@@ -1,0 +1,23 @@
+= Rolemaster Unified Frontend
+
+Punto de entrada para el frontal de RMU creado a partir de microfrontales con Webpack y React.
+
+== Ejecución local con Node
+
+----
+npm install -y
+
+npm start
+----
+
+== Ejecución local con Docker
+
+----
+docker build -t labcabrera/rmu-fe-main .
+
+docker run -d -p 8080:8080 --name rmu-fe-main -h rmu-fe-main labcabrera/rmu-fe-main
+----
+
+Una vez la aplicación esté en uso se puede entrar desde:
+
+http://localhost:8080
