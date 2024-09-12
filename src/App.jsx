@@ -1,24 +1,36 @@
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React, { Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
-import "./index.css";
-import Header from "./components/Header/Header";
+import { Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
+import "./index.css";
+
 const RemoteTacticalApp = React.lazy(() => import("tactical/TacticalApp"));
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   return (
-    <div className="main">
-      <Header />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/tactical/*" element={<RemoteTacticalApp />} />
-          <Route path="*" element={<div>404 Page not found!</div>} />
-        </Routes>
-      </Suspense>
-      <Footer />
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div className="main">
+        <Header />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tactical/*" element={<RemoteTacticalApp />} />
+            <Route path="*" element={<div>404 Page not found!</div>} />
+          </Routes>
+        </Suspense>
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 };
 
