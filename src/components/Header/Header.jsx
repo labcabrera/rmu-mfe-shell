@@ -20,7 +20,9 @@ import Tooltip from '@mui/material/Tooltip';
 const pages = [
   ['Strategic', "/strategic"],
   ['Tactical', "/tactical"],
-  ['Characters', "/characters"]];
+  ['Characters', "/characters"],
+  ['NPC', "/npc"]
+];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -55,7 +57,7 @@ const Header = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/tactical"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },

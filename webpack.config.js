@@ -80,6 +80,7 @@ module.exports = (_, argv) => ({
       filename: "remoteEntry.js",
       remotes: {
         tactical: "tactical@http://localhost:8081/tactical-app.js",
+        npc: "npc@http://localhost:8082/npc-app.js",
       },
       exposes: {},
       shared: {
