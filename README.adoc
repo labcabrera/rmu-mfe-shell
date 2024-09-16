@@ -2,6 +2,21 @@
 
 Punto de entrada para el frontal de RMU creado a partir de microfrontales con Webpack y React.
 
+== Módulos
+
+[options,header]
+|===
+|Module                   | Repository                                      | Local
+|API Core                 | https://github.com/labcabrera/rmu-api-core      | http://localhost:3001/v1
+|API Strategic            | https://github.com/labcabrera/rmu-api-strategic | http://localhost:3002/v1
+|API Tactical             | https://github.com/labcabrera/rmu-api-tactical  | http://localhost:3003/v1
+|API NPC                  | https://github.com/labcabrera/rmu-api-npc       | http://localhost:3004/v1
+|MicroFrontend Entry      | https://github.com/labcabrera/rmu-fe-main       | http://localhost:8080
+|MicroFrontend Strategic  | https://github.com/labcabrera/rmu-fe-strategic  | http://localhost:8081/strategic
+|MicroFrontend Tactical   | https://github.com/labcabrera/rmu-fe-tactical   | http://localhost:8082/tactical
+|MicroFrontend NPC        | https://github.com/labcabrera/rmu-fe-npc        | http://localhost:8083/npc
+|===
+
 == Ejecución local con Node
 
 ----
@@ -9,15 +24,3 @@ npm install -y
 
 npm start
 ----
-
-== Ejecución local con Docker
-
-----
-docker build -t labcabrera/rmu-fe-main .
-
-docker run -d -p 8080:8080 --name rmu-fe-main -h rmu-fe-main labcabrera/rmu-fe-main
-----
-
-Una vez la aplicación esté en uso se puede entrar desde:
-
-http://localhost:8080
