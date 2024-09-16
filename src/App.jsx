@@ -9,6 +9,7 @@ import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import "./index.css";
 
+const RemoteStrategicApp = React.lazy(() => import("strategic/StrategicApp"));
 const RemoteTacticalApp = React.lazy(() => import("tactical/TacticalApp"));
 const RemoteNpcApp = React.lazy(() => import("npc/NpcApp"));
 
@@ -27,6 +28,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/strategic/*" element={<RemoteStrategicApp />} />
             <Route path="/tactical/*" element={<RemoteTacticalApp />} />
             <Route path="/npc/*" element={<RemoteNpcApp />} />
             <Route path="*" element={<div>404 Page not found!</div>} />

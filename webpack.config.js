@@ -79,6 +79,7 @@ module.exports = (_, argv) => ({
       name: "main",
       filename: "remoteEntry.js",
       remotes: {
+        strategic: "strategic@http://localhost:8083/strategic-app.js",
         tactical: "tactical@http://localhost:8081/tactical-app.js",
         npc: "npc@http://localhost:8082/npc-app.js",
       },
