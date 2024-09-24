@@ -11,6 +11,7 @@ Microfront-end based implementation with Rolemaster Unified's React.
 |API Strategic            | https://github.com/labcabrera/rmu-api-strategic | http://localhost:3002/v1
 |API Tactical             | https://github.com/labcabrera/rmu-api-tactical  | http://localhost:3003/v1
 |API NPC                  | https://github.com/labcabrera/rmu-api-npc       | http://localhost:3004/v1
+|API Attack Tables        | https://github.com/labcabrera/rmu-api-npc       | http://localhost:3005/v1
 |MicroFrontend Entry      | https://github.com/labcabrera/rmu-fe-main       | http://localhost:8080
 |MicroFrontend Strategic  | https://github.com/labcabrera/rmu-fe-strategic  | http://localhost:8082/strategic
 |MicroFrontend Tactical   | https://github.com/labcabrera/rmu-fe-tactical   | http://localhost:8083/tactical
