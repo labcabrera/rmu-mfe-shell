@@ -1,18 +1,28 @@
 import React from "react";
+
+import Typography from '@mui/material/Typography';
+
+import { Card, CardContent, Link } from '@mui/material';
+
 import "./Home.css";
 
 const Home = () => {
   return (
-    <div>
-      <div>
-        <h2>
-          Under development
-        </h2>
-      </div>
-      <div>
-        This application provides a set of services for playing <b>Rolemaster Unified</b> developed by <a href="https://ironcrown.com">Iron Crown</a>
-      </div>
-    </div >
+    <Card sx={{ maxWidth: 500, margin: 'auto', mt: 5 }}>
+      <CardContent>
+        <Typography variant="body1" color="text.secondary" sx={{ marginBottom: '20px' }}>
+          This application offers a set of tools to
+          play <Link href="https://ironcrown.com" target="_blank" rel="noopener" color="primary">Rolemaster Unified</Link> developed
+          by <Link href="https://ironcrown.com" target="_blank" rel="noopener" color="primary">Iron Crown Enterprises</Link>.
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ marginBottom: '20px' }}>
+          This application is not an official product and requires the user to have the rulebooks as it is an assistant to speed up the games, especially oriented to combat.
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          In the <Link href="/wiki" target="_blank" rel="noopener" color="primary">Wiki</Link> category you can find information to help you start your first campaign and set up the game.
+        </Typography>
+      </CardContent>
+    </Card >
   );
 };
 
