@@ -13,20 +13,16 @@ module.exports = (_, argv) => ({
     publicPath: "http://localhost:8080/",
     //publicPath: "https://rmu-app.netlify.app/",
   },
-
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
-
   devServer: {
     port: 8080,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
     onListening: function (devServer) {
       const port = devServer.server.address().port;
-
       printCompilationMessage("compiling", port);
-
       devServer.compiler.hooks.done.tap("OutputMessagePlugin", (stats) => {
         setImmediate(() => {
           if (stats.hasErrors()) {
@@ -63,6 +59,13 @@ module.exports = (_, argv) => ({
         test: /\.(ico|jpg|jpeg|png|gif|jfif)$/i,
         use: ["file-loader"],
       },
+      {
+        test: /\.ttf$/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/fonts/[name][ext]',
+        },
+      },
     ],
   },
 
@@ -83,16 +86,30 @@ module.exports = (_, argv) => ({
         tactical: "tactical@http://localhost:8083/tactical-app.js",
         npc: "npc@http://localhost:8084/npc-app.js",
       },
-      exposes: {},
+      exposes: {
+        './theme': './src/theme'
+      },
       shared: {
         ...deps,
         react: {
           singleton: true,
           requiredVersion: deps.react,
         },
-        "react-dom": {
+        'react-dom': {
           singleton: true,
           requiredVersion: deps["react-dom"],
+        },
+        '@mui/material': {
+          singleton: true,
+          requiredVersion: deps["@mui/material"]
+        },
+        '@emotion/react': {
+          singleton: true,
+          requiredVersion: deps["@emotion/react"]
+        },
+        '@emotion/styled': {
+          singleton: true,
+          requiredVersion: deps["@emotion/styled"]
         },
       },
     }),

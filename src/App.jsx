@@ -13,15 +13,17 @@ const RemoteStrategicApp = React.lazy(() => import("strategic/StrategicApp"));
 const RemoteTacticalApp = React.lazy(() => import("tactical/TacticalApp"));
 const RemoteNpcApp = React.lazy(() => import("npc/NpcApp"));
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+import theme from './theme';
+
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: 'dark',
+//   },
+// });
 
 const App = () => {
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="main">
         <Header />

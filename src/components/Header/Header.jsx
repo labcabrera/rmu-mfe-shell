@@ -7,6 +7,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
@@ -18,15 +19,16 @@ import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 
 const pages = [
-  ['Strategic', "/strategic"],
-  ['Tactical', "/tactical"],
-  ['Characters', "/characters"],
-  ['NPC', "/npc"]
+  { label: 'Strategic', href: "/strategic" },
+  { label: 'Tactical', href: "/tactical" },
+  { label: 'Characters', href: "/characters" },
+  { label: 'NPC', href: "/npc" }
 ];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -36,6 +38,7 @@ const Header = () => {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -99,9 +102,9 @@ const Header = () => {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }} href={page[1]}>{page[0]}</Typography>
+              {pages.map((page, index) => (
+                <MenuItem key={index} onClick={handleCloseNavMenu}>
+                  <Link href={page.href} style={{ textDecoration: 'none', color: 'inherit' }}>{page.label}</Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -131,10 +134,10 @@ const Header = () => {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                href={page[1]}
+                href={page.href}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page[0]}
+                {page.label}
               </Button>
             ))}
           </Box>
