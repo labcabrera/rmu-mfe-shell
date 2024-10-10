@@ -5,8 +5,8 @@ const theme = createTheme({
     mode: 'dark'
   },
   typography: {
-    fontFamily: 'ringbearer, sans-serif',
-    fontSize: 20,
+    //fontFamily: 'ringbearer, sans-serif',
+    fontSize: 26,
   },
   components: {
     MuiCssBaseline: {
