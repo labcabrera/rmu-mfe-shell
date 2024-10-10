@@ -79,7 +79,7 @@ module.exports = (_, argv) => ({
       ],
     }),
     new ModuleFederationPlugin({
-      name: "main",
+      name: "host",
       filename: "remoteEntry.js",
       remotes: {
         strategic: "strategic@http://localhost:8082/strategic-app.js",
