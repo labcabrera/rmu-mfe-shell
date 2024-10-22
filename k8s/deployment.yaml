@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmu-fe-host
+  labels:
+    app: rmu-fe-host
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rmu-fe-host
+  template:
+    metadata:
+      labels:
+        app: rmu-fe-host
+    spec:
+      containers:
+      - name: rmu-fe-host
+        image: labcabrera/rmu-fe-host:latest
+        ports:
+        - containerPort: 8080

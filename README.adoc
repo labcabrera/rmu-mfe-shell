@@ -28,3 +28,33 @@ npm install -y
 
 npm start
 ----
+
+== Minikube
+
+Configuration with argocd
+
+----
+minikube start
+
+minikube dashboard
+
+kubectl create namespace rmu-main
+
+kubectl create namespace argocd
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+kubectl get pods -n argocd
+
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
+# check port
+kubectl get svc -n argocd
+
+# get service url
+minikube service argocd-server -n argocd
+----
+
+----
+minikube delete
+----
