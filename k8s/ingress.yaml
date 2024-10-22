@@ -13,6 +13,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: rmu-fe-host
+            name: rmu-fe-host-service
             port:
               number: 80
