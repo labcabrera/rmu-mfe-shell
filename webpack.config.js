@@ -11,13 +11,14 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = (_, argv) => ({
   output: {
     publicPath: "http://localhost:8080/",
-    //publicPath: "https://rmu-app.netlify.app/",
+    //publicPath: "https://rmu-fe-host.main/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
   devServer: {
-    disableHostCheck: true,
+    historyApiFallback: true,
+    allowedHosts: "all",
     port: 8080,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
