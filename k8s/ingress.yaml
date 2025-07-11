@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: rmu-fe-host.main
+  - host: fe-host.rmu.local
     http:
       paths:
       - path: /
