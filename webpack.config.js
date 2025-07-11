@@ -10,8 +10,9 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = (_, argv) => ({
   output: {
-    publicPath: "http://localhost:8080/",
-    //publicPath: "https://rmu-fe-host.main/",
+    //publicPath: "http://localhost:8080/",
+    //publicPath: "https://fe-host.rmu.local/",
+    publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://localhost:8080/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
