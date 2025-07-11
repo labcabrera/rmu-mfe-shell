@@ -84,7 +84,6 @@ module.exports = (_, argv) => ({
       filename: "remoteEntry.js",
       remotes: {
         strategic: process.env.RMU_FE_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
-        strategic: "strategic@http://localhost:8082/strategic-app.js",
         tactical: "tactical@http://localhost:8083/tactical-app.js",
         npc: "npc@http://localhost:8084/npc-app.js",
       },
