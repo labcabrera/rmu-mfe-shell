@@ -25,8 +25,18 @@ spec:
             configMapKeyRef:
               name: rmu-shared-configmap
               key: RMU_FE_HOST_PUBLIC_PATH
-        - name: RMU_FE_MODULE_FEDERATION_STRATEGIC
+        - name: RMU_MODULE_FEDERATION_STRATEGIC
           valueFrom:
             configMapKeyRef:
               name: rmu-shared-configmap
-              key: RMU_FE_MODULE_FEDERATION_STRATEGIC
+              key: RMU_MODULE_FEDERATION_STRATEGIC
+        - name: RMU_MODULE_FEDERATION_TACTICAL
+          valueFrom:
+            configMapKeyRef:
+              name: rmu-shared-configmap
+              key: RMU_MODULE_FEDERATION_STRATEGIC
+        - name: RMU_MODULE_FEDERATION_NPC
+          valueFrom:
+            configMapKeyRef:
+              name: rmu-shared-configmap
+              key: RMU_MODULE_FEDERATION_NPC
