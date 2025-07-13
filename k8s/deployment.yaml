@@ -18,7 +18,7 @@ spec:
       - name: rmu-fe-host
         image: labcabrera/rmu-fe-host:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         env:
 
         - name: RMU_FE_HOST_PUBLIC_PATH

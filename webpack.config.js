@@ -10,7 +10,9 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = (_, argv) => ({
   output: {
-    publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://localhost:8080/",
+    //publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://localhost:8080/",
+    //publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://fe-host.rmu.local/",
+    publicPath: "http://fe-host.rmu.local/",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
@@ -83,9 +85,12 @@ module.exports = (_, argv) => ({
       name: "host",
       filename: "remoteEntry.js",
       remotes: {
-        strategic: process.env.RMU_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
-        tactical: process.env.RMU_MODULE_FEDERATION_TACTICAL || "tactical@http://localhost:8083/tactical-app.js",
-        npc: process.env.RMU_MODULE_FEDERATION_NPC || "npc@http://localhost:8084/npc-app.js",
+        // strategic: process.env.RMU_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
+        // tactical: process.env.RMU_MODULE_FEDERATION_TACTICAL || "tactical@http://localhost:8083/tactical-app.js",
+        // npc: process.env.RMU_MODULE_FEDERATION_NPC || "npc@http://localhost:8084/npc-app.js",
+        strategic: "strategic@http://fe-strategic.rmu.local/strategic-app.js",
+        tactical: "tactical@http://fe-tactical.rmu.local/tactical-app.js",
+        npc: "npc@http://fe-npc.rmu.local/npc-app.js",
       },
       exposes: {
         './theme': './src/theme'
