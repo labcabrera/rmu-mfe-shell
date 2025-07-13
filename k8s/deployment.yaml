@@ -18,7 +18,7 @@ spec:
       - name: rmu-fe-host
         image: labcabrera/rmu-fe-host:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
 
         - name: RMU_FE_HOST_PUBLIC_PATH
@@ -44,3 +44,15 @@ spec:
             configMapKeyRef:
               name: rmu-shared-configmap
               key: RMU_MODULE_FEDERATION_NPC
+
+        - name: RMU_API_STRATEGIC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: rmu-shared-configmap
+              key: RMU_API_STRATEGIC_URL
+
+        - name: RMU_API_CORE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: rmu-shared-configmap
+              key: RMU_API_CORE_URL
