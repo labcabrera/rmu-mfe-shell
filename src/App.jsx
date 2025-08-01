@@ -15,12 +15,6 @@ const RemoteNpcApp = React.lazy(() => import("npc/NpcApp"));
 
 import theme from './theme';
 
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: 'dark',
-//   },
-// });
-
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
