@@ -1,12 +1,17 @@
 {
   "name": "host",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
     "start": "webpack serve --mode development",
-    "start:live": "webpack serve --mode development --live-reload --hot"
+    "start:live": "webpack serve --mode development --live-reload --hot",
+    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json",
+    "release": "./release.sh",
+    "release:patch": "./release-auto.sh patch",
+    "release:minor": "./release-auto.sh minor",
+    "release:major": "./release-auto.sh major"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
   "author": {
@@ -14,34 +19,34 @@
     "email": "lab.cabrera@gmail.com"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
-    "@babel/plugin-transform-runtime": "^7.15.8",
-    "@babel/preset-env": "^7.15.8",
-    "@babel/preset-react": "^7.14.5",
-    "autoprefixer": "^10.1.0",
-    "babel-loader": "^8.2.2",
-    "copy-webpack-plugin": "^12.0.2",
-    "css-loader": "^6.3.0",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-runtime": "^7.25.2",
+    "@babel/preset-env": "^7.25.2",
+    "@babel/preset-react": "^7.25.7",
+    "autoprefixer": "^10.4.20",
+    "babel-loader": "^10.0.0",
+    "copy-webpack-plugin": "^13.0.0",
+    "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.0.1",
     "html-webpack-plugin": "^5.3.2",
     "postcss": "^8.2.1",
-    "postcss-loader": "^4.1.0",
-    "style-loader": "^3.3.0",
-    "webpack": "^5.57.1",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.3.1"
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
     "@babel/plugin-syntax-jsx": "^7.24.7",
-    "@babel/runtime": "^7.13.10",
+    "@babel/runtime": "^7.25.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
-    "@mui/icons-material": "^6.1.0",
-    "@mui/material": "^6.1.0",
+    "@mui/icons-material": "^7.2.0",
+    "@mui/material": "^7.2.0",
     "file-loader": "^6.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.26.0"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.7.0"
   }
 }

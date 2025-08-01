@@ -102,26 +102,37 @@ module.exports = (_, argv) => ({
         './theme': './src/theme'
       },
       shared: {
-        ...deps,
-        react: {
+        'react': {
           singleton: true,
-          requiredVersion: deps.react,
+          requiredVersion: deps['react'],
         },
         'react-dom': {
           singleton: true,
-          requiredVersion: deps["react-dom"],
+          requiredVersion: deps['react-dom'],
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: deps['react-router-dom'],
         },
         '@mui/material': {
           singleton: true,
-          requiredVersion: deps["@mui/material"]
+          requiredVersion: deps['@mui/material'],
+        },
+        '@mui/icons-material': {
+          singleton: true,
+          requiredVersion: deps['@mui/icons-material'],
         },
         '@emotion/react': {
           singleton: true,
-          requiredVersion: deps["@emotion/react"]
+          requiredVersion: deps['@emotion/react'],
         },
         '@emotion/styled': {
           singleton: true,
-          requiredVersion: deps["@emotion/styled"]
+          requiredVersion: deps['@emotion/styled'],
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: deps['react-router-dom'],
         },
       },
     }),
