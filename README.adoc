@@ -1,8 +1,6 @@
-= Rolemaster Unified Frontend
+= Rolemaster Unified Frontend Host
 
-React-based microfrontend for tactical games management.
-
-This project is the entry point for RMO's microfronteds.
+React-based microfrontend for tactical games management. This project is the entry point for RMU's microfronteds.
 
 This project is part of RMU Online: https://github.com/labcabrera/rmu-platform
 

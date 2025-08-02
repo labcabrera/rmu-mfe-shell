@@ -7,7 +7,7 @@
     "build:start": "cd dist && PORT=8080 npx serve",
     "start": "webpack serve --mode development",
     "start:live": "webpack serve --mode development --live-reload --hot",
-    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json"
+    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/icons-material/esm/package.json"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
   "author": {
