@@ -1,13 +1,13 @@
 {
   "name": "host",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
     "start": "webpack serve --mode development",
     "start:live": "webpack serve --mode development --live-reload --hot",
-    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json"
+    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/icons-material/esm/package.json"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
   "author": {
@@ -41,6 +41,7 @@
     "@mui/icons-material": "^7.2.0",
     "@mui/material": "^7.2.0",
     "file-loader": "^6.2.0",
+    "keycloak-js": "^26.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.7.0"
