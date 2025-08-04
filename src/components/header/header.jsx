@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./Header.css";
 
 import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
@@ -10,13 +9,13 @@ import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
 import AdbIcon from '@mui/icons-material/Adb';
 import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import UserMenu from '../Auth/UserMenu';
+import UserMenu from '../auth/user-menu';
+import "./header.css";
 
 const pages = [
   { label: 'Strategic', href: "/strategic" },

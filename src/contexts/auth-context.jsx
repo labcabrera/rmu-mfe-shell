@@ -18,14 +18,20 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let mounted = true; // Flag para evitar actualizaciones de estado en componentes desmontados
+
     const initAuth = async () => {
       try {
+        if (!mounted) return; // Evitar operaciones si el componente se desmontó
+        
         setIsLoading(true);
         setError(null);
         
         console.log('Initializing authentication...');
         const authenticated = await authService.init();
         console.log('Authentication result:', authenticated);
+        
+        if (!mounted) return; // Verificar de nuevo después de la operación async
         
         setIsAuthenticated(authenticated);
         
@@ -37,15 +43,24 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Authentication initialization failed:', error);
-        setError(error?.message || 'Authentication initialization failed');
-        setIsAuthenticated(false);
-        setUser(null);
+        if (mounted) {
+          setError(error?.message || 'Authentication initialization failed');
+          setIsAuthenticated(false);
+          setUser(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initAuth();
+
+    // Cleanup function
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Función interna para cargar el perfil del usuario

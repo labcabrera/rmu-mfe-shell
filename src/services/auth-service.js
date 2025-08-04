@@ -7,9 +7,6 @@ const keycloakConfig = {
   clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || 'rmu-fe-host',
 };
 
-// Create Keycloak instance
-const keycloak = new Keycloak(keycloakConfig);
-
 // Initialize options with PKCE S256
 const initOptions = {
   onLoad: 'check-sso',
@@ -21,8 +18,10 @@ const initOptions = {
 
 class AuthService {
   constructor() {
-    this.keycloak = keycloak;
+    this.keycloak = null;
     this.initialized = false;
+    this.initPromise = null; // Para evitar múltiples inicializaciones concurrentes
+    this.tokenRefreshInterval = null; // Para evitar múltiples intervalos
   }
 
   /**
@@ -30,13 +29,45 @@ class AuthService {
    * @returns {Promise<boolean>} - Promise that resolves to authentication status
    */
   async init() {
+    // Si ya hay una inicialización en progreso, esperar a que termine
+    if (this.initPromise) {
+      console.log('Keycloak initialization already in progress, waiting...');
+      return await this.initPromise;
+    }
+
+    // Si ya está inicializado, devolver el estado actual
+    if (this.initialized && this.keycloak) {
+      console.log('Keycloak already initialized');
+      return this.keycloak.authenticated || false;
+    }
+
+    console.log('Starting Keycloak initialization...');
+    
+    // Crear la promesa de inicialización
+    this.initPromise = this._initializeKeycloak();
+    
     try {
-      console.log('Starting Keycloak initialization...');
+      const result = await this.initPromise;
+      return result;
+    } finally {
+      // Limpiar la promesa cuando termine, exitosa o no
+      this.initPromise = null;
+    }
+  }
+
+  /**
+   * Método interno para inicializar Keycloak
+   * @private
+   */
+  async _initializeKeycloak() {
+    try {
+      console.log('Creating new Keycloak instance...');
       console.log('Keycloak config:', keycloakConfig);
       console.log('Init options:', initOptions);
       
+      // Crear nueva instancia de Keycloak solo si no existe
       if (!this.keycloak) {
-        throw new Error('Keycloak instance not created');
+        this.keycloak = new Keycloak(keycloakConfig);
       }
       
       const authenticated = await this.keycloak.init(initOptions);
@@ -50,6 +81,7 @@ class AuthService {
     } catch (error) {
       console.error('Failed to initialize Keycloak:', error);
       this.initialized = false;
+      this.keycloak = null; // Reset en caso de error
       // No hacer throw aquí para evitar romper la aplicación cuando Keycloak no esté disponible
       return false;
     }
@@ -249,9 +281,21 @@ class AuthService {
    * Setup automatic token refresh
    */
   setupTokenRefresh() {
+    // Limpiar intervalo existente si existe
+    if (this.tokenRefreshInterval) {
+      clearInterval(this.tokenRefreshInterval);
+      this.tokenRefreshInterval = null;
+    }
+
+    // Solo configurar si tenemos un keycloak válido y autenticado
+    if (!this.keycloak) {
+      console.warn('Cannot setup token refresh: Keycloak instance not available');
+      return;
+    }
+
     // Refresh token every 5 minutes if it expires in less than 1 minute
-    setInterval(async () => {
-      if (this.keycloak.authenticated) {
+    this.tokenRefreshInterval = setInterval(async () => {
+      if (this.keycloak && this.keycloak.authenticated) {
         try {
           await this.updateToken(60);
         } catch (error) {
@@ -305,6 +349,26 @@ class AuthService {
         return Promise.reject(error);
       }
     );
+  }
+
+  /**
+   * Cleanup resources
+   */
+  cleanup() {
+    if (this.tokenRefreshInterval) {
+      clearInterval(this.tokenRefreshInterval);
+      this.tokenRefreshInterval = null;
+    }
+  }
+
+  /**
+   * Reset service state
+   */
+  reset() {
+    this.cleanup();
+    this.initialized = false;
+    this.keycloak = null;
+    this.initPromise = null;
   }
 }
 

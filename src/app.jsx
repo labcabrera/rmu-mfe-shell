@@ -2,16 +2,15 @@ import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
 import { AuthProvider, useAuth } from "./contexts/auth-context";
-import AuthLoader from "./components/Auth/AuthLoader";
-import ProtectedRoute from "./components/Auth/ProtectedRoute";
-
-import Footer from "./components/Footer/Footer";
-import Header from "./components/Header/Header";
-import Home from "./components/Home/Home";
-import AuthDebug from "./components/Auth/AuthDebug";
+import AuthLoader from "./components/auth/auth-loader";
+import ProtectedRoute from "./components/auth/protected-route";
+import Footer from "./components/footer/footer";
+import Header from "./components/header/header";
+import Home from "./components/home/home";
+import AuthDebug from "./components/auth/auth-debug";
 import "./index.css";
 
 const RemoteStrategicApp = React.lazy(() => import("strategic/StrategicApp"));

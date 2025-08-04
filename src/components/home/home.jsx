@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import { Card, CardContent, Link } from '@mui/material';
 
-import "./Home.css";
+import "./home.css";
 
 const Home = () => {
   return (
