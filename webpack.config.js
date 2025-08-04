@@ -99,7 +99,17 @@ module.exports = (_, argv) => ({
         npc: "npc@http://localhost:8084/npc-app.js",
       },
       exposes: {
-        './theme': './src/theme'
+        './theme': './src/theme',
+        // Contexto y hooks
+        "./AuthContext": "./src/contexts/auth-context.jsx",
+        //"./useAuth": "./src/hooks/use-keycloak.js",
+        // Componentes de autenticación
+        // "./AuthProvider": "./src/contexts/auth-context.jsx",
+        // "./UserMenu": "./src/components/auth/user-menu.jsx",
+        // "./ProtectedRoute": "./src/components/auth/protected-route.jsx",
+        "./AuthLoader": "./src/components/auth/auth-loader.jsx",
+        // Servicio de autenticación
+        "./AuthService": "./src/services/auth-service.js",
       },
       shared: {
         'react': {
