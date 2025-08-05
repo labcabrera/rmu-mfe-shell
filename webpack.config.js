@@ -100,16 +100,13 @@ module.exports = (_, argv) => ({
       },
       exposes: {
         './theme': './src/theme',
-        // Contexto y hooks
-        "./AuthContext": "./src/contexts/auth-context.jsx",
-        //"./useAuth": "./src/hooks/use-keycloak.js",
-        // Componentes de autenticación
-        // "./AuthProvider": "./src/contexts/auth-context.jsx",
-        // "./UserMenu": "./src/components/auth/user-menu.jsx",
-        // "./ProtectedRoute": "./src/components/auth/protected-route.jsx",
-        "./AuthLoader": "./src/components/auth/auth-loader.jsx",
-        // Servicio de autenticación
-        "./AuthService": "./src/services/auth-service.js",
+        './auth': './src/auth',
+        './AuthContext': './src/contexts/auth-context',
+        './AuthService': './src/services/auth-service',
+        './UserMenu': './src/components/auth/user-menu',
+        './AuthLoader': './src/components/auth/auth-loader',
+        './ProtectedRoute': './src/components/auth/protected-route',
+        './AuthDebug': './src/components/auth/auth-debug'
       },
       shared: {
         'react': {
@@ -140,9 +137,9 @@ module.exports = (_, argv) => ({
           singleton: true,
           requiredVersion: deps['@emotion/styled'],
         },
-        'react-router-dom': {
+        'keycloak-js': {
           singleton: true,
-          requiredVersion: deps['react-router-dom'],
+          requiredVersion: deps['keycloak-js'],
         },
       },
     }),
