@@ -139,8 +139,36 @@ export const AuthProvider = ({ children }) => {
     return authService.getToken();
   };
 
+  const getRefreshToken = () => {
+    return authService.getRefreshToken();
+  };
+
+  const getValidToken = async (minValidity = 30) => {
+    try {
+      return await authService.getValidToken(minValidity);
+    } catch (error) {
+      console.error('Error getting valid token:', error);
+      setError(error.message);
+      return null;
+    }
+  };
+
   const getAuthHeader = () => {
     return authService.getAuthHeader();
+  };
+
+  const getValidAuthHeader = async (minValidity = 30) => {
+    try {
+      return await authService.getValidAuthHeader(minValidity);
+    } catch (error) {
+      console.error('Error getting valid auth header:', error);
+      setError(error.message);
+      return null;
+    }
+  };
+
+  const isTokenExpired = (minValidity = 30) => {
+    return authService.isTokenExpired(minValidity);
   };
 
   const updateToken = async (minValidity = 30) => {
@@ -163,10 +191,20 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     register,
+    loadUserProfile,
+    
+    // Role management
     hasRole,
     hasAnyRole,
+    getRoles: () => authService.getRoles(),
+    
+    // Token management
     getToken,
+    getRefreshToken,
+    getValidToken,
     getAuthHeader,
+    getValidAuthHeader,
+    isTokenExpired,
     updateToken,
     
     // Service reference for advanced usage

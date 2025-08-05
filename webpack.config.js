@@ -106,7 +106,9 @@ module.exports = (_, argv) => ({
         './UserMenu': './src/components/auth/user-menu',
         './AuthLoader': './src/components/auth/auth-loader',
         './ProtectedRoute': './src/components/auth/protected-route',
-        './AuthDebug': './src/components/auth/auth-debug'
+        './AuthDebug': './src/components/auth/auth-debug',
+        './useApi': './src/hooks/useApi',
+        './ApiClient': './src/utils/api-client'
       },
       shared: {
         'react': {

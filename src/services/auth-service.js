@@ -308,12 +308,60 @@ class AuthService {
   }
 
   /**
+   * Get valid token with automatic refresh if needed
+   * @param {number} minValidity - Minimum validity time in seconds (default: 30)
+   * @returns {Promise<string|null>} The access token or null if failed
+   */
+  async getValidToken(minValidity = 30) {
+    if (!this.keycloak || !this.isAuthenticated()) {
+      console.warn('🔒 Cannot get valid token - user not authenticated');
+      return null;
+    }
+
+    try {
+      // Check if token needs refresh
+      const refreshed = await this.keycloak.updateToken(minValidity);
+      if (refreshed) {
+        console.log('🔄 Token refreshed successfully');
+      }
+      return this.keycloak.token;
+    } catch (error) {
+      console.error('❌ Failed to refresh token:', error);
+      // Token refresh failed, user might need to login again
+      return null;
+    }
+  }
+
+  /**
+   * Check if token is expired or will expire soon
+   * @param {number} minValidity - Minimum validity time in seconds
+   * @returns {boolean} True if token is expired or will expire soon
+   */
+  isTokenExpired(minValidity = 30) {
+    if (!this.keycloak || !this.isAuthenticated()) {
+      return true;
+    }
+    
+    return this.keycloak.isTokenExpired(minValidity);
+  }
+
+  /**
    * Get authorization header for API calls
    * @returns {Object}
    */
   getAuthHeader() {
     const token = this.getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  /**
+   * Get authorization header with valid token (auto-refresh)
+   * @param {number} minValidity - Minimum validity time in seconds
+   * @returns {Promise<Object|null>} Authorization header object or null
+   */
+  async getValidAuthHeader(minValidity = 30) {
+    const token = await this.getValidToken(minValidity);
+    return token ? { Authorization: `Bearer ${token}` } : null;
   }
 
   /**
