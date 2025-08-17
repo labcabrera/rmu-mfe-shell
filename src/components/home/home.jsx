@@ -12,8 +12,8 @@ const Home = () => {
       <CardContent>
         <Typography variant="body1" color="text.secondary" sx={{ marginBottom: '20px' }}>
           This application offers a set of tools to
-          play <Link href="https://ironcrown.com" target="_blank" rel="noopener" color="primary">Rolemaster Unified</Link> developed
-          by <Link href="https://ironcrown.com" target="_blank" rel="noopener" color="primary">Iron Crown Enterprises</Link>.
+          play <Link href="http://ironcrown.co.uk/unified-rolemaster/" target="_blank" rel="noopener" color="primary">Rolemaster Unified</Link> developed
+          by <Link href="https://ironcrown.co.uk/" target="_blank" rel="noopener" color="primary">Iron Crown Enterprises</Link>.
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ marginBottom: '20px' }}>
           This application is not an official product and requires the user to have the rulebooks as it is an assistant to speed up the games, especially oriented to combat.
