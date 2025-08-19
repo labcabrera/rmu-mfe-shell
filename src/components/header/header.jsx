@@ -14,7 +14,6 @@ import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import UserMenu from '../auth/user-menu';
 import "./header.css";
 
 const pages = [
@@ -130,7 +129,7 @@ const Header = () => {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <UserMenu />
+            TODO: USER MENU
           </Box>
         </Toolbar>
       </Container>

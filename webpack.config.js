@@ -84,7 +84,7 @@ module.exports = (_, argv) => ({
     }),
     new ModuleFederationPlugin({
       name: "host",
-      filename: "remoteEntry.js",
+      filename: "host.js",
       remotes: {
         // strategic: process.env.RMU_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
         // tactical: process.env.RMU_MODULE_FEDERATION_TACTICAL || "tactical@http://localhost:8083/tactical-app.js",
@@ -94,55 +94,22 @@ module.exports = (_, argv) => ({
         //tactical: "tactical@http://fe-tactical.rmu.local/tactical-app.js",
         //npc: "npc@http://fe-npc.rmu.local/npc-app.js",
 
+        core: "core@http://localhost:8010/core-app.js",
         strategic: "strategic@http://localhost:8082/strategic-app.js",
         tactical: "tactical@http://localhost:8083/tactical-app.js",
         npc: "npc@http://localhost:8084/npc-app.js",
       },
       exposes: {
-        './theme': './src/theme',
-        './auth': './src/auth',
-        './AuthContext': './src/contexts/auth-context',
-        './AuthService': './src/services/auth-service',
-        './UserMenu': './src/components/auth/user-menu',
-        './AuthLoader': './src/components/auth/auth-loader',
-        './ProtectedRoute': './src/components/auth/protected-route',
-        './AuthDebug': './src/components/auth/auth-debug',
-        './useApi': './src/hooks/useApi',
-        './ApiClient': './src/utils/api-client'
       },
       shared: {
-        'react': {
-          singleton: true,
-          requiredVersion: deps['react'],
-        },
-        'react-dom': {
-          singleton: true,
-          requiredVersion: deps['react-dom'],
-        },
-        'react-router-dom': {
-          singleton: true,
-          requiredVersion: deps['react-router-dom'],
-        },
-        '@mui/material': {
-          singleton: true,
-          requiredVersion: deps['@mui/material'],
-        },
-        '@mui/icons-material': {
-          singleton: true,
-          requiredVersion: deps['@mui/icons-material'],
-        },
-        '@emotion/react': {
-          singleton: true,
-          requiredVersion: deps['@emotion/react'],
-        },
-        '@emotion/styled': {
-          singleton: true,
-          requiredVersion: deps['@emotion/styled'],
-        },
-        'keycloak-js': {
-          singleton: true,
-          requiredVersion: deps['keycloak-js'],
-        },
+        'react': { singleton: true, requiredVersion: '^19.1.1' },
+        'react-dom': { singleton: true, requiredVersion: '^19.1.1' },
+        'react-router-dom': { singleton: true, requiredVersion: '^7.7.0' },
+        'keycloak-js': { singleton: true, requiredVersion: '^26.2.0' },
+        '@mui/material': { singleton: true, requiredVersion: false },
+        '@mui/icons-material': { singleton: true, requiredVersion: false },
+        '@emotion/react': { singleton: true, requiredVersion: false },
+        '@emotion/styled': { singleton: true, requiredVersion: false },
       },
     }),
     new HtmlWebPackPlugin({

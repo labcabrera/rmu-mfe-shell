@@ -1,7 +1,6 @@
 import React from "react";
 
 import Typography from '@mui/material/Typography';
-
 import { Card, CardContent, Link } from '@mui/material';
 
 import "./home.css";
