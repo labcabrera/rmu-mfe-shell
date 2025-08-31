@@ -120,8 +120,9 @@ const Header = () => {
             {pages.map((page) => (
               <Button
                 key={page.label}
-                onClick={handleCloseNavMenu}
                 href={page.href}
+                onClick={handleCloseNavMenu}
+                variant="text"
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page.label}
