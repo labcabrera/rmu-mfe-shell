@@ -54,6 +54,15 @@ module.exports = (_, argv) => ({
           console.log('[proxy tactical] Redirect:', req.url, '->', proxyReq.getHeader('host'));
           proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
         }
+      }   ,   {
+        context: ['/dev/api/items'],
+        target: 'http://localhost:3006',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/items': '' },
+        onProxyReq: function(proxyReq, req, res) {
+          console.log('[proxy items] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        }
       }
     ],
     onListening: function (devServer) {

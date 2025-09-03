@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
+
 const theme = createTheme({
  palette: {
     mode: 'dark',
@@ -34,7 +35,7 @@ const theme = createTheme({
       },
     },
     MuiButton: { defaultProps: { size: 'small', variant: 'contained' } },
-    MuiTextField: { defaultProps: { size: 'small', margin: 'dense' } },
+    MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
     MuiSelect: { defaultProps: { size: 'small' } },
     MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
     MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
