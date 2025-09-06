@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
+
 const theme = createTheme({
  palette: {
     mode: 'dark',
@@ -20,24 +21,38 @@ const theme = createTheme({
       disabled: '#616161',
     },
   },
+  shape: { borderRadius: 10 },
   typography: {
     //fontFamily: 'ringbearer, sans-serif',
     fontFamily: 'Open Sans, sans-serif',
     fontSize: 16,
   },
   components: {
-    Excluded_MuiCssBaseline: {
-      styleOverrides: `
-        @font-face {
-          font-family: 'ringbearer';
-          src: url('/static/fonts/anirm___.ttf') format('truetype');
-        }
-        body {
-          font-family: 'ringbearer', sans-serif;
-        }
-      `,
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: { scrollbarColor: '#2a2f3a #0f1115' },
+        '*::-webkit-scrollbar-thumb': { backgroundColor: '#2a2f3a' },
+      },
     },
+    MuiButton: { defaultProps: { size: 'small', variant: 'contained' } },
+    MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
+    MuiSelect: { defaultProps: { size: 'small' } },
+    MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
+    MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
   },
+  // components: {
+  //   Excluded_MuiCssBaseline: {
+  //     styleOverrides: `
+  //       @font-face {
+  //         font-family: 'ringbearer';
+  //         src: url('/static/fonts/anirm___.ttf') format('truetype');
+  //       }
+  //       body {
+  //         font-family: 'ringbearer', sans-serif;
+  //       }
+  //     `,
+  //   },
+  // },
 });
 
 export default theme;

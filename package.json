@@ -1,49 +1,53 @@
 {
   "name": "host",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
     "start": "webpack serve --mode development",
     "start:live": "webpack serve --mode development --live-reload --hot",
-    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.2.0\"}' > node_modules/@mui/icons-material/esm/package.json"
+    "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/icons-material/esm/package.json"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
   "author": {
     "name": "Luis Cabrera",
     "email": "lab.cabrera@gmail.com"
   },
+  "dependencies": {
+    "@babel/plugin-syntax-jsx": "^7.27.1",
+    "@babel/runtime": "^7.28.3",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@fontsource/roboto": "^5.2.6",
+    "@mui/icons-material": "7.3.1",
+    "@mui/material": "7.3.1",
+    "@mui/system": "7.3.1",
+    "file-loader": "^6.2.0",
+    "keycloak-js": "^26.2.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-runtime": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
     "@babel/preset-react": "^7.25.7",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
     "autoprefixer": "^10.4.20",
     "babel-loader": "^10.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "dotenv-webpack": "^8.0.1",
     "html-webpack-plugin": "^5.3.2",
+    "jest": "^30.0.5",
     "postcss": "^8.2.1",
     "postcss-loader": "^8.1.1",
     "style-loader": "^4.0.0",
     "webpack": "^5.95.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"
-  },
-  "dependencies": {
-    "@babel/plugin-syntax-jsx": "^7.24.7",
-    "@babel/runtime": "^7.25.0",
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@fontsource/roboto": "^5.1.0",
-    "@mui/icons-material": "^7.2.0",
-    "@mui/material": "^7.2.0",
-    "file-loader": "^6.2.0",
-    "keycloak-js": "^26.2.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.7.0"
   }
 }

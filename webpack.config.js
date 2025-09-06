@@ -24,6 +24,47 @@ module.exports = (_, argv) => ({
     port: 8080,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, "src")],
+    proxy: [
+      {
+        context: ['/dev/api/core'],
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/core': '' },
+        onProxyReq: function(proxyReq, req, res) {
+          console.log('[proxy core] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        }
+      },
+      {
+        context: ['/dev/api/strategic'],
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/strategic': '' },
+        onProxyReq: function(proxyReq, req, res) {
+          console.log('[proxy strategic] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        }
+      },
+      {
+        context: ['/dev/api/tactical'],
+        target: 'http://localhost:3003',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/tactical': '' },
+        onProxyReq: function(proxyReq, req, res) {
+          console.log('[proxy tactical] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        }
+      }   ,   {
+        context: ['/dev/api/items'],
+        target: 'http://localhost:3006',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/items': '' },
+        onProxyReq: function(proxyReq, req, res) {
+          console.log('[proxy items] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        }
+      }
+    ],
     onListening: function (devServer) {
       const port = devServer.server.address().port;
       printCompilationMessage("compiling", port);
@@ -84,7 +125,7 @@ module.exports = (_, argv) => ({
     }),
     new ModuleFederationPlugin({
       name: "host",
-      filename: "remoteEntry.js",
+      filename: "host.js",
       remotes: {
         // strategic: process.env.RMU_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
         // tactical: process.env.RMU_MODULE_FEDERATION_TACTICAL || "tactical@http://localhost:8083/tactical-app.js",
@@ -94,46 +135,22 @@ module.exports = (_, argv) => ({
         //tactical: "tactical@http://fe-tactical.rmu.local/tactical-app.js",
         //npc: "npc@http://fe-npc.rmu.local/npc-app.js",
 
+        core: "core@http://localhost:8010/core-app.js",
         strategic: "strategic@http://localhost:8082/strategic-app.js",
         tactical: "tactical@http://localhost:8083/tactical-app.js",
         npc: "npc@http://localhost:8084/npc-app.js",
       },
       exposes: {
-        './theme': './src/theme'
       },
       shared: {
-        'react': {
-          singleton: true,
-          requiredVersion: deps['react'],
-        },
-        'react-dom': {
-          singleton: true,
-          requiredVersion: deps['react-dom'],
-        },
-        'react-router-dom': {
-          singleton: true,
-          requiredVersion: deps['react-router-dom'],
-        },
-        '@mui/material': {
-          singleton: true,
-          requiredVersion: deps['@mui/material'],
-        },
-        '@mui/icons-material': {
-          singleton: true,
-          requiredVersion: deps['@mui/icons-material'],
-        },
-        '@emotion/react': {
-          singleton: true,
-          requiredVersion: deps['@emotion/react'],
-        },
-        '@emotion/styled': {
-          singleton: true,
-          requiredVersion: deps['@emotion/styled'],
-        },
-        'react-router-dom': {
-          singleton: true,
-          requiredVersion: deps['react-router-dom'],
-        },
+        react: { singleton: true, requiredVersion: deps.react },
+        'react-dom': { singleton: true, requiredVersion: deps["react-dom"] },
+        'react-router-dom': { singleton: true, requiredVersion: deps["react-router-dom"] },
+        '@mui/material': { singleton: true, requiredVersion: deps["@mui/material"] },
+        '@mui/icons-material': { singleton: true, requiredVersion: deps["@mui/icons-material"] },
+        '@emotion/react': { singleton: true, requiredVersion: deps["@emotion/react"] },
+        '@emotion/styled': { singleton: true, requiredVersion: deps["@emotion/styled"] },
+
       },
     }),
     new HtmlWebPackPlugin({
