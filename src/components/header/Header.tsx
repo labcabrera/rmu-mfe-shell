@@ -1,30 +1,18 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AdbIcon from '@mui/icons-material/Adb';
-import Container from '@mui/material/Container';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
-import "./header.css";
+import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import UserMenu from './UserMenu';
 
 const pages = [
-  { label: 'Strategic', href: "/strategic" },
-  { label: 'Tactical', href: "/tactical" },
-  { label: 'Characters', href: "/characters" },
-  { label: 'NPC', href: "/npc" }
+  { label: 'Strategic', href: '/strategic' },
+  { label: 'Tactical', href: '/tactical' },
+  { label: 'Characters', href: '/characters' },
+  { label: 'NPC', href: '/npc' },
 ];
 
 const Header = () => {
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -51,16 +39,14 @@ const Header = () => {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              //fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            RMU Online
+            RMU Engine
           </Typography>
-
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -91,7 +77,9 @@ const Header = () => {
             >
               {pages.map((page, index) => (
                 <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Link href={page.href} style={{ textDecoration: 'none', color: 'inherit' }}>{page.label}</Link>
+                  <Link href={page.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {page.label}
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -107,7 +95,6 @@ const Header = () => {
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              //fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
@@ -118,20 +105,12 @@ const Header = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page.label}
-                href={page.href}
-                onClick={handleCloseNavMenu}
-                variant="text"
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
+              <Button key={page.label} href={page.href} onClick={handleCloseNavMenu} variant="text" sx={{ my: 2, color: 'white', display: 'block' }}>
                 {page.label}
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            TODO: USER MENU
-          </Box>
+          <UserMenu userName="Nombre Usuario" avatarUrl="/ruta/a/avatar.png" />
         </Toolbar>
       </Container>
     </AppBar>

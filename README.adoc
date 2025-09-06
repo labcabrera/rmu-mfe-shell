@@ -1,4 +1,17 @@
-= Rolemaster Unified Frontend Host
+= RMU Engine MFE Shell
+:linkattrs:
+:icons: font
+
+image:https://img.shields.io/badge/license-GPL3.0-green.svg[License,link="https://www.gnu.org/licenses/gpl-3.0.html"]
+image:https://img.shields.io/badge/rolemaster-rmu-green.svg[Rolemaster,link="http://ironcrown.co.uk/unified-rolemaster/"]
+image:https://img.shields.io/badge/react-19.1.1-green.svg[React 19.1.1, link="https://www.npmjs.com/package/react/v/19.1.1"]
+image:https://img.shields.io/badge/@mui-7.3.1-green.svg[Material UI 7.3.1, link="https://www.npmjs.com/package/@mui/material/v/7.3.1"]
+
+++++
+<a href="https://www.postman.com/labcabrera/workspace/rmu-engine/collection/5547717-39d04dee-7325-4251-86e5-e1f250cd99f2?action=share&creator=5547717&active-environment=5547717-f0da278a-5cc7-4d6c-8a82-8739ae0d1b0b" target="_blank">
+  <img src="https://run.pstmn.io/button.svg" alt="Run in Postman"/>
+</a>
+++++
 
 React-based microfrontend for tactical games management. This project is the entry point for RMU's microfronteds.
 
@@ -9,37 +22,6 @@ WARNING: *This application is an independent project developed by fans of Rolema
 
 image::diagrams/c4-context.png[Context System]
 
-== Module Federation & Authentication
 
-This host application exposes authentication components and utilities for consumption by remote microservices through Module Federation.
 
-=== Exposed Components
 
-The following authentication components are available to remote modules:
-
-* `host/auth` - Complete authentication module (recommended)
-* `host/AuthContext` - Authentication context and hooks
-* `host/AuthService` - Keycloak authentication service
-* `host/UserMenu` - User menu component with login/logout
-* `host/AuthLoader` - Loading component for auth states
-* `host/ProtectedRoute` - Route protection component
-* `host/AuthDebug` - Debug component for authentication
-
-=== Quick Start for Microservices
-
-```javascript
-// In your microservice
-import { useAuth, ProtectedRoute } from 'host/auth';
-
-function MicroserviceApp() {
-  const { isAuthenticated, user } = useAuth();
-  
-  return (
-    <ProtectedRoute>
-      <div>Welcome {user?.name}!</div>
-    </ProtectedRoute>
-  );
-}
-```
-
-See link:docs/AUTHENTICATION.md[Authentication Documentation] for detailed integration guide.
