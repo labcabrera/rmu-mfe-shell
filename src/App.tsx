@@ -4,9 +4,9 @@ import { Route, Routes } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 
-import Footer from "./components/footer/footer";
-import Header from "./components/header/header";
-import Home from "./components/home/home";
+import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
+import Home from "./components/home/Home";
 import "./index.css";
 
 const RemoteCoreApp = React.lazy(() => import("core/CoreApp"));
@@ -16,10 +16,10 @@ const RemoteNpcApp = React.lazy(() => import("npc/NpcApp"));
 
 import theme from "./theme";
 
-const AppContent = () => {
-
+const App = () => {
   return (
-    <div className="main">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
@@ -32,15 +32,6 @@ const AppContent = () => {
         </Routes>
       </Suspense>
       <Footer />
-    </div>
-  );
-};
-
-const App = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppContent />
     </ThemeProvider>
   );
 };

@@ -14,8 +14,6 @@ import Container from '@mui/material/Container';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-import "./header.css";
-
 const pages = [
   { label: 'Strategic', href: "/strategic" },
   { label: 'Tactical', href: "/tactical" },
@@ -51,7 +49,6 @@ const Header = () => {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              //fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
