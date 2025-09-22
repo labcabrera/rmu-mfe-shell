@@ -16,7 +16,6 @@ const pages = [
 
 const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
