@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useState, MouseEvent } from 'react';
 import { Avatar, Box, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 
 interface UserMenuProps {
@@ -6,10 +6,10 @@ interface UserMenuProps {
   avatarUrl?: string;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '' }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const UserMenu: FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '' }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -21,7 +21,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open menu">
         <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-          <Avatar alt={userName} src="/static/images/avatars/sauron.png">
+          <Avatar alt={userName} src="/static/images/avatars/avatar-000.png" sx={{ width: 60, height: 60 }}>
             {userName[0]}
           </Avatar>
         </IconButton>

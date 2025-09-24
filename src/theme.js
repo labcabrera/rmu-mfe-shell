@@ -1,30 +1,36 @@
 import { createTheme } from '@mui/material/styles';
 
-
 const theme = createTheme({
- palette: {
+  palette: {
     mode: 'dark',
     primary: {
-      main: '#a5d6a7',
+      main: '#d3bb90',
     },
     secondary: {
-      main: '#a5d6a7',
+      main: '#8b9395',
     },
-    divider: '#a5d6a7',
+    divider: '#a6bccf',
     background: {
       paper: '#212121',
     },
+    success: {
+      main: '#a5d6a7',
+    },
     error: {
-      main: '#e57373',
+      main: '#ffab91',
+    },
+    info: {
+      main: '#90caf9',
     },
     text: {
-      disabled: '#616161',
+      disabled: '#969696ff',
     },
   },
   shape: { borderRadius: 10 },
   typography: {
     //fontFamily: 'ringbearer, sans-serif',
-    fontFamily: 'Open Sans, sans-serif',
+    //fontFamily: 'Open Sans, sans-serif',
+    fontFamily: 'sans-serif',
     fontSize: 16,
   },
   components: {

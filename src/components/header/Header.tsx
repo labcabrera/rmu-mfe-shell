@@ -6,15 +6,16 @@ import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolb
 import UserMenu from './UserMenu';
 
 const pages = [
+  { label: 'Core', href: '/core' },
   { label: 'Strategic', href: '/strategic' },
   { label: 'Tactical', href: '/tactical' },
-  { label: 'Characters', href: '/characters' },
-  { label: 'NPC', href: '/npc' },
+  { label: 'NPCs', href: '/npcs' },
+  { label: 'Items', href: '/items' },
+  { label: 'Spells', href: '/spells' },
 ];
 
 const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 

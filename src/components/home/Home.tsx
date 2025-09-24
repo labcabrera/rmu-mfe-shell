@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -12,7 +13,7 @@ const Home = () => {
   return (
     <Card sx={{ maxWidth: 1000, margin: 'auto', mt: 5 }}>
       <Box sx={{ maxWidth: 1000, mx: 'auto', mt: 1, p: 2 }}>
-        <Alert severity="info" sx={{ mb: 2 }}>
+        <Alert severity="warning" sx={{ mb: 2 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by
           Iron Crown Enterprises (ICE), the owners of the Rolemaster intellectual property. All Rolemaster trademarks, game systems, and materials are
           the property of Iron Crown Enterprises. This software is provided for personal, non-commercial use only. If you enjoy Rolemaster, please
@@ -36,17 +37,12 @@ const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={5}>
-            <CardMedia
-              component="img"
-              image="/static/images/generic/strategic.png"
-              alt="Descripción imagen 1"
-              sx={{ width: '100%', borderRadius: 2 }}
-            />
+            <CardMedia component="img" image="/static/images/generic/strategic.png" alt="Strategic module" sx={{ width: '100%', borderRadius: 2 }} />
           </Grid>
           <Grid size={7}>
             <CardContent>
               <Typography variant="h5" gutterBottom>
-                Strategic module
+                <Link href="/strategic">Strategic module</Link>
               </Typography>
               <Typography variant="body1">
                 The strategic module allows us to create a campaign (strategic game) set in a specific realm such as LOTR or Forgotten Realms. Each
@@ -63,7 +59,7 @@ const Home = () => {
           <Grid size={7} order={{ xs: 2, md: 1 }}>
             <CardContent>
               <Typography variant="h5" gutterBottom>
-                Tactical module
+                <Link href="/tactical">Tactical module</Link>
               </Typography>
               <Typography variant="body1">
                 The tactical module allows us to select the factions that will interact, usually through combat. We can create a battle (tactical
@@ -73,12 +69,45 @@ const Home = () => {
             </CardContent>
           </Grid>
           <Grid size={5} order={{ xs: 1, md: 2 }}>
-            <CardMedia
-              component="img"
-              image="/static/images/generic/tactical.png"
-              alt="Descripción imagen 2"
-              sx={{ width: '100%', borderRadius: 2 }}
-            />
+            <CardMedia component="img" image="/static/images/avatars/avatar-017.png" alt="Tactical module" sx={{ width: '100%', borderRadius: 2 }} />
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Grid container spacing={4} alignItems="center">
+          <Grid size={5}>
+            <CardMedia component="img" image="/static/images/generic/configuration.png" alt="Core module" sx={{ width: '100%', borderRadius: 2 }} />
+          </Grid>
+          <Grid size={7}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                <Link href="/core">Core module</Link>
+              </Typography>
+              <Typography variant="body1">
+                The core module provides the basic rules and mechanics for the game, including character creation, skill checks, and combat
+                resolution. It serves as the foundation for the other modules and ensures a consistent gameplay experience.
+              </Typography>
+            </CardContent>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4 }} />
+
+        <Grid container spacing={4} alignItems="center">
+          <Grid size={7} order={{ xs: 2, md: 1 }}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom>
+                <Link href="/npcs">NPC module</Link>
+              </Typography>
+              <Typography variant="body1">
+                The NPC module allows us to manage different characters that are not created using the character creation system, such as animals,
+                predefined characters with predetermined statistics and equipment, dragons, unicorns, and anything else we can think of.
+              </Typography>
+            </CardContent>
+          </Grid>
+          <Grid size={5} order={{ xs: 1, md: 2 }}>
+            <CardMedia component="img" image="/static/images/generic/npcs.png" alt="NPC module" sx={{ width: '100%', borderRadius: 2 }} />
           </Grid>
         </Grid>
       </Box>
