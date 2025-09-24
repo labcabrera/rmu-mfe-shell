@@ -1,6 +1,6 @@
 {
   "name": "host",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
