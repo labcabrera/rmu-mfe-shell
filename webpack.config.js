@@ -137,7 +137,7 @@ module.exports = (_, argv) => ({
         core: 'core@http://localhost:8089/core-app.js',
         strategic: 'strategic@http://localhost:8082/strategic-app.js',
         tactical: 'tactical@http://localhost:8083/tactical-app.js',
-        npc: 'npc@http://localhost:8084/npc-app.js',
+        npcs: 'npcs@http://localhost:8084/npcs-app.js',
       },
       exposes: {},
       shared: {

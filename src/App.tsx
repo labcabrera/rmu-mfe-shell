@@ -11,7 +11,7 @@ import theme from './theme';
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
 const RemoteStrategicApp = React.lazy(() => import('strategic/StrategicApp'));
 const RemoteTacticalApp = React.lazy(() => import('tactical/TacticalApp'));
-const RemoteNpcApp = React.lazy(() => import('npc/NpcApp'));
+const RemoteNpcsApp = React.lazy(() => import('npcs/NpcsApp'));
 
 const App = () => {
   return (
@@ -24,7 +24,7 @@ const App = () => {
           <Route path="/core/*" element={<RemoteCoreApp />} />
           <Route path="/strategic/*" element={<RemoteStrategicApp />} />
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />
-          <Route path="/npc/*" element={<RemoteNpcApp />} />
+          <Route path="/npcs/*" element={<RemoteNpcsApp />} />
           <Route path="/theme/*" element={<ThemeSample />} />
           <Route path="*" element={<div>404 Page not found!</div>} />
         </Routes>
