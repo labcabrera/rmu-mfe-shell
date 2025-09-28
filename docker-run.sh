@@ -1,13 +1,13 @@
 #!/bin/bash
 
-docker stop rmu-fe-host
+docker stop rmu-mfe-shell
 
-docker rm rmu-fe-host
+docker rm rmu-mfe-shell
 
-docker rmi labcabrera/rmu-fe-host:latest
+docker rmi labcabrera/rmu-mfe-shell:latest
 
-docker build -t labcabrera/rmu-fe-host:latest .
+docker build -t labcabrera/rmu-mfe-shell:latest .
 
-docker run -d -p 8080:8080 --network rmu-network --name rmu-fe-host -h rmu-fe-host labcabrera/rmu-fe-host:latest
+docker run -d -p 8080:8080 --network rmu-network --name rmu-mfe-shell -h rmu-mfe-shell labcabrera/rmu-mfe-shell:latest
 
-docker logs -f rmu-fe-host
+docker logs -f rmu-mfe-shell

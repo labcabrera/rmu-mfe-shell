@@ -1,5 +1,5 @@
 {
-  "name": "host",
+  "name": "rmu-mfe-shell",
   "version": "0.5.3",
   "scripts": {
     "build": "webpack --mode production",

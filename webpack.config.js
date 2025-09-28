@@ -11,8 +11,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = (_, argv) => ({
   output: {
     //publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://localhost:8080/",
-    //publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://fe-host.rmu.local/",
-    //publicPath: "http://fe-host.rmu.local/",
     publicPath: 'http://localhost:8080/',
   },
   resolve: {
@@ -125,8 +123,8 @@ module.exports = (_, argv) => ({
       ],
     }),
     new ModuleFederationPlugin({
-      name: 'host',
-      filename: 'host.js',
+      name: 'shell',
+      filename: 'shell.js',
       remotes: {
         // strategic: process.env.RMU_MODULE_FEDERATION_STRATEGIC || "strategic@http://localhost:8082/strategic-app.js",
         // tactical: process.env.RMU_MODULE_FEDERATION_TACTICAL || "tactical@http://localhost:8083/tactical-app.js",
