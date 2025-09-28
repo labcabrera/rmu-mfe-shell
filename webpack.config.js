@@ -63,6 +63,16 @@ module.exports = (_, argv) => ({
           proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
         },
       },
+      {
+        context: ['/dev/api/npcs'],
+        target: 'http://localhost:3008',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/npcs': '' },
+        onProxyReq: function (proxyReq, req, res) {
+          console.log('[proxy npcs] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        },
+      },
     ],
     onListening: function (devServer) {
       const port = devServer.server.address().port;
