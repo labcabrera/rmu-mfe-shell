@@ -13,17 +13,17 @@ const Home = () => {
   return (
     <Card sx={{ maxWidth: 1000, margin: 'auto', mt: 5 }}>
       <Box sx={{ maxWidth: 1000, mx: 'auto', mt: 1, p: 2 }}>
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert severity="info" sx={{ mb: 2 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by
           Iron Crown Enterprises (ICE), the owners of the Rolemaster intellectual property. All Rolemaster trademarks, game systems, and materials are
           the property of Iron Crown Enterprises. This software is provided for personal, non-commercial use only. If you enjoy Rolemaster, please
           support the official publications and content from ICE.
         </Alert>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h4" color="primary" align="center" gutterBottom>
           RMU Engine
         </Typography>
 
-        <Typography variant="body1" color="textSecondary" gutterBottom>
+        <Typography variant="body1" color="primary" gutterBottom>
           This application is an assistant for playing Rolemaster Unified. It supports character and campaign management as well as combat, maneuvers,
           and actions using the following rules:
         </Typography>
