@@ -1,37 +1,17 @@
 import { createTheme } from '@mui/material/styles';
 
-const baseColors = {
-  almostBlack: '#060707',
-  darkSlate: '#282e2f',
-  midSlate: '#495657',
-  mist: '#617274',
-  haze: '#99b3b6ff',
-};
-
 const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: baseColors.haze,
-      light: '#a8b3b4',
-      dark: baseColors.midSlate,
-      contrastText: '#050505',
+      main: '#d3bb90',
     },
     secondary: {
-      main: baseColors.mist,
-      light: baseColors.haze,
-      dark: baseColors.midSlate,
-      contrastText: '#f3f5f5',
+      main: '#8b9395',
     },
+    divider: '#a6bccf',
     background: {
-      default: baseColors.almostBlack,
-      paper: '#171a1b',
-    },
-    divider: baseColors.darkSlate,
-    text: {
-      primary: baseColors.haze,
-      secondary: baseColors.mist,
-      disabled: '#6f7a7c',
+      paper: '#212121',
     },
     success: {
       main: '#a5d6a7',
@@ -41,6 +21,9 @@ const theme = createTheme({
     },
     info: {
       main: '#90caf9',
+    },
+    text: {
+      disabled: '#969696ff',
     },
   },
   shape: { borderRadius: 10 },

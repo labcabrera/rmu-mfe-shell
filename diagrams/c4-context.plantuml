@@ -42,11 +42,11 @@ Rel(user, keycloak, "Login", "HTTP")
 
 Rel(rmu_mfe_shell, keycloak, "Authenticate user", "OIDC")
 
-Rel(rmu_mfe_shell, rmu_mfe_core, "Load", "Module federation")
+Rel(rmu_mfe_shell, rmu_mfe_core, "Load", "Webpack")
 Rel(rmu_mfe_shell, rmu_mfe_strategic, "Load", "Webpack")
-Rel(rmu_mfe_shell, rmu_mfe_tactical, "Load", "Module federation")
-Rel(rmu_mfe_shell, rmu_mfe_npc, "Load", "Module federation")
-Rel(rmu_mfe_shell, rmu_mfe_items, "Load", "Module federation")
+Rel(rmu_mfe_shell, rmu_mfe_tactical, "Load", "Webpack")
+Rel(rmu_mfe_shell, rmu_mfe_npc, "Load", "Webpack")
+Rel(rmu_mfe_shell, rmu_mfe_items, "Load", "Webpack")
 
 Rel(rmu_mfe_core, rmu_api_core, "", "HTTP")
 

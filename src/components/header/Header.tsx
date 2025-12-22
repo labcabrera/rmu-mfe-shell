@@ -33,6 +33,7 @@ const Header = () => {
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
+            color="primary"
             variant="h6"
             noWrap
             component="a"
@@ -42,7 +43,6 @@ const Header = () => {
               display: { xs: 'none', md: 'flex' },
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
               textDecoration: 'none',
             }}
           >
@@ -78,7 +78,7 @@ const Header = () => {
             >
               {pages.map((page, index) => (
                 <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Link href={page.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <Link href={page.href} style={{ textDecoration: 'none', color: 'primary' }}>
                     {page.label}
                   </Link>
                 </MenuItem>
@@ -106,7 +106,7 @@ const Header = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button key={page.label} href={page.href} onClick={handleCloseNavMenu} variant="text" sx={{ my: 2, color: 'white', display: 'block' }}>
+              <Button key={page.label} href={page.href} onClick={handleCloseNavMenu} variant="text" color="primary" sx={{ my: 2, display: 'block' }}>
                 {page.label}
               </Button>
             ))}

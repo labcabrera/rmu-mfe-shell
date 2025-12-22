@@ -63,6 +63,16 @@ module.exports = (_, argv) => ({
           proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
         },
       },
+      {
+        context: ['/dev/api/npcs'],
+        target: 'http://localhost:3008',
+        changeOrigin: true,
+        pathRewrite: { '^/dev/api/npcs': '' },
+        onProxyReq: function (proxyReq, req, res) {
+          console.log('[proxy npcs] Redirect:', req.url, '->', proxyReq.getHeader('host'));
+          proxyReq.setHeader('Authorization', `Bearer ${process.env.TOKEN}`);
+        },
+      },
     ],
     onListening: function (devServer) {
       const port = devServer.server.address().port;
@@ -137,7 +147,7 @@ module.exports = (_, argv) => ({
         core: 'core@http://localhost:8089/core-app.js',
         strategic: 'strategic@http://localhost:8082/strategic-app.js',
         tactical: 'tactical@http://localhost:8083/tactical-app.js',
-        npc: 'npc@http://localhost:8084/npc-app.js',
+        npcs: 'npcs@http://localhost:8084/npcs-app.js',
       },
       exposes: {},
       shared: {
