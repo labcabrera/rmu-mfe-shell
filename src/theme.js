@@ -62,6 +62,24 @@ const theme = createTheme({
     MuiSelect: { defaultProps: { size: 'small' } },
     MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
     MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
+    MuiToggleButton: {
+      defaultProps: { size: 'small' },
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          color: baseColors.haze,
+          backgroundColor: 'transparent',
+          '&:hover': { backgroundColor: 'rgba(153,179,182,0.08)' },
+          '&.Mui-selected': {
+            color: baseColors.almostBlack,
+            backgroundColor: baseColors.haze,
+          },
+          '&.Mui-selected:hover': {
+            backgroundColor: baseColors.midSlate,
+          },
+        },
+      },
+    },
   },
   // components: {
   //   Excluded_MuiCssBaseline: {
