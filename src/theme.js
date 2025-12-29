@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, alpha } from '@mui/material/styles';
 
 const baseColors = {
   almostBlack: '#060707',
@@ -57,7 +57,17 @@ const theme = createTheme({
         '*::-webkit-scrollbar-thumb': { backgroundColor: '#2a2f3a' },
       },
     },
-    MuiButton: { defaultProps: { size: 'small', variant: 'contained' } },
+    MuiButton: {
+      defaultProps: { size: 'small', variant: 'contained' },
+      styleOverrides: {
+        outlined: {
+          color: baseColors.haze,
+          backgroundColor: alpha(baseColors.haze, 0.06),
+          border: `1px solid ${alpha(baseColors.haze, 0.18)}`,
+          '&:hover': { backgroundColor: alpha(baseColors.haze, 0.12) },
+        },
+      },
+    },
     MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
     MuiSelect: { defaultProps: { size: 'small' } },
     MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
@@ -68,8 +78,8 @@ const theme = createTheme({
         root: {
           borderRadius: 8,
           color: baseColors.haze,
-          backgroundColor: 'transparent',
-          '&:hover': { backgroundColor: 'rgba(153,179,182,0.08)' },
+          backgroundColor: alpha(baseColors.haze, 0.06),
+          '&:hover': { backgroundColor: alpha(baseColors.haze, 0.12) },
           '&.Mui-selected': {
             color: baseColors.almostBlack,
             backgroundColor: baseColors.haze,
