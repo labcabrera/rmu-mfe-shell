@@ -25,6 +25,7 @@ const theme = createTheme({
     },
     background: {
       default: baseColors.almostBlack,
+      light: baseColors.darkSlate,
       paper: '#171a1b',
     },
     divider: baseColors.darkSlate,
