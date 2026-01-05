@@ -185,11 +185,286 @@ const ThemeSample = () => {
           Sample font family monaco. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
           magna aliqua.
         </Typography>
-        <Typography variant="body1" gutterBottom fontFamily={'fantasy'}>
-          Sample font family fantasy. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua.
-        </Typography>
         <Divider />
+      </Grid>
+
+      <Grid size={12}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center', mt: 2 }}>
+          <Typography variant="h6" sx={{ width: '100%' }}>
+            Paleta (muestras)
+          </Typography>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.primary.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.primary.main),
+            }}
+          >
+            primary.main
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.primary.light,
+              color: (t: any) => t.palette.getContrastText(t.palette.primary.light),
+            }}
+          >
+            primary.light
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.primary.dark,
+              color: (t: any) => t.palette.getContrastText(t.palette.primary.dark),
+            }}
+          >
+            primary.dark
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.secondary.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.secondary.main),
+            }}
+          >
+            secondary.main
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.secondary.light,
+              color: (t: any) => t.palette.getContrastText(t.palette.secondary.light),
+            }}
+          >
+            secondary.light
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.secondary.dark,
+              color: (t: any) => t.palette.getContrastText(t.palette.secondary.dark),
+            }}
+          >
+            secondary.dark
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.background.default,
+              color: (t: any) => t.palette.getContrastText(t.palette.background.default),
+            }}
+          >
+            background.default
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.background.paper,
+              color: (t: any) => t.palette.getContrastText(t.palette.background.paper),
+            }}
+          >
+            background.paper
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => (t.palette as any).background.light || (t.palette as any).background.light,
+              color: (t: any) => t.palette.getContrastText((t.palette as any).background.light || (t.palette as any).background.light),
+            }}
+          >
+            background.light
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.text.primary,
+              color: (t: any) => t.palette.getContrastText(t.palette.text.primary),
+            }}
+          >
+            text.primary
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.text.secondary,
+              color: (t: any) => t.palette.getContrastText(t.palette.text.secondary),
+            }}
+          >
+            text.secondary
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.text.disabled,
+              color: (t: any) => t.palette.getContrastText(t.palette.text.disabled),
+            }}
+          >
+            text.disabled
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.divider,
+              color: (t: any) => t.palette.getContrastText(t.palette.divider),
+            }}
+          >
+            divider
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.success.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.success.main),
+            }}
+          >
+            success.main
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.error.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.error.main),
+            }}
+          >
+            error.main
+          </Box>
+
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.info.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.info.main),
+            }}
+          >
+            info.main
+          </Box>
+          <Box
+            sx={{
+              width: 240,
+              height: 64,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 1,
+              m: 0.5,
+              backgroundColor: (t: any) => t.palette.warning.main,
+              color: (t: any) => t.palette.getContrastText(t.palette.warning.main),
+            }}
+          >
+            warning.main
+          </Box>
+        </Box>
       </Grid>
     </Grid>
   );

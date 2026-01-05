@@ -40,6 +40,10 @@ const theme = createTheme({
     error: {
       main: '#ffab91',
     },
+    // Warning: ligero, tomando referencia entre error (rojo) y success (verde)
+    warning: {
+      main: '#e6dbb3ff',
+    },
     info: {
       main: '#90caf9',
     },
