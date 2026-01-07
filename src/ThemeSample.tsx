@@ -466,6 +466,13 @@ const ThemeSample = () => {
           </Box>
         </Box>
       </Grid>
+      <Grid size={12}>
+        {Array.from({ length: 11 }, (_, i) => (
+          <Paper key={i} elevation={i} sx={{ p: 2, mt: 2 }}>
+            <Typography variant="body1">paper.{i}</Typography>
+          </Paper>
+        ))}
+      </Grid>
     </Grid>
   );
 };

@@ -6,6 +6,9 @@ const baseColors = {
   midSlate: '#495657',
   mist: '#617274',
   haze: '#99b3b6ff',
+  dialogBackground: '#222626ff',
+  dialogBackgroundTop: '#181818ff',
+  backgroundDark: '#131414',
 };
 
 const theme = createTheme({
@@ -26,7 +29,7 @@ const theme = createTheme({
     background: {
       default: baseColors.almostBlack,
       light: baseColors.darkSlate,
-      paper: '#171a1b',
+      paper: baseColors.backgroundDark,
     },
     divider: baseColors.darkSlate,
     text: {
@@ -42,7 +45,8 @@ const theme = createTheme({
     },
     // Warning: ligero, tomando referencia entre error (rojo) y success (verde)
     warning: {
-      main: '#e6dbb3ff',
+      // main: '#e6dbb3ff',
+      main: '#e6e68d',
     },
     info: {
       main: '#90caf9',
@@ -75,7 +79,7 @@ const theme = createTheme({
     },
     MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
     MuiSelect: { defaultProps: { size: 'small' } },
-    MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
+    //MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
     MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
     MuiToggleButton: {
       defaultProps: { size: 'small' },
@@ -92,6 +96,41 @@ const theme = createTheme({
           '&.Mui-selected:hover': {
             backgroundColor: baseColors.midSlate,
           },
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: baseColors.dialogBackground,
+          overflow: 'hidden',
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          background: `linear-gradient(180deg, ${baseColors.dialogBackgroundTop} 0%, ${baseColors.dialogBackground} 100%)`,
+          padding: '16px 24px',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          background: `linear-gradient(180deg, ${baseColors.dialogBackground} 0%, ${baseColors.dialogBackgroundTop} 100%)`,
+          // padding: '12px 16px',
+          borderBottomLeftRadius: 10,
+          borderBottomRightRadius: 10,
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          backgroundColor: baseColors.dialogBackground,
         },
       },
     },
