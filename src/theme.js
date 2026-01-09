@@ -43,10 +43,9 @@ const theme = createTheme({
     error: {
       main: '#ffab91',
     },
-    // Warning: ligero, tomando referencia entre error (rojo) y success (verde)
     warning: {
       // main: '#e6dbb3ff',
-      main: '#e6e68d',
+      main: '#ebeb75ff',
     },
     info: {
       main: '#90caf9',
@@ -54,8 +53,6 @@ const theme = createTheme({
   },
   shape: { borderRadius: 10 },
   typography: {
-    //fontFamily: 'ringbearer, sans-serif',
-    //fontFamily: 'Open Sans, sans-serif',
     fontFamily: 'sans-serif',
     fontSize: 16,
   },
@@ -79,7 +76,6 @@ const theme = createTheme({
     },
     MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
     MuiSelect: { defaultProps: { size: 'small' } },
-    //MuiPaper: { styleOverrides: { root: { backdropFilter: 'saturate(120%) blur(4px)' } } },
     MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
     MuiToggleButton: {
       defaultProps: { size: 'small' },
@@ -95,6 +91,14 @@ const theme = createTheme({
           },
           '&.Mui-selected:hover': {
             backgroundColor: baseColors.midSlate,
+          },
+          '&.Mui-disabled': {
+            border: `1px solid ${alpha(baseColors.darkSlate, 0.36)}`,
+            color: alpha(baseColors.mist, 0.9),
+            backgroundColor: alpha(baseColors.haze, 0.03),
+          },
+          '&.Mui-disabled:hover': {
+            backgroundColor: alpha(baseColors.darkSlate, 0.12),
           },
         },
       },
@@ -121,7 +125,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           background: `linear-gradient(180deg, ${baseColors.dialogBackground} 0%, ${baseColors.dialogBackgroundTop} 100%)`,
-          // padding: '12px 16px',
           borderBottomLeftRadius: 10,
           borderBottomRightRadius: 10,
         },
@@ -135,19 +138,6 @@ const theme = createTheme({
       },
     },
   },
-  // components: {
-  //   Excluded_MuiCssBaseline: {
-  //     styleOverrides: `
-  //       @font-face {
-  //         font-family: 'ringbearer';
-  //         src: url('/static/fonts/anirm___.ttf') format('truetype');
-  //       }
-  //       body {
-  //         font-family: 'ringbearer', sans-serif;
-  //       }
-  //     `,
-  //   },
-  // },
 });
 
 export default theme;
