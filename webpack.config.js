@@ -10,18 +10,25 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (_, argv) => ({
   output: {
-    //publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || "http://localhost:8080/",
-    publicPath: 'http://localhost:8080/',
+    // Use an env var for public path when provided, otherwise use relative paths
+    publicPath: process.env.RMU_FE_HOST_PUBLIC_PATH || '/',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
   },
   devServer: {
+    host: '0.0.0.0',
     historyApiFallback: true,
     allowedHosts: 'all',
     port: 8080,
     historyApiFallback: true,
     watchFiles: [path.resolve(__dirname, 'src')],
+    client: {
+      webSocketURL: {
+        hostname: process.env.RMU_FE_HOST || 'auto',
+        port: 8080,
+      },
+    },
     proxy: [
       {
         context: ['/dev/api/core'],
