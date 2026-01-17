@@ -15,42 +15,91 @@ const ModuleFederationPlugin = require_('webpack/lib/container/ModuleFederationP
 const deps = require_('./package.json').dependencies;
 const printCompilationMessage = require_('./compilation.config.js');
 
-function loadEnv(envFile: string) {
+function fileExists(p: string) {
   try {
-    require('dotenv').config({ path: envFile });
+    return fs.existsSync(p);
   } catch (e) {
-    try {
-      const content = fs.readFileSync(envFile, 'utf8');
-      content.split(/\r?\n/).forEach((line) => {
-        const m = line.match(/^\s*([A-Za-z0-9_\.\-]+)\s*=\s*(.*)\s*$/);
-        if (!m) return;
-        let key = m[1];
-        let val = m[2] || '';
-        if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
-        if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
-        if (process.env[key] === undefined) process.env[key] = val;
-      });
-    } catch (e2) {
-      // ignore
-    }
+    return false;
   }
 }
 
+function parseEnvFile(envFile: string) {
+  try {
+    const dotenv = require('dotenv');
+    const res = dotenv.config({ path: envFile });
+    if (res && res.parsed) {
+      Object.keys(res.parsed).forEach((k) => {
+        if (process.env[k] === undefined) process.env[k] = res.parsed![k];
+      });
+      return true;
+    }
+  } catch (e) {
+    // continue to fallback
+  }
+
+  try {
+    const content = fs.readFileSync(envFile, 'utf8');
+    content.split(/\r?\n/).forEach((line) => {
+      const m = line.match(/^\s*([A-Za-z0-9_\.\-]+)\s*=\s*(.*)\s*$/);
+      if (!m) return;
+      let key = m[1];
+      let val = m[2] || '';
+      if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+      if (val.startsWith("'") && val.endsWith("'")) val = val.slice(1, -1);
+      if (process.env[key] === undefined) process.env[key] = val;
+    });
+    return true;
+  } catch (e2) {
+    return false;
+  }
+}
+
+/**
+ * Load .env files following common dotenv conventions (order matters):
+ * 1. .env
+ * 2. .env.local (unless production)
+ * 3. .env.{mode}
+ * 4. .env.{mode}.local (unless production)
+ */
+function loadEnvFiles(mode?: string) {
+  const files: string[] = [];
+  files.push('.env');
+  if (mode !== 'production') files.push('.env.local');
+  if (mode) files.push(`.env.${mode}`);
+  if (mode && mode !== 'production') files.push(`.env.${mode}.local`);
+
+  files.forEach((f) => {
+    if (fileExists(f)) {
+      try {
+        parseEnvFile(f);
+        // eslint-disable-next-line no-console
+        console.debug(`[webpack] loaded env file ${f}`);
+      } catch (e) {
+        // ignore parse errors
+      }
+    }
+  });
+}
+
 export default function (_: any, argv: any): Configuration & { devServer?: DevServerConfiguration } {
-  const envFile = argv && argv.mode === 'production' ? '.env.production' : '.env';
-  loadEnv(envFile);
+  const mode: string | undefined = argv && argv.mode;
+  loadEnvFiles(mode);
 
   // compute websocket hostname/port for devServer client from an env var
-  const wsDefaults = { hostname: 'auto', port: 8080 };
-  const wsRaw = process.env.RMU_MFE_SHELL_PUBLIC_PATH || process.env.RMU_FE_HOST || '';
+  const wsDefaults = { hostname: 'auto', port: process.env.PORT ? Number(process.env.PORT) : 8010 };
+  const wsRaw = process.env.RMU_MFE_SHELL_PUBLIC_PATH || process.env.RMU_FE_HOST || process.env.RMU_FE_HOST_PUBLIC_PATH || '';
+
   const wsConfig = ((): { hostname: string; port: number } => {
     if (!wsRaw) return wsDefaults;
     try {
       const u = new URL(wsRaw);
       return { hostname: u.hostname || wsDefaults.hostname, port: u.port ? Number(u.port) : wsDefaults.port };
     } catch (e) {
-      // fallback: strip protocol and trailing slash
-      const stripped = wsRaw.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      // fallback: strip protocol, path and trailing slash
+      const stripped = wsRaw
+        .replace(/^https?:\/\//, '')
+        .replace(/\/.*$/, '')
+        .replace(/\/$/, '');
       const [h, p] = stripped.split(':');
       return { hostname: h || wsDefaults.hostname, port: p ? Number(p) : wsDefaults.port };
     }
@@ -67,7 +116,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       host: '0.0.0.0',
       historyApiFallback: true,
       allowedHosts: 'all',
-      port: 8080,
+      port: process.env.PORT ? Number(process.env.PORT) : 8010,
       watchFiles: [path.resolve(__dirname, 'src')],
       client: {
         webSocketURL: {
