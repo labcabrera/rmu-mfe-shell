@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Export access tokena and start the app in live mode
-
 set -a
-source ./.env
+source ./.env.development
 set -e
 
 read_access_token() {

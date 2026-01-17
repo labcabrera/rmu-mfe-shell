@@ -2,11 +2,11 @@
   "name": "rmu-mfe-shell",
   "version": "0.6.1",
   "scripts": {
-    "build": "webpack --mode production",
-    "build:dev": "webpack --mode development",
+    "build": "NODE_OPTIONS='-r ts-node/register' webpack --config webpack.config.ts --mode production",
+    "build:dev": "NODE_OPTIONS='-r ts-node/register' webpack --config webpack.config.ts --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
-    "start": "webpack serve --mode development",
-    "start:live": "webpack serve --mode development --live-reload --hot",
+    "start": "NODE_OPTIONS='-r ts-node/register' webpack serve --config webpack.config.ts --mode development",
+    "start:live": "NODE_OPTIONS='-r ts-node/register' webpack serve --config webpack.config.ts --mode development --live-reload --hot",
     "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/icons-material/esm/package.json"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
@@ -47,6 +47,7 @@
     "babel-loader": "^10.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
+    "dotenv": "^17.2.3",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
@@ -61,6 +62,7 @@
     "prettier": "^3.6.2",
     "style-loader": "^4.0.0",
     "typescript": "^5.9.2",
+    "ts-node": "^10.9.1",
     "webpack": "^5.95.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"

@@ -22,6 +22,12 @@ WARNING: *This application is an independent project developed by fans of Rolema
 
 image::diagrams/c4-context.png[Context System]
 
+## Local build
 
+----
+npm run build
+
+npx serve -l 8080 dist
+----
 
 
