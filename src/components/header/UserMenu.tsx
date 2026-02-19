@@ -1,5 +1,6 @@
 import React, { FC, useState, MouseEvent } from 'react';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/auth/AuthProvider';
 
 interface UserMenuProps {
@@ -10,6 +11,7 @@ interface UserMenuProps {
 const UserMenu: FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '' }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { isAuthenticated, user, login, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -67,9 +69,14 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '' }) =
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
-          <Typography textAlign="center">Profile</Typography>
-        </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleCloseMenu();
+              navigate('/user-profile');
+            }}
+          >
+            <Typography textAlign="center">Profile</Typography>
+          </MenuItem>
         <MenuItem onClick={handleCloseMenu}>
           <Typography textAlign="center">Settings</Typography>
         </MenuItem>

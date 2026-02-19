@@ -7,6 +7,7 @@ import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import Home from './components/home/Home';
 import theme from './theme';
+import UserProfile from './components/user/UserProfile';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
 const RemoteStrategicApp = React.lazy(() => import('strategic/StrategicApp'));
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />
           <Route path="/npcs/*" element={<RemoteNpcsApp />} />
           <Route path="/theme/*" element={<ThemeSample />} />
+          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="*" element={<div>404 Page not found!</div>} />
         </Routes>
       </Suspense>
