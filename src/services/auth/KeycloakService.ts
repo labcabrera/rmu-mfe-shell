@@ -41,10 +41,6 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
       // remove fragment without reloading
       const url = window.location.href.replace(window.location.hash, '');
       window.history.replaceState({}, document.title, url);
-      // mark recent failed login to avoid immediate retries
-      try {
-        sessionStorage.setItem('kc_last_login_attempt', Date.now().toString());
-      } catch (e) {}
     } catch (e) {
       // ignore
     }
@@ -143,35 +139,9 @@ export function getToken(): string | undefined {
   return keycloak?.token;
 }
 
-const LOGIN_GUARD_KEY = 'kc_last_login_attempt';
-const LOGIN_GUARD_TTL = 30 * 1000; // ms
-
-function shouldAttemptLogin() {
-  try {
-    const raw = sessionStorage.getItem(LOGIN_GUARD_KEY);
-    if (!raw) return true;
-    const last = parseInt(raw, 10) || 0;
-    return Date.now() - last > LOGIN_GUARD_TTL;
-  } catch (e) {
-    return true;
-  }
-}
-
-function markLoginAttempt() {
-  try {
-    sessionStorage.setItem(LOGIN_GUARD_KEY, Date.now().toString());
-  } catch (e) {}
-}
-
 export function login() {
   if (!keycloak) return;
-  if (!shouldAttemptLogin()) {
-    console.warn('[KeycloakService] skipping login: recent attempt recorded');
-    return;
-  }
-  markLoginAttempt();
   console.info('[KeycloakService] initiating login with pkceMethod=S256');
-  // Some environments require explicitly passing pkceMethod; include it to ensure PKCE params are sent.
   try {
     // @ts-ignore - keycloak-js types may not include pkceMethod on login options
     return keycloak.login({ pkceMethod: 'S256' });
