@@ -6,8 +6,8 @@ import ThemeSample from './ThemeSample';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import Home from './components/home/Home';
-import theme from './theme';
 import UserProfile from './components/user/UserProfile';
+import theme from './theme';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
 const RemoteStrategicApp = React.lazy(() => import('strategic/StrategicApp'));
