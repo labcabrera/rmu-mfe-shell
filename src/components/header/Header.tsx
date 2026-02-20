@@ -117,7 +117,7 @@ const Header = () => {
               </Button>
             ))}
           </Box>
-          <UserMenu userName="Nombre Usuario" avatarUrl="/ruta/a/avatar.png" />
+          <UserMenu userName="Nombre Usuario" avatarUrl="/static/images/generic/races.png" />
         </Toolbar>
       </Container>
     </AppBar>

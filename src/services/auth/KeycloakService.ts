@@ -4,6 +4,9 @@ let keycloak: KeycloakInstance | null = null;
 
 const REFRESH_INTERVAL = 20; // seconds to try refresh before expiring
 
+const STORAGE_TOKEN_KEY = 'rmu.token';
+const STORAGE_PROFILE_KEY = 'rmu.profile';
+
 export interface KeycloakConfig {
   url: string;
   realm: string;
@@ -69,11 +72,29 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
 
   // attach event handlers for diagnostics and to avoid loops
   if (keycloak) {
-    keycloak.onAuthSuccess = () => console.info('[KeycloakService] onAuthSuccess');
+    keycloak.onAuthSuccess = async () => {
+      console.info('[KeycloakService] onAuthSuccess');
+      try {
+        sessionStorage.setItem(STORAGE_TOKEN_KEY, keycloak?.token ?? '');
+        const profile = await keycloak?.loadUserProfile();
+        if (profile) sessionStorage.setItem(STORAGE_PROFILE_KEY, JSON.stringify(profile));
+      } catch (e) {}
+    };
     keycloak.onAuthError = (err) => console.error('[KeycloakService] onAuthError', err);
     keycloak.onAuthRefreshError = () => console.error('[KeycloakService] onAuthRefreshError');
-    keycloak.onAuthRefreshSuccess = () => console.info('[KeycloakService] onAuthRefreshSuccess');
-    keycloak.onAuthLogout = () => console.info('[KeycloakService] onAuthLogout');
+    keycloak.onAuthRefreshSuccess = () => {
+      console.info('[KeycloakService] onAuthRefreshSuccess');
+      try {
+        sessionStorage.setItem(STORAGE_TOKEN_KEY, keycloak?.token ?? '');
+      } catch (e) {}
+    };
+    keycloak.onAuthLogout = () => {
+      console.info('[KeycloakService] onAuthLogout');
+      try {
+        sessionStorage.removeItem(STORAGE_TOKEN_KEY);
+        sessionStorage.removeItem(STORAGE_PROFILE_KEY);
+      } catch (e) {}
+    };
     keycloak.onTokenExpired = () => {
       console.warn('[KeycloakService] token expired');
       // try refreshing token but avoid immediate login redirect loops
@@ -103,8 +124,38 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
     try {
       const profile = await keycloak.loadUserProfile();
       (window as any).RMU_AUTH.profile = profile;
+      try {
+        sessionStorage.setItem(STORAGE_TOKEN_KEY, keycloak.token ?? '');
+        sessionStorage.setItem(STORAGE_PROFILE_KEY, JSON.stringify(profile));
+      } catch (e) {}
     } catch (e) {
       // ignore
+    }
+  }
+
+  // If Keycloak failed to initialize but we have a stored token/profile, adopt them
+  // to keep the UI authenticated across reloads without triggering silent SSO.
+  if ((!keycloak || !keycloak.authenticated) && typeof sessionStorage !== 'undefined') {
+    const storedToken = sessionStorage.getItem(STORAGE_TOKEN_KEY);
+    const storedProfile = sessionStorage.getItem(STORAGE_PROFILE_KEY);
+    if (storedToken) {
+      try {
+        keycloak = new Keycloak({ url: cfg.url, realm: cfg.realm, clientId: cfg.clientId });
+        // @ts-ignore
+        keycloak.token = storedToken;
+        // @ts-ignore
+        keycloak.authenticated = true;
+        (window as any).RMU_AUTH = {
+          token: storedToken,
+          isAuthenticated: true,
+          login: () => login(),
+          logout: (options?: any) => logout(options),
+          profile: storedProfile ? JSON.parse(storedProfile) : null,
+        };
+        console.info('[KeycloakService] adopted session from sessionStorage');
+      } catch (e) {
+        // ignore adoption errors
+      }
     }
   }
 
@@ -189,7 +240,13 @@ export function getKeycloak() {
 }
 
 export function getToken(): string | undefined {
-  return keycloak?.token;
+  if (keycloak?.token) return keycloak.token;
+  try {
+    const t = sessionStorage.getItem(STORAGE_TOKEN_KEY);
+    return t ?? undefined;
+  } catch (e) {
+    return undefined;
+  }
 }
 
 export function login() {
@@ -205,28 +262,85 @@ export function login() {
 }
 
 export function logout(options?: any) {
+  try {
+    sessionStorage.removeItem(STORAGE_TOKEN_KEY);
+    sessionStorage.removeItem(STORAGE_PROFILE_KEY);
+  } catch (e) {}
+  try {
+    sessionStorage.setItem('rmu.logging_out', '1');
+  } catch (e) {}
   return keycloak?.logout(options);
 }
 
 export function isAuthenticated() {
-  return !!keycloak?.authenticated;
+  if (keycloak?.authenticated) return true;
+  try {
+    return !!sessionStorage.getItem(STORAGE_TOKEN_KEY);
+  } catch (e) {
+    return false;
+  }
 }
 
 export async function getProfile() {
-  if (!keycloak) return null;
-  try {
-    return await keycloak.loadUserProfile();
-  } catch (e) {
-    return null;
+  if (keycloak) {
+    try {
+      return await keycloak.loadUserProfile();
+    } catch (e) {
+      return null;
+    }
   }
+  // If no Keycloak instance, fall back to sessionStorage-stored profile
+  try {
+    const stored = sessionStorage.getItem(STORAGE_PROFILE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) {}
+  return null;
+}
+
+// Synchronous read of stored profile from sessionStorage (fast path for UI hydration)
+export function getStoredProfile(): any | null {
+  try {
+    const stored = sessionStorage.getItem(STORAGE_PROFILE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch (e) {}
+  return null;
+}
+
+/**
+ * Fetch the Keycloak account endpoint using the stored token.
+ * Returns parsed JSON on 2xx, otherwise throws an error with `status`.
+ */
+export async function fetchAccount(): Promise<any> {
+  const token = getToken();
+  if (!token) throw Object.assign(new Error('no-token'), { status: 401 });
+  const url = `${defaultConfig.url.replace(/\/$/, '')}/realms/${defaultConfig.realm}/account`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+    credentials: 'omit',
+  });
+  if (!res.ok) {
+    const err: any = new Error('account-fetch-failed');
+    err.status = res.status;
+    try {
+      err.body = await res.text();
+    } catch (e) {}
+    throw err;
+  }
+  return await res.json();
 }
 
 export default {
   initKeycloak,
+  silentCheckForSession,
   getKeycloak,
   getToken,
   login,
   logout,
   isAuthenticated,
   getProfile,
+  getStoredProfile,
 };
