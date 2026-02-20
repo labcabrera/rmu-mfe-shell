@@ -131,6 +131,59 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
   return keycloak;
 }
 
+/**
+ * Attempt a silent SSO check using a temporary Keycloak instance.
+ * If a session exists, adopt the authenticated instance as the main keycloak.
+ */
+export async function silentCheckForSession(timeoutMs = 5000): Promise<boolean> {
+  const cfg = defaultConfig;
+  const tmp = new Keycloak({ url: cfg.url, realm: cfg.realm, clientId: cfg.clientId });
+  let timer: any;
+  try {
+    const p = tmp.init({
+      onLoad: 'check-sso',
+      pkceMethod: 'S256',
+      silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
+      checkLoginIframe: false,
+    });
+    const res = await Promise.race([
+      p,
+      new Promise((_, rej) => {
+        timer = setTimeout(() => rej(new Error('silent-check-timeout')), timeoutMs);
+      }),
+    ]);
+    clearTimeout(timer);
+    if (res && tmp.authenticated) {
+      // adopt tmp as main instance
+      keycloak = tmp;
+      // update RMU_AUTH
+      (window as any).RMU_AUTH = {
+        token: keycloak.token,
+        isAuthenticated: keycloak.authenticated,
+        login: () => login(),
+        logout: (options?: any) => logout(options),
+        profile: null,
+      };
+      try {
+        const profile = await keycloak.loadUserProfile();
+        (window as any).RMU_AUTH.profile = profile;
+      } catch (e) {}
+      console.info('[KeycloakService] silent SSO found session and adopted it');
+      return true;
+    }
+    return false;
+  } catch (e) {
+    clearTimeout(timer);
+    console.info('[KeycloakService] silent SSO check failed or timed out', e);
+    try {
+      // ensure to cleanup tmp
+      // @ts-ignore
+      if (tmp && tmp.clear) tmp.clear();
+    } catch (err) {}
+    return false;
+  }
+}
+
 export function getKeycloak() {
   return keycloak;
 }

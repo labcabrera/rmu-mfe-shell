@@ -37,6 +37,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           .catch(() => {});
       }
     }
+    // Attempt a silent SSO check on load (non-blocking). If found, update state.
+    (async () => {
+      try {
+        const ok = await KeycloakService.silentCheckForSession(5000);
+        if (ok && mounted) {
+          setIsAuthenticated(!!KeycloakService.getKeycloak()?.authenticated);
+          setToken(KeycloakService.getToken() ?? null);
+          const prof = await KeycloakService.getProfile();
+          if (mounted) setUser(prof);
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
     // keep window.RMU_AUTH in sync
     (window as any).RMU_AUTH = {
       token: KeycloakService.getToken(),
