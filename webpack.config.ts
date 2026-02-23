@@ -1,4 +1,5 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import Dotenv from 'dotenv-webpack';
 import fs from 'fs';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 import { createRequire } from 'module';
@@ -98,9 +99,15 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
     }
   })();
 
+  // normalize websocket host/port for dev: avoid passing literal 'auto' which
+  // some browsers (Firefox) may treat as a real hostname. Use localhost when
+  // in development unless an explicit env override is provided.
+  const devServerPort = process.env.PORT ? Number(process.env.PORT) : 8010;
+  const wsHostnameResolved = wsConfig.hostname === 'auto' && mode !== 'production' ? process.env.WS_HOST || 'localhost' : wsConfig.hostname;
+
   return {
     output: {
-      publicPath: process.env.RMU_MFE_SHELL_PUBLIC_PATH || '/',
+      publicPath: mode === 'production' ? process.env.RMU_MFE_SHELL_PUBLIC_PATH || '/' : '/',
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
@@ -113,8 +120,8 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       watchFiles: [path.resolve(__dirname, 'src')],
       client: {
         webSocketURL: {
-          hostname: wsConfig.hostname,
-          port: wsConfig.port,
+          hostname: wsHostnameResolved,
+          port: devServerPort,
         },
       },
       proxy: [
@@ -217,6 +224,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       ],
     },
     plugins: [
+      new Dotenv({ systemvars: true }),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -249,6 +257,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
         template: './src/index.html',
         favicon: './src/assets/react.256x228.png',
       }),
+      // Fast Refresh intentionally disabled for React 19 compatibility
     ],
   };
 }

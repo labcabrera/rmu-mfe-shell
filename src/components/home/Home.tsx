@@ -9,6 +9,8 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+const imageBaseUrl = process.env.RMU_MFE_ASSETS!;
+
 const Home = () => {
   return (
     <Card sx={{ maxWidth: 1000, margin: 'auto', mt: 5 }}>
@@ -37,7 +39,12 @@ const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={5}>
-            <CardMedia component="img" image="/static/images/generic/strategic.png" alt="Strategic module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/strategic.png`}
+              alt="Strategic module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
           <Grid size={7}>
             <CardContent>
@@ -69,7 +76,12 @@ const Home = () => {
             </CardContent>
           </Grid>
           <Grid size={5} order={{ xs: 1, md: 2 }}>
-            <CardMedia component="img" image="/static/images/avatars/avatar-017.png" alt="Tactical module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/tactical.png`}
+              alt="Tactical module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
         </Grid>
 
@@ -77,7 +89,12 @@ const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={5}>
-            <CardMedia component="img" image="/static/images/generic/configuration.png" alt="Core module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/configuration.png`}
+              alt="Core module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
           <Grid size={7}>
             <CardContent>
@@ -107,7 +124,7 @@ const Home = () => {
             </CardContent>
           </Grid>
           <Grid size={5} order={{ xs: 1, md: 2 }}>
-            <CardMedia component="img" image="/static/images/generic/npcs.png" alt="NPC module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia component="img" image={`${imageBaseUrl}images/generic/npcs.png`} alt="NPC module" sx={{ width: '100%', borderRadius: 2 }} />
           </Grid>
         </Grid>
       </Box>

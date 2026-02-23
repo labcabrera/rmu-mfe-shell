@@ -5,6 +5,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import UserMenu from './UserMenu';
 
+const imageBaseUrl = process.env.RMU_MFE_ASSETS!;
+
 const pages = [
   { label: 'Core', href: '/core' },
   { label: 'Strategic', href: '/strategic' },
@@ -100,7 +102,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            RMU Engine
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -117,7 +119,7 @@ const Header = () => {
               </Button>
             ))}
           </Box>
-          <UserMenu userName="Nombre Usuario" avatarUrl="/static/images/generic/races.png" />
+          <UserMenu userName="Nombre Usuario" avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
         </Toolbar>
       </Container>
     </AppBar>
