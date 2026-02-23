@@ -16,14 +16,6 @@ const ModuleFederationPlugin = require_('webpack/lib/container/ModuleFederationP
 const deps = require_('./package.json').dependencies;
 const printCompilationMessage = require_('./compilation.config.js');
 
-function fileExists(p: string) {
-  try {
-    return fs.existsSync(p);
-  } catch (e) {
-    return false;
-  }
-}
-
 function parseEnvFile(envFile: string) {
   try {
     const dotenv = require('dotenv');
@@ -34,10 +26,7 @@ function parseEnvFile(envFile: string) {
       });
       return true;
     }
-  } catch (e) {
-    // continue to fallback
-  }
-
+  } catch (ignore) {}
   try {
     const content = fs.readFileSync(envFile, 'utf8');
     content.split(/\r?\n/).forEach((line) => {
@@ -50,28 +39,20 @@ function parseEnvFile(envFile: string) {
       if (process.env[key] === undefined) process.env[key] = val;
     });
     return true;
-  } catch (e2) {
+  } catch (ignore) {
     return false;
   }
 }
 
 function loadEnvFiles(mode?: string) {
+  console.log(`[webpack] loading env files for mode: ${mode || 'N/A'}`);
   const files: string[] = [];
-  files.push('.env');
-  if (mode !== 'production') files.push('.env.local');
   if (mode) files.push(`.env.${mode}`);
-  if (mode && mode !== 'production') files.push(`.env.${mode}.local`);
-
   files.forEach((f) => {
-    if (fileExists(f)) {
-      try {
-        parseEnvFile(f);
-        // eslint-disable-next-line no-console
-        console.debug(`[webpack] loaded env file ${f}`);
-      } catch (e) {
-        // ignore parse errors
-      }
-    }
+    try {
+      parseEnvFile(f);
+      console.debug(`[webpack] loaded env file ${f}`);
+    } catch (ignore) {}
   });
 }
 
@@ -79,8 +60,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
   const mode: string | undefined = argv && argv.mode;
   loadEnvFiles(mode);
 
-  // compute websocket hostname/port for devServer client from an env var
-  const wsDefaults = { hostname: 'auto', port: process.env.PORT ? Number(process.env.PORT) : 8010 };
+  const wsDefaults = { hostname: 'auto', port: process.env.PORT ? Number(process.env.PORT) : 8080 };
   const wsRaw = process.env.RMU_MFE_SHELL_PUBLIC_PATH || process.env.RMU_FE_HOST || process.env.RMU_FE_HOST_PUBLIC_PATH || '';
 
   const wsConfig = ((): { hostname: string; port: number } => {
@@ -89,7 +69,6 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       const u = new URL(wsRaw);
       return { hostname: u.hostname || wsDefaults.hostname, port: u.port ? Number(u.port) : wsDefaults.port };
     } catch (e) {
-      // fallback: strip protocol, path and trailing slash
       const stripped = wsRaw
         .replace(/^https?:\/\//, '')
         .replace(/\/.*$/, '')
@@ -99,9 +78,6 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
     }
   })();
 
-  // normalize websocket host/port for dev: avoid passing literal 'auto' which
-  // some browsers (Firefox) may treat as a real hostname. Use localhost when
-  // in development unless an explicit env override is provided.
   const devServerPort = process.env.PORT ? Number(process.env.PORT) : 8010;
   const wsHostnameResolved = wsConfig.hostname === 'auto' && mode !== 'production' ? process.env.WS_HOST || 'localhost' : wsConfig.hostname;
 
@@ -124,6 +100,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           port: devServerPort,
         },
       },
+      //TODO remove proxy configuration
       proxy: [
         {
           context: ['/dev/api/core'],
@@ -257,7 +234,6 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
         template: './src/index.html',
         favicon: './src/assets/react.256x228.png',
       }),
-      // Fast Refresh intentionally disabled for React 19 compatibility
     ],
   };
 }
