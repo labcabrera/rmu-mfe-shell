@@ -2,11 +2,11 @@
   "name": "rmu-mfe-shell",
   "version": "0.6.1",
   "scripts": {
-    "build": "NODE_OPTIONS='-r ts-node/register' webpack --config webpack.config.ts --mode production",
-    "build:dev": "NODE_OPTIONS='-r ts-node/register' webpack --config webpack.config.ts --mode development",
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
     "build:start": "cd dist && PORT=8080 npx serve",
-    "start": "NODE_OPTIONS='-r ts-node/register' webpack serve --config webpack.config.ts --mode development",
-    "start:live": "NODE_OPTIONS='-r ts-node/register' webpack serve --config webpack.config.ts --mode development --live-reload --hot",
+    "start": "webpack serve --mode development",
+    "start:live": "webpack serve --mode development --live-reload --hot",
     "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/icons-material/esm/package.json"
   },
   "license": "GNU GENERAL PUBLIC LICENSE V3",
@@ -15,7 +15,6 @@
     "email": "lab.cabrera@gmail.com"
   },
   "dependencies": {
-    "@babel/plugin-syntax-jsx": "^7.27.1",
     "@babel/runtime": "^7.28.3",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
@@ -23,7 +22,6 @@
     "@mui/icons-material": "7.3.1",
     "@mui/material": "7.3.1",
     "@mui/system": "7.3.1",
-    "file-loader": "^6.2.0",
     "keycloak-js": "^26.2.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -31,6 +29,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/plugin-syntax-jsx": "^7.27.1",
     "@babel/plugin-transform-runtime": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
     "@babel/preset-react": "^7.25.7",
@@ -55,14 +54,15 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.2",
     "jest": "^30.0.5",
     "postcss": "^8.2.1",
     "postcss-loader": "^8.1.1",
     "prettier": "^3.6.2",
     "style-loader": "^4.0.0",
-    "typescript": "^5.9.2",
     "ts-node": "^10.9.1",
+    "typescript": "^5.9.3",
     "webpack": "^5.95.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2"

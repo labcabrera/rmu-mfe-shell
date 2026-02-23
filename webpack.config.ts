@@ -4,7 +4,7 @@ import HtmlWebPackPlugin from 'html-webpack-plugin';
 import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { Configuration } from 'webpack';
+import type { Configuration } from 'webpack';
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
 
 const require_ = createRequire(import.meta.url);
@@ -54,13 +54,6 @@ function parseEnvFile(envFile: string) {
   }
 }
 
-/**
- * Load .env files following common dotenv conventions (order matters):
- * 1. .env
- * 2. .env.local (unless production)
- * 3. .env.{mode}
- * 4. .env.{mode}.local (unless production)
- */
 function loadEnvFiles(mode?: string) {
   const files: string[] = [];
   files.push('.env');
