@@ -10,10 +10,12 @@ const Footer: React.FC = () => {
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Typography variant="h6" sx={{ color: 'text.primary', mb: 1 }}>
-              Open source
+              On development
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              This is a public open source project. The source code is available at{' '}
+              This application is currently under active development. Features may change, and you might encounter bugs or incomplete functionality.
+              The project is fully open source, and we welcome feedback, contributions, and suggestions from the community. You can view the source
+              code and follow the development progress here:{' '}
               <Link href="https://github.com/labcabrera/rmu-platform/" target="_blank" rel="noopener noreferrer">
                 github.com/labcabrera/rmu-platform
               </Link>
