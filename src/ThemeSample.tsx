@@ -1,13 +1,7 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Button, CardActions, CardContent, CardHeader, Divider, IconButton, Paper, TextField, Typography } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 import { Box, Grid } from '@mui/system';
-import Footer from './components/footer/Footer';
-import Header from './components/header/Header';
-import Home from './components/home/Home';
-import theme from './theme';
 
 const ThemeSample = () => {
   return (
@@ -203,8 +197,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.primary.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.primary.main),
+              backgroundColor: (t) => t.palette.primary.main,
+              color: (t) => t.palette.getContrastText(t.palette.primary.main),
             }}
           >
             primary.main
@@ -219,8 +213,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.primary.light,
-              color: (t: any) => t.palette.getContrastText(t.palette.primary.light),
+              backgroundColor: (t) => t.palette.primary.light,
+              color: (t) => t.palette.getContrastText(t.palette.primary.light),
             }}
           >
             primary.light
@@ -235,8 +229,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.primary.dark,
-              color: (t: any) => t.palette.getContrastText(t.palette.primary.dark),
+              backgroundColor: (t) => t.palette.primary.dark,
+              color: (t) => t.palette.getContrastText(t.palette.primary.dark),
             }}
           >
             primary.dark
@@ -251,8 +245,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.secondary.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.secondary.main),
+              backgroundColor: (t) => t.palette.secondary.main,
+              color: (t) => t.palette.getContrastText(t.palette.secondary.main),
             }}
           >
             secondary.main
@@ -267,8 +261,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.secondary.light,
-              color: (t: any) => t.palette.getContrastText(t.palette.secondary.light),
+              backgroundColor: (t) => t.palette.secondary.light,
+              color: (t) => t.palette.getContrastText(t.palette.secondary.light),
             }}
           >
             secondary.light
@@ -283,8 +277,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.secondary.dark,
-              color: (t: any) => t.palette.getContrastText(t.palette.secondary.dark),
+              backgroundColor: (t) => t.palette.secondary.dark,
+              color: (t) => t.palette.getContrastText(t.palette.secondary.dark),
             }}
           >
             secondary.dark
@@ -299,8 +293,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.background.default,
-              color: (t: any) => t.palette.getContrastText(t.palette.background.default),
+              backgroundColor: (t) => t.palette.background.default,
+              color: (t) => t.palette.getContrastText(t.palette.background.default),
             }}
           >
             background.default
@@ -315,8 +309,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.background.paper,
-              color: (t: any) => t.palette.getContrastText(t.palette.background.paper),
+              backgroundColor: (t) => t.palette.background.paper,
+              color: (t) => t.palette.getContrastText(t.palette.background.paper),
             }}
           >
             background.paper
@@ -331,8 +325,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => (t.palette as any).background.light || (t.palette as any).background.light,
-              color: (t: any) => t.palette.getContrastText((t.palette as any).background.light || (t.palette as any).background.light),
+              backgroundColor: (t) => t.palette.background.light || t.palette.background.light,
+              color: (t) => t.palette.getContrastText(t.palette.background.light || t.palette.background.light),
             }}
           >
             background.light
@@ -347,8 +341,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.text.primary,
-              color: (t: any) => t.palette.getContrastText(t.palette.text.primary),
+              backgroundColor: (t) => t.palette.text.primary,
+              color: (t) => t.palette.getContrastText(t.palette.text.primary),
             }}
           >
             text.primary
@@ -363,8 +357,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.text.secondary,
-              color: (t: any) => t.palette.getContrastText(t.palette.text.secondary),
+              backgroundColor: (t) => t.palette.text.secondary,
+              color: (t) => t.palette.getContrastText(t.palette.text.secondary),
             }}
           >
             text.secondary
@@ -379,8 +373,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.text.disabled,
-              color: (t: any) => t.palette.getContrastText(t.palette.text.disabled),
+              backgroundColor: (t) => t.palette.text.disabled,
+              color: (t) => t.palette.getContrastText(t.palette.text.disabled),
             }}
           >
             text.disabled
@@ -395,8 +389,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.divider,
-              color: (t: any) => t.palette.getContrastText(t.palette.divider),
+              backgroundColor: (t) => t.palette.divider,
+              color: (t) => t.palette.getContrastText(t.palette.divider),
             }}
           >
             divider
@@ -411,8 +405,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.success.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.success.main),
+              backgroundColor: (t) => t.palette.success.main,
+              color: (t) => t.palette.getContrastText(t.palette.success.main),
             }}
           >
             success.main
@@ -427,8 +421,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.error.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.error.main),
+              backgroundColor: (t) => t.palette.error.main,
+              color: (t) => t.palette.getContrastText(t.palette.error.main),
             }}
           >
             error.main
@@ -443,8 +437,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.info.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.info.main),
+              backgroundColor: (t) => t.palette.info.main,
+              color: (t) => t.palette.getContrastText(t.palette.info.main),
             }}
           >
             info.main
@@ -458,8 +452,8 @@ const ThemeSample = () => {
               justifyContent: 'center',
               borderRadius: 1,
               m: 0.5,
-              backgroundColor: (t: any) => t.palette.warning.main,
-              color: (t: any) => t.palette.getContrastText(t.palette.warning.main),
+              backgroundColor: (t) => t.palette.warning.main,
+              color: (t) => t.palette.getContrastText(t.palette.warning.main),
             }}
           >
             warning.main

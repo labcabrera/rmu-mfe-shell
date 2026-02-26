@@ -25,8 +25,7 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'Usuario', avatarUrl = '' }) =
     // Storage Access API must be called from a user gesture. Try to request it first.
     try {
       if (typeof document !== 'undefined' && 'requestStorageAccess' in document) {
-        // @ts-ignore
-        await (document as any).requestStorageAccess();
+        await document.requestStorageAccess();
       }
     } catch (e) {
       console.warn('[UserMenu] requestStorageAccess failed or denied', e);

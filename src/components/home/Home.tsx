@@ -71,7 +71,7 @@ const Home = () => {
               <Typography variant="body1">
                 The tactical module allows us to select the factions that will interact, usually through combat. We can create a battle (tactical
                 game) associated with a campaign and import the factions involved. Once the characters are loaded, we will have a dashboard where we
-                can resolve the characters' actions such as movement, combat, or maneuvers.
+                can resolve the characters actions such as movement, combat, or maneuvers.
               </Typography>
             </CardContent>
           </Grid>

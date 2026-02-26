@@ -106,9 +106,8 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
     };
     // expose for debug in browser console
     try {
-      // @ts-ignore
       (window as any).__KEYCLOAK__ = keycloak;
-    } catch (e) {}
+    } catch (ignore) {}
   }
 
   // expose a minimal global for remotes
@@ -141,9 +140,7 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
     if (storedToken) {
       try {
         keycloak = new Keycloak({ url: cfg.url, realm: cfg.realm, clientId: cfg.clientId });
-        // @ts-ignore
         keycloak.token = storedToken;
-        // @ts-ignore
         keycloak.authenticated = true;
         (window as any).RMU_AUTH = {
           token: storedToken,
@@ -163,7 +160,7 @@ export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
   setInterval(
     () => {
       if (!keycloak) return;
-      keycloak.updateToken(REFRESH_INTERVAL).then((refreshed) => {
+      keycloak.updateToken(REFRESH_INTERVAL).then(() => {
         (window as any).RMU_AUTH.token = keycloak?.token;
         (window as any).RMU_AUTH.isAuthenticated = keycloak?.authenticated;
       });
@@ -227,8 +224,6 @@ export async function silentCheckForSession(timeoutMs = 5000): Promise<boolean> 
     clearTimeout(timer);
     console.info('[KeycloakService] silent SSO check failed or timed out', e);
     try {
-      // ensure to cleanup tmp
-      // @ts-ignore
       if (tmp && tmp.clear) tmp.clear();
     } catch (err) {}
     return false;
@@ -253,7 +248,6 @@ export function login() {
   if (!keycloak) return;
   console.info('[KeycloakService] initiating login with pkceMethod=S256');
   try {
-    // @ts-ignore - keycloak-js types may not include pkceMethod on login options
     return keycloak.login({ pkceMethod: 'S256' });
   } catch (e) {
     console.warn('[KeycloakService] login call failed, falling back to default login()', e);
@@ -327,7 +321,7 @@ export async function fetchAccount(): Promise<any> {
     err.status = res.status;
     try {
       err.body = await res.text();
-    } catch (e) {}
+    } catch (ignore) {}
     throw err;
   }
   return await res.json();
