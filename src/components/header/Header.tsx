@@ -2,23 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Link,
-} from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import UserMenu from './UserMenu';
 
 const imageBaseUrl = process.env.RMU_MFE_ASSETS!;
@@ -34,7 +18,6 @@ const pages = [
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [openRegister, setOpenRegister] = React.useState(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -42,14 +25,6 @@ const Header = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleOpenRegister = () => {
-    setOpenRegister(true);
-  };
-
-  const handleCloseRegister = () => {
-    setOpenRegister(false);
   };
 
   return (
@@ -142,26 +117,7 @@ const Header = () => {
               </Button>
             ))}
           </Box>
-          <Button variant="outlined" color="primary" onClick={handleOpenRegister} sx={{ mr: 1, display: { xs: 'none', md: 'inline-flex' } }}>
-            Register
-          </Button>
           <UserMenu userName="User name" avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
-
-          <Dialog open={openRegister} onClose={handleCloseRegister} aria-labelledby="register-dialog-title">
-            <DialogTitle id="register-dialog-title">Account Registration</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Because this application contains material licensed by <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises</Link>, creating
-                new accounts is not permitted. If you are interested, please send an email to the contact address{' '}
-                <Link href="mailto:lab.cabrera@gmail.com">lab.cabrera@gmail.com</Link>.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseRegister} color="primary">
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Toolbar>
       </Container>
     </AppBar>
