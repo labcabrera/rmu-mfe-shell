@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            © {year} RMU — Public Project
+            © {year} RMU Engine
           </Typography>
         </Box>
       </Container>

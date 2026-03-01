@@ -14,9 +14,9 @@ export interface KeycloakConfig {
 }
 
 const defaultConfig: KeycloakConfig = {
-  url: 'https://auth.labcabrera.com/',
-  realm: 'rmu',
-  clientId: 'rmu-mfe',
+  url: process.env.KC_URL as string,
+  realm: process.env.KC_REALM as string,
+  clientId: process.env.KC_CLIENT_ID as string,
 };
 
 export async function initKeycloak(config: Partial<KeycloakConfig> = {}) {
