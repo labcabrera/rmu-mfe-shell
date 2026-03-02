@@ -121,9 +121,6 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
           >
             <Typography textAlign="center">Profile</Typography>
           </MenuItem>
-          <MenuItem onClick={handleCloseMenu}>
-            <Typography textAlign="center">Settings</Typography>
-          </MenuItem>
           <MenuItem
             onClick={() => {
               handleCloseMenu();

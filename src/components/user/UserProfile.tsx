@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Container, Typography, Paper, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Accordion } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  Avatar,
+  Box,
+  Container,
+  Typography,
+  Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
 import { useAuth } from '../../services/auth/AuthProvider';
 
 const UserProfile = () => {
@@ -82,7 +97,14 @@ const UserProfile = () => {
           Profile details
         </Typography>
 
-        <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>{JSON.stringify(user || {}, null, 2)}</pre>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Details</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12 }}>{JSON.stringify(user || {}, null, 2)}</pre>
+          </AccordionDetails>
+        </Accordion>
       </Paper>
     </Container>
   );
