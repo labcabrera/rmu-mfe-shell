@@ -44,7 +44,6 @@ const theme = createTheme({
       main: '#ffab91',
     },
     warning: {
-      // main: '#e6dbb3ff',
       main: '#ebeb75ff',
     },
     info: {

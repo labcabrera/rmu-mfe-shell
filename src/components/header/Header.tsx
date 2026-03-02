@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import AdbIcon from '@mui/icons-material/Adb';
+import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { imageBaseUrl } from '../../services/config';
 import UserMenu from './UserMenu';
-
-const imageBaseUrl = process.env.RMU_MFE_ASSETS!;
 
 const pages = [
   { label: 'Core', href: '/core' },
@@ -31,7 +30,7 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             color="primary"
             variant="h6"
@@ -41,12 +40,12 @@ const Header = () => {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
+              fontWeight: 600,
               letterSpacing: '.3rem',
               textDecoration: 'none',
             }}
           >
-            RMU Engine
+            RMU-Engine
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -84,12 +83,12 @@ const Header = () => {
             </Menu>
           </Box>
 
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <FilterVintageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
             component={RouterLink}
-            to="#app-bar-with-responsive-menu"
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -100,7 +99,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            RMU Engine
+            RMU-E
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

@@ -94,7 +94,7 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open menu">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-            <Avatar alt={displayName} src={avatarUrl || '/static/images/avatars/avatar-000.png'} sx={{ width: 60, height: 60 }}>
+            <Avatar alt={displayName} src={avatarUrl || '/static/images/avatars/avatar-000.png'} sx={{ width: 45, height: 45 }}>
               {displayName[0]}
             </Avatar>
           </IconButton>
