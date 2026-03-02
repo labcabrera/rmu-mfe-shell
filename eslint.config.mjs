@@ -1,7 +1,7 @@
 import js from '@eslint/js';
-import pluginReact from 'eslint-plugin-react';
 import pluginTs from '@typescript-eslint/eslint-plugin';
 import parserTs from '@typescript-eslint/parser';
+import pluginReact from 'eslint-plugin-react';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 
@@ -40,11 +40,8 @@ export default defineConfig([
     plugins: {
       '@typescript-eslint': pluginTs,
     },
-    extends: [
-      'plugin:@typescript-eslint/recommended',
-    ],
-    rules: {
-    },
+    extends: [pluginTs.configs['flat/recommended']],
+    rules: {},
   },
   pluginReact.configs.flat.recommended,
 ]);

@@ -8,10 +8,11 @@ import CardMedia from '@mui/material/CardMedia';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { imageBaseUrl } from '../../services/config';
 
-const Home = () => {
+export const Home = () => {
   return (
-    <Card sx={{ maxWidth: 1000, margin: 'auto', mt: 5 }}>
+    <Card sx={{ maxWidth: 1000, margin: 'auto', m: 1 }}>
       <Box sx={{ maxWidth: 1000, mx: 'auto', mt: 1, p: 2 }}>
         <Alert severity="info" sx={{ mb: 2 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by
@@ -37,7 +38,12 @@ const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={5}>
-            <CardMedia component="img" image="/static/images/generic/strategic.png" alt="Strategic module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/strategic.png`}
+              alt="Strategic module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
           <Grid size={7}>
             <CardContent>
@@ -64,12 +70,17 @@ const Home = () => {
               <Typography variant="body1">
                 The tactical module allows us to select the factions that will interact, usually through combat. We can create a battle (tactical
                 game) associated with a campaign and import the factions involved. Once the characters are loaded, we will have a dashboard where we
-                can resolve the characters' actions such as movement, combat, or maneuvers.
+                can resolve the characters actions such as movement, combat, or maneuvers.
               </Typography>
             </CardContent>
           </Grid>
           <Grid size={5} order={{ xs: 1, md: 2 }}>
-            <CardMedia component="img" image="/static/images/avatars/avatar-017.png" alt="Tactical module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/tactical.png`}
+              alt="Tactical module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
         </Grid>
 
@@ -77,7 +88,12 @@ const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={5}>
-            <CardMedia component="img" image="/static/images/generic/configuration.png" alt="Core module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia
+              component="img"
+              image={`${imageBaseUrl}images/generic/configuration.png`}
+              alt="Core module"
+              sx={{ width: '100%', borderRadius: 2 }}
+            />
           </Grid>
           <Grid size={7}>
             <CardContent>
@@ -107,7 +123,7 @@ const Home = () => {
             </CardContent>
           </Grid>
           <Grid size={5} order={{ xs: 1, md: 2 }}>
-            <CardMedia component="img" image="/static/images/generic/npcs.png" alt="NPC module" sx={{ width: '100%', borderRadius: 2 }} />
+            <CardMedia component="img" image={`${imageBaseUrl}images/generic/npcs.png`} alt="NPC module" sx={{ width: '100%', borderRadius: 2 }} />
           </Grid>
         </Grid>
       </Box>

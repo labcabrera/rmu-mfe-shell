@@ -1,8 +1,9 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import AdbIcon from '@mui/icons-material/Adb';
+import { Link as RouterLink } from 'react-router-dom';
+import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { imageBaseUrl } from '../../services/config';
 import UserMenu from './UserMenu';
 
 const pages = [
@@ -15,11 +16,9 @@ const pages = [
 ];
 
 const Header = () => {
-  const location = useLocation();
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
@@ -31,22 +30,22 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             color="primary"
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={RouterLink}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
+              fontWeight: 600,
               letterSpacing: '.3rem',
               textDecoration: 'none',
             }}
           >
-            RMU Engine
+            RMU-Engine
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -77,21 +76,19 @@ const Header = () => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
-                  <Link href={page.href} style={{ textDecoration: 'none', color: 'primary' }}>
-                    {page.label}
-                  </Link>
+                <MenuItem key={index} onClick={handleCloseNavMenu} component={RouterLink} to={page.href}>
+                  {page.label}
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <FilterVintageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={RouterLink}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -102,16 +99,24 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            RMU-E
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button key={page.label} href={page.href} onClick={handleCloseNavMenu} variant="text" color="primary" sx={{ my: 2, display: 'block' }}>
+              <Button
+                key={page.label}
+                component={RouterLink}
+                to={page.href}
+                onClick={handleCloseNavMenu}
+                variant="text"
+                color="primary"
+                sx={{ my: 2, display: 'block' }}
+              >
                 {page.label}
               </Button>
             ))}
           </Box>
-          <UserMenu userName="Nombre Usuario" avatarUrl="/ruta/a/avatar.png" />
+          <UserMenu userName="User name" avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
         </Toolbar>
       </Container>
     </AppBar>

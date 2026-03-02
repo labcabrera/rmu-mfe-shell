@@ -1,3 +1,5 @@
+aws/*
+
 # Logs
 logs
 *.log
