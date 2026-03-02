@@ -12,7 +12,7 @@ import { imageBaseUrl } from '../../services/config';
 
 export const Home = () => {
   return (
-    <Card sx={{ maxWidth: 1000, margin: 'auto', mt: 1 }}>
+    <Card sx={{ maxWidth: 1000, margin: 'auto', m: 1 }}>
       <Box sx={{ maxWidth: 1000, mx: 'auto', mt: 1, p: 2 }}>
         <Alert severity="info" sx={{ mb: 2 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by

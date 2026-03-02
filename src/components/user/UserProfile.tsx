@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Container, Typography, Paper, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Avatar, Box, Container, Typography, Paper, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, Accordion } from '@mui/material';
 import { useAuth } from '../../services/auth/AuthProvider';
 
 const UserProfile = () => {
@@ -21,6 +21,20 @@ const UserProfile = () => {
       localStorage.setItem('lang', lang);
     } catch (e) {}
   }, [lang]);
+
+  const [unit, setUnit] = useState<string>(() => {
+    try {
+      return (localStorage.getItem('unit') as string) || 'metric';
+    } catch (e) {
+      return 'metric';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('unit', unit);
+    } catch (e) {}
+  }, [unit]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 1 }}>
@@ -47,6 +61,20 @@ const UserProfile = () => {
           >
             <MenuItem value="en">English</MenuItem>
             <MenuItem value="es">Español</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+          <InputLabel id="unit-select-label">Units</InputLabel>
+          <Select
+            labelId="unit-select-label"
+            id="unit-select"
+            value={unit}
+            label="Units"
+            onChange={(e: SelectChangeEvent<string>) => setUnit(e.target.value as string)}
+          >
+            <MenuItem value="metric">Metric</MenuItem>
+            <MenuItem value="imperial">Imperial</MenuItem>
           </Select>
         </FormControl>
 
