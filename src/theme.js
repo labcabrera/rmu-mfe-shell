@@ -73,8 +73,8 @@ const theme = createTheme({
         },
       },
     },
-    MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'standard' } },
-    MuiSelect: { defaultProps: { size: 'small' } },
+    MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
+    MuiSelect: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
     MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
     MuiToggleButton: {
       defaultProps: { size: 'small' },
