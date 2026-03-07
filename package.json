@@ -1,6 +1,6 @@
 {
   "name": "rmu-mfe-shell",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "scripts": {
     "build": "rm -rf dist && webpack --mode production",
     "build:dev": "webpack --mode development",
