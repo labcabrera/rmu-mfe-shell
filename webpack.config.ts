@@ -123,6 +123,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           tactical: `tactical@${process.env.RMU_MFE_TACTICAL_PUBLIC_PATH}tactical-app.js`,
           npcs: `npcs@${process.env.RMU_MFE_NPCS_PUBLIC_PATH}npcs-app.js`,
           items: `items@${process.env.RMU_MFE_ITEMS_PUBLIC_PATH}items-app.js`,
+          spells: `spells@${process.env.RMU_MFE_SPELLS_PUBLIC_PATH}spells-app.js`,
         },
         exposes: {},
         shared: {

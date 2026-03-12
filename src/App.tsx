@@ -13,6 +13,7 @@ const RemoteStrategicApp = React.lazy(() => import('strategic/StrategicApp'));
 const RemoteTacticalApp = React.lazy(() => import('tactical/TacticalApp'));
 const RemoteNpcsApp = React.lazy(() => import('npcs/NpcsApp'));
 const RemoteItemsApp = React.lazy(() => import('items/ItemsApp'));
+const RemoteSpellsApp = React.lazy(() => import('spells/SpellsApp'));
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />
           <Route path="/npcs/*" element={<RemoteNpcsApp />} />
           <Route path="/items/*" element={<RemoteItemsApp />} />
+          <Route path="/spells/*" element={<RemoteSpellsApp />} />
           <Route path="/user-profile" element={<UserProfile />} />
           <Route path="*" element={<div>404 Page not found!</div>} />
         </Routes>
