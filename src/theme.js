@@ -19,6 +19,7 @@ const theme = createTheme({
       light: '#a8b3b4',
       dark: baseColors.midSlate,
       contrastText: '#050505',
+      card: '#1b1e1f',
     },
     secondary: {
       main: baseColors.mist,
