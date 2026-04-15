@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container } from '@mui/material';
+import { Button, Container, useTheme, useMediaQuery, Link } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,19 +13,19 @@ import { imageBaseUrl } from '../../services/config';
 const MODULES = [
   {
     title: 'Core',
-    desc: 'Adjust game settings such as the creation of realms, races and professions, and define the general game configuration.',
+    desc: 'Adjust game settings such as the creation of realms, races and professions, and define the general game configuration. You can use the standard RMU settings or create as many game-specific customisations as you like.',
     img: `${imageBaseUrl}images/generic/core.png`,
     href: '/core',
   },
   {
     title: 'Strategic',
-    desc: 'Create a game with your friends using characters from a specific realm. The strategic mode allows you to create characters, equip them, and set the rules for the campaign you’ll be playing.',
+    desc: 'Create a game with your friends using characters from a specific realm. The strategic mode allows you to create characters, equip them, and set the rules for the campaign you’ll be playing. Create your own factions and customise the characters who will be involved in future matches.',
     img: `${imageBaseUrl}images/generic/strategic.png`,
     href: '/strategic',
   },
   {
     title: 'Tactical',
-    desc: 'Handle battles, characters and maneuvers in the tactical view.',
+    desc: 'Once you’ve created a campaign in tactical mode, you can battle against other players or the environment. Simply choose who’s taking part in the battle and roll the dice.',
     img: `${imageBaseUrl}images/generic/tactical.png`,
     href: '/tactical',
   },
@@ -37,7 +37,7 @@ const MODULES = [
   },
   {
     title: 'Spells',
-    desc: "Use the spells from the game's default spell lists or create your own spell decks",
+    desc: "Use the spells from the game's default spell lists or create your own spell lists.",
     img: `${imageBaseUrl}images/generic/spells.png`,
     href: '/npcs',
   },
@@ -45,6 +45,9 @@ const MODULES = [
 
 export const Home = () => {
   const [scrolled, setScrolled] = useState(false);
+  const theme = useTheme();
+  // consider small screens (sm and below) as mobile for disabling effects
+  const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -56,6 +59,16 @@ export const Home = () => {
   useEffect(() => {
     const cards = Array.from(document.querySelectorAll('.feature-card')) as HTMLElement[];
     if (!cards || cards.length === 0) return;
+    if (isSmall) {
+      // Disable scaling effects on small screens — keep layout static
+      cards.forEach((el) => {
+        el.style.transform = 'none';
+        el.style.transition = '';
+        el.style.zIndex = '1';
+        el.style.boxShadow = '';
+      });
+      return;
+    }
 
     const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
     const obs = new IntersectionObserver(
@@ -71,8 +84,7 @@ export const Home = () => {
           const normalized = Math.max(0, 1 - distance / maxDistance); // 1 => center, 0 => far
           // sharpen so center gains much more weight than neighbors
           const weight = Math.pow(normalized, 2.2);
-          const isMobile = window.matchMedia && window.matchMedia('(max-width:600px)').matches;
-          const multiplier = isMobile ? 0.12 : 0.28;
+          const multiplier = isSmall ? 0.12 : 0.28;
           const scale = 1 + weight * multiplier; // smaller multiplier on mobile
           el.style.transform = `scale(${scale})`;
           el.style.transition = 'transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms cubic-bezier(.2,.9,.2,1)';
@@ -94,8 +106,7 @@ export const Home = () => {
         const maxDistance = window.innerHeight / 2 + rect.height / 2;
         const normalized = Math.max(0, 1 - distance / maxDistance);
         const weight = Math.pow(normalized, 2.2);
-        const isMobile = window.matchMedia && window.matchMedia('(max-width:600px)').matches;
-        const multiplier = isMobile ? 0.2 : 0.28;
+        const multiplier = isSmall ? 0.12 : 0.28;
         const scale = 1 + weight * multiplier;
         el.style.transform = `scale(${scale})`;
         el.style.transition = 'transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms cubic-bezier(.2,.9,.2,1)';
@@ -106,18 +117,18 @@ export const Home = () => {
     tick();
 
     return () => obs.disconnect();
-  }, []);
+  }, [isSmall]);
 
   return (
     <Box sx={{ width: '100%', bgcolor: (t) => t.palette.background.default, minHeight: '100vh' }}>
       <Container maxWidth="lg" sx={{ py: 10 }}>
         <Alert severity="info" sx={{ mb: 3 }}>
-          This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by
-          Iron Crown Enterprises (ICE). Please support official publications if you enjoy Rolemaster.
+          This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
+          <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises (ICE)</Link>. Please support official publications if you enjoy Rolemaster.
         </Alert>
 
         <Grid container spacing={4} alignItems="center">
-          <Grid size={{ xs: 8, md: 7 }}>
+          <Grid size={{ xs: 12, md: 12 }}>
             <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }} color="primary">
               Modern companion for Rolemaster Unified
             </Typography>
@@ -125,15 +136,12 @@ export const Home = () => {
               Create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a clean, extendable toolset.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-              <Button variant="contained" color="primary" href="/create">
+              <Button variant="contained" color="primary" href="/strategic/games/create">
                 Start a campaign
-              </Button>
-              <Button variant="outlined" color="primary" href="/docs">
-                Read the docs
               </Button>
             </Box>
           </Grid>
-          <Grid size={{ xs: 6, md: 5 }}>
+          <Grid size={{ xs: 12, lg: 10 }}>
             <Card sx={{ borderRadius: 3, overflow: 'hidden' }}>
               <CardMedia
                 component="img"
