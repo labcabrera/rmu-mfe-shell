@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { imageBaseUrl } from '../../services/config';
 import UserMenu from './UserMenu';
 
@@ -28,9 +28,16 @@ const Header = () => {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+      <Container maxWidth="lg">
+        <Toolbar
+          disableGutters
+          sx={{
+            minHeight: { xs: 60, md: 80 },
+            alignItems: 'center',
+            py: { xs: 1, md: 1 },
+          }}
+        >
+          <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: { xs: 22, md: 32 }, alignSelf: 'center' }} />
           <Typography
             color="primary"
             variant="h6"
@@ -40,9 +47,9 @@ const Header = () => {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontWeight: 600,
-              letterSpacing: '.3rem',
               textDecoration: 'none',
+              py: 0,
+              alignItems: 'center',
             }}
           >
             RMU-Engine
@@ -83,9 +90,9 @@ const Header = () => {
             </Menu>
           </Box>
 
-          <FilterVintageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <FilterVintageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, fontSize: { xs: 20, md: 32 } }} />
           <Typography
-            variant="h5"
+            variant="h6"
             noWrap
             component={RouterLink}
             to="/"
@@ -93,10 +100,13 @@ const Header = () => {
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontWeight: 700,
+              fontWeight: 800,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              lineHeight: 1,
+              py: 0,
+              alignItems: 'center',
             }}
           >
             RMU-E

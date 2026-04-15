@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import WarningIcon from '@mui/icons-material/Warning';
 import { Button, Container, useTheme, useMediaQuery, Link } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -46,7 +47,6 @@ const MODULES = [
 export const Home = () => {
   const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
-  // consider small screens (sm and below) as mobile for disabling effects
   const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export const Home = () => {
     const cards = Array.from(document.querySelectorAll('.feature-card')) as HTMLElement[];
     if (!cards || cards.length === 0) return;
     if (isSmall) {
-      // Disable scaling effects on small screens — keep layout static
       cards.forEach((el) => {
         el.style.transform = 'none';
         el.style.transition = '';
@@ -129,7 +128,7 @@ export const Home = () => {
 
         <Grid container spacing={4} alignItems="center">
           <Grid size={{ xs: 12, md: 12 }}>
-            <Typography variant="h2" sx={{ fontWeight: 800, mb: 2 }} color="primary">
+            <Typography variant="h3" sx={{ fontWeight: 800, mb: 2 }} color="primary">
               Modern companion for Rolemaster Unified
             </Typography>
             <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
@@ -187,12 +186,12 @@ export const Home = () => {
                     {f.desc}
                   </Typography>
                 </CardContent>
-                <Box sx={{ ml: { xs: 0, md: 'auto' }, mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 200 } }}>
+                <Box sx={{ ml: { xs: 0, md: 'auto' }, mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 240 } }}>
                   <CardMedia
                     component="img"
                     image={f.img}
                     alt={f.title}
-                    sx={{ width: '100%', height: { xs: 180, md: 140 }, objectFit: 'cover', borderRadius: 1 }}
+                    sx={{ width: '100%', height: { xs: 200, md: 160 }, objectFit: 'cover', borderRadius: 1 }}
                   />
                 </Box>
               </Card>
