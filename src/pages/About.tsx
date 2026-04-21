@@ -22,7 +22,7 @@ const sections = [
       </>
     ),
     image: `${imageBaseUrl}images/photos/photo-combat-01.jpg`,
-    imageText: 'Remnants of the battle',
+    imageText: "With all this programming, I haven't had time to paint lately!",
   },
   {
     title: 'What I Do',
@@ -34,7 +34,7 @@ const sections = [
       </Typography>
     ),
     image: `${imageBaseUrl}images/photos/photo-chin-01.png`,
-    imageText: "I'm Chin, the other assistant",
+    imageText: "I'm Chin, the Other assistant",
   },
   {
     title: 'Beyond Work',
@@ -46,7 +46,7 @@ const sections = [
       </Typography>
     ),
     image: `${imageBaseUrl}images/photos/photo-preparing-game-01.png`,
-    imageText: 'lorem ipsum',
+    imageText: 'Preparing the board',
   },
   {
     title: 'Beyond Work',
@@ -58,7 +58,19 @@ const sections = [
       </Typography>
     ),
     image: `${imageBaseUrl}images/photos/photo-board-01.jpeg`,
-    imageText: 'lorem ipsum',
+    imageText: 'Amon Sûl surrounded by buildings? What happened?',
+  },
+  {
+    title: 'Beyond Work',
+    text: (
+      <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
+        In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I
+        discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out
+        just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.
+      </Typography>
+    ),
+    image: `${imageBaseUrl}images/photos/photo-combat-02.jpeg`,
+    imageText: '',
   },
 ];
 export default function AboutPage() {
@@ -119,7 +131,7 @@ export default function AboutPage() {
                     boxShadow: 4,
                   }}
                 />
-                <Typography variant="body2" color="secondary">
+                <Typography variant="body1" color="secondary" mt={1}>
                   <em>{section.imageText}</em>
                 </Typography>
               </Grid>
