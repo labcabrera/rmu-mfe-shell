@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import WarningIcon from '@mui/icons-material/Warning';
 import { Button, Container, useTheme, useMediaQuery, Link } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -9,13 +8,14 @@ import CardMedia from '@mui/material/CardMedia';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { imageBaseUrl } from '../../services/config';
+import { imageBaseUrl } from '../services/config';
 
 const MODULES = [
   {
     title: 'Core',
     desc: 'Adjust game settings such as the creation of realms, races and professions, and define the general game configuration. You can use the standard RMU settings or create as many game-specific customisations as you like.',
     img: `${imageBaseUrl}images/generic/core.png`,
+    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-05.png`,
     href: '/core',
   },
   {
@@ -45,6 +45,7 @@ const MODULES = [
 ];
 
 export const Home = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
   const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
@@ -120,13 +121,37 @@ export const Home = () => {
 
   return (
     <Box sx={{ width: '100%', bgcolor: (t) => t.palette.background.default, minHeight: '100vh' }}>
+      <Box
+        sx={{
+          minHeight: '60vh',
+          display: 'flex',
+          alignItems: 'center',
+          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: 'white',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Typography variant="h2" fontWeight={700} gutterBottom>
+            Rolemaster Unified Companion
+          </Typography>
+          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
+            Create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a clean, extendable toolset.
+          </Typography>
+          <Button variant="contained" color="secondary" href="/strategic/games/create">
+            Start a campaign
+          </Button>
+        </Container>
+      </Box>
+
       <Container maxWidth="lg" sx={{ py: 10 }}>
         <Alert severity="info" sx={{ mb: 3 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
           <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises (ICE)</Link>. Please support official publications if you enjoy Rolemaster.
         </Alert>
 
-        <Grid container spacing={4} alignItems="center">
+        {/* <Grid container spacing={4} alignItems="center">
           <Grid size={{ xs: 12, md: 12 }}>
             <Typography variant="h3" sx={{ fontWeight: 800, mb: 2 }} color="primary">
               Modern companion for Rolemaster Unified
@@ -150,7 +175,7 @@ export const Home = () => {
               />
             </Card>
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <Divider sx={{ my: 6 }} />
 
@@ -161,7 +186,7 @@ export const Home = () => {
                 className="feature-card"
                 onClick={() => window.location.assign(f.href)}
                 onKeyDown={(e) => {
-                  if ((e as any).key === 'Enter') window.location.assign(f.href);
+                  if (e.key === 'Enter') window.location.assign(f.href);
                 }}
                 role="button"
                 tabIndex={0}

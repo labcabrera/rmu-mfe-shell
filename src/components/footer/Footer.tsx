@@ -67,7 +67,7 @@ const Footer: React.FC = () => {
                 </Typography>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                   <li>
-                    <Link href="#" sx={{ color: 'text.secondary' }}>
+                    <Link href="/about" sx={{ color: 'text.secondary' }}>
                       About
                     </Link>
                   </li>
