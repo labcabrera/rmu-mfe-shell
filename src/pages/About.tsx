@@ -57,7 +57,7 @@ const sections = [
         just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.
       </Typography>
     ),
-    image: `${imageBaseUrl}images/photos/photo-board-01.png`,
+    image: `${imageBaseUrl}images/photos/photo-board-01.jpeg`,
     imageText: 'lorem ipsum',
   },
 ];
