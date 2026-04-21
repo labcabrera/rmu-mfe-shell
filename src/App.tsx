@@ -7,7 +7,9 @@ import Header from './components/header/Header';
 import UserProfile from './components/user/UserProfile';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import DocsPage from './pages/DocsPage';
 import HomePage from './pages/HomePage';
+import RegisterPage from './pages/RegisterPage';
 import theme from './theme';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
@@ -27,6 +29,8 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/docs" element={<DocsPage />} />
           <Route path="/core/*" element={<RemoteCoreApp />} />
           <Route path="/strategic/*" element={<RemoteStrategicApp />} />
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />

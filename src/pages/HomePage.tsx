@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, useTheme, useMediaQuery, Link } from '@mui/material';
+import { Button, Container, useTheme, useMediaQuery, Link, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -140,11 +140,17 @@ export const Home = () => {
             Rolemaster Unified Companion
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            Create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a clean, extendable toolset.
+            OpenSource Rolemaster assistant for create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a
+            clean, extendable toolset.
           </Typography>
-          <Button variant="contained" color="secondary" href="/strategic/games/create">
-            Start a campaign
-          </Button>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" color="secondary" href="/docs">
+              Get started
+            </Button>
+            <Button variant="contained" color="secondary" href="/strategic/games/create">
+              Start a campaign
+            </Button>
+          </Stack>
         </Container>
       </Box>
 
