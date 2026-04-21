@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { imageBaseUrl } from '../services/config';
@@ -146,38 +145,10 @@ export const Home = () => {
       </Box>
 
       <Container maxWidth="lg" sx={{ py: 10 }}>
-        <Alert severity="info" sx={{ mb: 3 }}>
+        <Alert severity="info" sx={{ mb: 1 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
           <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises (ICE)</Link>. Please support official publications if you enjoy Rolemaster.
         </Alert>
-
-        {/* <Grid container spacing={4} alignItems="center">
-          <Grid size={{ xs: 12, md: 12 }}>
-            <Typography variant="h3" sx={{ fontWeight: 800, mb: 2 }} color="primary">
-              Modern companion for Rolemaster Unified
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-              Create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a clean, extendable toolset.
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-              <Button variant="contained" color="primary" href="/strategic/games/create">
-                Start a campaign
-              </Button>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, lg: 10 }}>
-            <Card sx={{ borderRadius: 3, overflow: 'hidden' }}>
-              <CardMedia
-                component="img"
-                image={`${imageBaseUrl}images/generic/strategic.png`}
-                alt="hero"
-                sx={{ width: '100%', height: 320, objectFit: 'cover' }}
-              />
-            </Card>
-          </Grid>
-        </Grid> */}
-
-        <Divider sx={{ my: 6 }} />
 
         <Grid container spacing={3}>
           {MODULES.map((f) => (

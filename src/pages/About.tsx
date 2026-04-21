@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container } from '@mui/material';
+import { Button, Container, Link } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
@@ -8,23 +8,57 @@ import { imageBaseUrl } from '../services/config';
 const sections = [
   {
     title: 'This application',
-    text: 'In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.',
+    text: (
+      <>
+        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
+          In 2021, I set about programming an initial version of the{' '}
+          <Link href="https://ironcrown.co.uk/rolemaster-fantasy-role-playing/" target="_blank">
+            RMSS
+          </Link>{' '}
+          based assistant. And just when I’d got the application quite far along, I discovered that a new version was due to be released soon. It’s a
+          bit of a joke that, after decades without a new version, one was coming out just as I was finishing development. So I left the project on
+          hold for a while until the new Rolemaster Unified books were published.
+        </Typography>
+      </>
+    ),
     image: `${imageBaseUrl}images/photos/photo-combat-01.jpg`,
+    imageText: 'Remnants of the battle',
   },
   {
     title: 'What I Do',
-    text: 'In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.',
+    text: (
+      <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
+        In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I
+        discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out
+        just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.
+      </Typography>
+    ),
     image: `${imageBaseUrl}images/photos/photo-chin-01.png`,
+    imageText: "I'm Chin, the other assistant",
   },
   {
     title: 'Beyond Work',
-    text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+    text: (
+      <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
+        In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I
+        discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out
+        just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.
+      </Typography>
+    ),
     image: `${imageBaseUrl}images/photos/photo-preparing-game-01.png`,
+    imageText: 'lorem ipsum',
   },
   {
     title: 'Beyond Work',
-    text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+    text: (
+      <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
+        In 2021, I set about programming an initial version of the RMSS-based assistant. And just when I’d got the application quite far along, I
+        discovered that a new version was due to be released soon. It’s a bit of a joke that, after decades without a new version, one was coming out
+        just as I was finishing development. So I left the project on hold for a while until the new Rolemaster Unified books were published.
+      </Typography>
+    ),
     image: `${imageBaseUrl}images/photos/photo-board-01.png`,
+    imageText: 'lorem ipsum',
   },
 ];
 export default function AboutPage() {
@@ -85,15 +119,20 @@ export default function AboutPage() {
                     boxShadow: 4,
                   }}
                 />
+                <Typography variant="body2" color="secondary">
+                  <em>{section.imageText}</em>
+                </Typography>
               </Grid>
 
               <Grid size={{ xs: 12, md: 6 }}>
                 <Typography variant="h4" fontWeight={700} gutterBottom>
                   {section.title}
                 </Typography>
+                {section.text}
+                {/* 
                 <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
                   {section.text}
-                </Typography>
+                </Typography> */}
               </Grid>
             </Grid>
           );
