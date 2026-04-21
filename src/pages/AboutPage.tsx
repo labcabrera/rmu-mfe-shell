@@ -141,10 +141,6 @@ export default function AboutPage() {
                   {section.title}
                 </Typography>
                 {section.text}
-                {/* 
-                <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
-                  {section.text}
-                </Typography> */}
               </Grid>
             </Grid>
           );

@@ -5,8 +5,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import UserProfile from './components/user/UserProfile';
-import About from './pages/About';
-import Home from './pages/Home';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import HomePage from './pages/HomePage';
 import theme from './theme';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
@@ -23,8 +24,9 @@ const App = () => {
       <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/core/*" element={<RemoteCoreApp />} />
           <Route path="/strategic/*" element={<RemoteStrategicApp />} />
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />

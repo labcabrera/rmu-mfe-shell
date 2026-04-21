@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
 
           <Grid size={{ xs: 12, md: 8 }}>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 6, sm: 3 }}>
+              <Grid size={{ xs: 6, sm: 4 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary', mb: 0.5 }}>
                   Official ICE
                 </Typography>
@@ -43,9 +43,9 @@ const Footer: React.FC = () => {
                 </Box>
               </Grid>
 
-              <Grid size={{ xs: 6, sm: 3 }}>
+              <Grid size={{ xs: 6, sm: 4 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary', mb: 0.5 }}>
-                  Resources
+                  About
                 </Typography>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                   <li>
@@ -54,39 +54,41 @@ const Footer: React.FC = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link href="https://github.com/labcabrera/rmu-platform" target="_blank" sx={{ color: 'text.secondary' }}>
+                      Github
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="#" sx={{ color: 'text.secondary' }}>
                       Guides
                     </Link>
                   </li>
+                  <li>
+                    <Link href="#" sx={{ color: 'text.secondary' }}>
+                      Legal
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" sx={{ color: 'text.secondary' }}>
+                      Privacy
+                    </Link>
+                  </li>
                 </Box>
               </Grid>
 
-              <Grid size={{ xs: 6, sm: 3 }}>
+              <Grid size={{ xs: 6, sm: 4 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary', mb: 0.5 }}>
-                  Company
+                  Support
                 </Typography>
                 <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
                   <li>
                     <Link href="/about" sx={{ color: 'text.secondary' }}>
-                      About
+                      About me
                     </Link>
                   </li>
                   <li>
-                    <Link href="#" sx={{ color: 'text.secondary' }}>
+                    <Link href="/contact" sx={{ color: 'text.secondary' }}>
                       Contact
-                    </Link>
-                  </li>
-                </Box>
-              </Grid>
-
-              <Grid size={{ xs: 6, sm: 3 }}>
-                <Typography variant="subtitle2" sx={{ color: 'text.primary', mb: 0.5 }}>
-                  Legal
-                </Typography>
-                <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
-                  <li>
-                    <Link href="#" sx={{ color: 'text.secondary' }}>
-                      Privacy
                     </Link>
                   </li>
                 </Box>
