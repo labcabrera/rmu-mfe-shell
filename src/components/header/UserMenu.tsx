@@ -34,11 +34,17 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
 
   if (!isAuthenticated) {
     return (
-      <Box sx={{ flexGrow: 0 }}>
-        <Button variant="outlined" color="primary" href="/register" sx={{ mr: 1, display: { xs: 'none', md: 'inline-flex' } }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: { xs: 1, md: 0 } }}>
+        <Button
+          variant="outlined"
+          color="primary"
+          href="/register"
+          size="small"
+          sx={{ display: { xs: 'none', sm: 'inline-flex' }, textTransform: 'none' }}
+        >
           Register
         </Button>
-        <Button color="inherit" variant="outlined" onClick={handleLoginClick}>
+        <Button color="primary" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
           Login
         </Button>
       </Box>
@@ -52,7 +58,11 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open menu">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-            <Avatar alt={displayName} src={avatarUrl || '/static/images/avatars/avatar-000.png'} sx={{ width: 45, height: 45 }}>
+            <Avatar
+              alt={displayName}
+              src={avatarUrl || '/static/images/avatars/avatar-000.png'}
+              sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
+            >
               {displayName[0]}
             </Avatar>
           </IconButton>
