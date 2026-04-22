@@ -28,8 +28,8 @@ const Footer: React.FC = () => {
       title: 'Support',
       links: [
         { label: 'About me', href: '/about' },
-        { label: 'Get started', href: '/docs' },
         { label: 'Contact', href: '/contact' },
+        { label: 'Get started', href: '/docs' },
         { label: 'Github', href: 'https://github.com/labcabrera/rmu-platform', openInNewTab: true },
         { label: 'Technical', href: '/technical-info' },
       ],

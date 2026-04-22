@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { Container, Divider, Link } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';

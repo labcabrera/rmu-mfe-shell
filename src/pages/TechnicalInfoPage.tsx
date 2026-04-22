@@ -1,5 +1,5 @@
-import React from 'react';
-import { Container, Divider, Link, Paper } from '@mui/material';
+import React, { JSX } from 'react';
+import { Container, Link, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
