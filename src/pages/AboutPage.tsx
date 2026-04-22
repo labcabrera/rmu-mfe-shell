@@ -122,7 +122,7 @@ export default function AboutPage() {
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
         sx={{
-          minHeight: '60vh',
+          minHeight: '40vh',
           display: 'flex',
           alignItems: 'center',
           background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,

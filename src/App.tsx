@@ -9,7 +9,10 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import DocsPage from './pages/DocsPage';
 import HomePage from './pages/HomePage';
+import LegalPage from './pages/LegalPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RegisterPage from './pages/RegisterPage';
+import TechnicalInfoPage from './pages/TechnicalInfoPage';
 import theme from './theme';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
@@ -30,6 +33,9 @@ const App = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/legal" element={<LegalPage />} />
+          <Route path="/technical-info" element={<TechnicalInfoPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/core/*" element={<RemoteCoreApp />} />
           <Route path="/strategic/*" element={<RemoteStrategicApp />} />
