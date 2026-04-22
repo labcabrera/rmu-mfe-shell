@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
     {
       title: 'About',
       links: [
-        { label: 'Docs', href: '/docs' },
+        { label: 'Get started', href: '/docs' },
         { label: 'Github', href: 'https://github.com/labcabrera/rmu-platform', openInNewTab: true },
         { label: 'Guides', href: '#' },
         { label: 'Legal', href: '/legal' },

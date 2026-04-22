@@ -141,7 +141,7 @@ export default function AboutPage() {
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
             Now, 25 years on from those games I used to play with my brother, we’ve got together again to move around Lord of the Rings miniatures,
-            eat pizza and roll the dice
+            eat pizza and roll the dice.
           </Typography>
           <Button variant="contained" color="secondary" onClick={() => navigate('/contact')}>
             Contact me
