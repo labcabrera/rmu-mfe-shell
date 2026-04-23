@@ -26,11 +26,11 @@ export default function RegisterPage(): JSX.Element {
             Not available
           </Typography>
           <Typography variant="body1" color="primary" sx={{ maxWidth: 600, mb: 3 }}>
-            As this application does not hold the rights to ICE or the Rolemaster Unified licences, registration is not permitted; you must have a
+            As this application does not hold the rights to ICE or the Rolemaster Unified licences, registration is not permitted. You must have a
             valid user account that has been created beforehand in order to use this tool.
           </Typography>
           <Typography variant="body1" color="primary" sx={{ maxWidth: 600, mb: 3 }}>
-            We apologise for the inconvenience and will endeavour to reach a partnership agreement with ICE regarding the use of the tool
+            We apologise for the inconvenience and will endeavour to reach a partnership agreement with ICE regarding the use of the tool.
           </Typography>
         </Container>
       </Box>
