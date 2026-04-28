@@ -1,17 +1,22 @@
 import React, { FC, useState, MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from 'react-oidc-context';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { useAuth } from '../../services/auth/AuthProvider';
 
 interface UserMenuProps {
-  userName?: string;
   avatarUrl?: string;
 }
 
-const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
+const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { isAuthenticated, user, login, logout } = useAuth();
+  const { t } = useTranslation();
+  const oidc = useAuth();
+  const isAuthenticated = !!oidc?.isAuthenticated;
+  const login = () => oidc?.signinRedirect?.();
+  const logout = () => oidc?.signoutRedirect?.();
+  const userName = oidc.user?.profile.preferred_username || 'Undefined';
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,16 +47,14 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
           size="small"
           sx={{ display: { xs: 'none', sm: 'inline-flex' }, textTransform: 'none' }}
         >
-          Register
+          {t('Register')}
         </Button>
         <Button color="primary" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
-          Login
+          {t('Login')}
         </Button>
       </Box>
     );
   }
-
-  const displayName = user?.username || userName;
 
   return (
     <>
@@ -59,11 +62,11 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
         <Tooltip title="Open menu">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
             <Avatar
-              alt={displayName}
+              alt={userName}
               src={avatarUrl || '/static/images/avatars/avatar-000.png'}
               sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
             >
-              {displayName[0]}
+              {userName}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -87,15 +90,16 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
               navigate('/user-profile');
             }}
           >
-            <Typography textAlign="center">Profile</Typography>
+            <Typography sx={{ textAlign: 'center' }}>{t('profile')}</Typography>
           </MenuItem>
+
           <MenuItem
             onClick={() => {
               handleCloseMenu();
               logout();
             }}
           >
-            <Typography textAlign="center">Logout</Typography>
+            <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
           </MenuItem>
         </Menu>
       </Box>
