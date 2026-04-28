@@ -1,8 +1,8 @@
 import React, { FC, useState, MouseEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { t } from 'i18next';
 
 interface UserMenuProps {
   avatarUrl?: string;
@@ -11,6 +11,7 @@ interface UserMenuProps {
 const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { t } = useTranslation();
   const oidc = useAuth();
   const isAuthenticated = !!oidc?.isAuthenticated;
   const login = () => oidc?.signinRedirect?.();
