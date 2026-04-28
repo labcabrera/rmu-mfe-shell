@@ -111,6 +111,7 @@ const Header = () => {
             minHeight: { xs: 60, md: 80 },
             alignItems: 'center',
             py: { xs: 1, md: 1 },
+            position: 'relative',
           }}
         >
           <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, fontSize: { xs: 22, md: 32 }, alignSelf: 'center' }} />
@@ -123,6 +124,7 @@ const Header = () => {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
+              order: { md: -1 },
               textDecoration: 'none',
               py: 0,
               alignItems: 'center',
@@ -187,7 +189,18 @@ const Header = () => {
           >
             RMU-E
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2, alignItems: 'center' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              gap: 2,
+              alignItems: 'center',
+              flexWrap: 'nowrap',
+              overflowX: 'auto',
+              whiteSpace: 'nowrap',
+              order: { md: 0 },
+            }}
+          >
             {pages.map((page) => (
               <Box key={page.label} sx={{ display: 'inline-block', position: 'relative' }}>
                 <Button
@@ -196,6 +209,7 @@ const Header = () => {
                   sx={{
                     my: 2,
                     display: 'inline-flex',
+                    whiteSpace: 'nowrap',
                     mx: 1.5,
                     px: 1.5,
                     minWidth: 96,
