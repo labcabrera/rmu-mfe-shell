@@ -1,7 +1,7 @@
 import React, { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 
 interface UserMenuProps {
@@ -43,9 +43,10 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
         <Button
           variant="outlined"
           color="primary"
-          href="/register"
+          component={RouterLink}
+          to="/register"
           size="small"
-          sx={{ display: { xs: 'none', sm: 'inline-flex' }, textTransform: 'none' }}
+          sx={{ display: 'inline-flex', textTransform: 'none' }}
         >
           {t('Register')}
         </Button>

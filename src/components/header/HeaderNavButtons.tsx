@@ -29,7 +29,7 @@ const HeaderNavButtons: FC<{ pages: Page[] }> = ({ pages }) => {
     <Box
       sx={{
         flexGrow: 1,
-        display: { xs: 'none', md: 'flex' },
+        display: { xs: 'none', sm: 'none', md: 'none', lg: 'none', xl: 'flex' },
         gap: 2,
         alignItems: 'center',
         flexWrap: 'nowrap',
