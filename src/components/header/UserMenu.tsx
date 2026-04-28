@@ -2,6 +2,7 @@ import React, { FC, useState, MouseEvent } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { t } from 'i18next';
 
 interface UserMenuProps {
   avatarUrl?: string;
@@ -46,10 +47,10 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
           size="small"
           sx={{ display: { xs: 'none', sm: 'inline-flex' }, textTransform: 'none' }}
         >
-          Register
+          {t('Register')}
         </Button>
         <Button color="primary" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
-          Login
+          {t('Login')}
         </Button>
       </Box>
     );
@@ -91,6 +92,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
           >
             <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
           </MenuItem>
+
           <MenuItem
             onClick={() => {
               handleCloseMenu();

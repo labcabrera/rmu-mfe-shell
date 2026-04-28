@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { t } from 'i18next';
 import { imageBaseUrl } from '../services/config';
 
 const MODULES = [
@@ -136,13 +137,14 @@ export const Home = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h2" fontWeight={700} gutterBottom>
+          <Typography variant="h2" sx={{ fontWeight: 700 }} gutterBottom>
             Rolemaster Unified Companion
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
             OpenSource Rolemaster assistant for create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a
             clean, extendable toolset.
           </Typography>
+          <Typography>x{t('skill-administration')}x</Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" color="secondary" href="/docs">
               Get started

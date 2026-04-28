@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -24,6 +25,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material';
+import { t } from 'i18next';
 import { imageBaseUrl } from '../../services/config';
 import UserMenu from './UserMenu';
 
@@ -65,9 +67,22 @@ const pages = [
 const Header = () => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const [anchorElLocale, setAnchorElLocale] = React.useState<null | HTMLElement>(null);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [popperAnchor, setPopperAnchor] = React.useState<null | HTMLElement>(null);
   const [openSection, setOpenSection] = React.useState<string | null>(null);
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    try {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('locale') : null;
+      if (stored && stored !== i18n.language) {
+        i18n.changeLanguage(stored);
+      }
+    } catch (ignore) {
+      console.log('Error loading locale', ignore);
+    }
+  }, []);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -145,7 +160,7 @@ const Header = () => {
             >
               {pages.map((page, index) => (
                 <MenuItem key={index} onClick={handleCloseNavMenu} component={RouterLink} to={page.href}>
-                  {page.label}
+                  {t(page.label)}
                 </MenuItem>
               ))}
             </Menu>
@@ -197,7 +212,7 @@ const Header = () => {
                     isMdUp ? openSection === page.label ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" /> : undefined
                   }
                 >
-                  {page.label}
+                  {t(page.label)}
                 </Button>
                 <Popper
                   open={openSection === page.label}
@@ -214,7 +229,7 @@ const Header = () => {
                             <List disablePadding>
                               {page.links?.map((l) => (
                                 <ListItemButton key={l.label} component={RouterLink} to={l.href} onClick={handleCloseSection}>
-                                  <ListItemText primary={l.label} />
+                                  <ListItemText primary={t(l.label)} />
                                 </ListItemButton>
                               ))}
                             </List>
@@ -226,9 +241,49 @@ const Header = () => {
                 </Popper>
               </Box>
             ))}
-          </Box>
-          <Box sx={{ ml: 1, pr: { xs: 1, md: 2 }, display: 'flex', alignItems: 'center' }}>
-            <UserMenu userName="User name" avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
+            <Box sx={{ ml: 1, pr: { xs: 1, md: 2 }, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button color="inherit" onClick={(e) => setAnchorElLocale(e.currentTarget)} sx={{ textTransform: 'none', minWidth: 48 }}>
+                {i18n.language === 'es' ? 'ES' : 'EN'}
+              </Button>
+              <Menu
+                id="locale-menu"
+                anchorEl={anchorElLocale}
+                open={Boolean(anchorElLocale)}
+                onClose={() => setAnchorElLocale(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuItem
+                  onClick={async () => {
+                    try {
+                      const res = await i18n.changeLanguage('en');
+                      console.debug('changeLanguage en result', res);
+                      localStorage.setItem('locale', 'en');
+                    } catch (e) {
+                      console.error('changeLanguage en failed', e);
+                    }
+                    setAnchorElLocale(null);
+                  }}
+                >
+                  English
+                </MenuItem>
+                <MenuItem
+                  onClick={async () => {
+                    try {
+                      const res = await i18n.changeLanguage('es');
+                      console.debug('changeLanguage es result', res);
+                      localStorage.setItem('locale', 'es');
+                    } catch (e) {
+                      console.error('changeLanguage es failed', e);
+                    }
+                    setAnchorElLocale(null);
+                  }}
+                >
+                  Español
+                </MenuItem>
+              </Menu>
+              <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
+            </Box>
           </Box>
         </Toolbar>
       </Container>
