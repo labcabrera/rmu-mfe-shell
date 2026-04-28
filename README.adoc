@@ -31,3 +31,13 @@ npx serve -l 8080 dist
 ----
 
 
+// "postinstall": "echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/material/esm/package.json && echo '{\"type\":\"module\",\"sideEffects\":false,\"version\":\"7.3.1\"}' > node_modules/@mui/icons-material/esm/package.json"
+
+//     "eslint-config-prettier": "^10.1.8",
+//     "eslint-plugin-jsx-a11y": "^6.10.2",
+//     "eslint-plugin-prettier": "^5.5.4",
+//     "eslint-plugin-react": "^7.37.5",
+//     "eslint-plugin-react-hooks": "^7.1.1",
+//     "eslint-plugin-unused-imports": "^4.2.0",
+
+//     "eslint-plugin-import": "^2.32.0",

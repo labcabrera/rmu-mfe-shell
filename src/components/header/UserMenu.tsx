@@ -4,18 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 
 interface UserMenuProps {
-  userName?: string;
   avatarUrl?: string;
 }
 
-const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
+const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const oidc = useAuth();
   const isAuthenticated = !!oidc?.isAuthenticated;
-  const user = (oidc?.user as any)?.profile ?? oidc?.user ?? null;
   const login = () => oidc?.signinRedirect?.();
   const logout = () => oidc?.signoutRedirect?.();
+  const user = oidc?.user?.profile ?? oidc?.user ?? null;
+  const userName = oidc.user?.profile.preferred_username || 'Undefined';
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -55,19 +55,17 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
     );
   }
 
-  const displayName = user?.username || user?.name || userName;
-
   return (
     <>
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open menu">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
             <Avatar
-              alt={displayName}
+              alt={userName}
               src={avatarUrl || '/static/images/avatars/avatar-000.png'}
               sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
             >
-              {displayName[0]}
+              {userName}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -91,7 +89,7 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
               navigate('/user-profile');
             }}
           >
-            <Typography textAlign="center">Profile</Typography>
+            <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
           </MenuItem>
           <MenuItem
             onClick={() => {
@@ -99,7 +97,7 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
               logout();
             }}
           >
-            <Typography textAlign="center">Logout</Typography>
+            <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
           </MenuItem>
         </Menu>
       </Box>

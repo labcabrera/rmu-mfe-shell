@@ -135,7 +135,8 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           '@emotion/react': { singleton: true, requiredVersion: deps['@emotion/react'] },
           '@emotion/styled': { singleton: true, requiredVersion: deps['@emotion/styled'] },
           'react-oidc-context': { singleton: true, requiredVersion: deps['react-oidc-context'] },
-          'oidc-client-ts': { singleton: true, requiredVersion: deps['react-oidc-context'] },
+          'oidc-client-ts': { singleton: true, requiredVersion: deps['oidc-client-ts'] },
+          i18next: { singleton: true, requiredVersion: deps['i18next'] },
         },
       }),
       new HtmlWebPackPlugin({
