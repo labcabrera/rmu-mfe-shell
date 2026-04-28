@@ -6,6 +6,7 @@ import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 import { imageBaseUrl } from '../../services/config';
 import HeaderNavButtons from './HeaderNavButtons';
 import LanguageSelector from './LanguageSelector';
+import MobileMenu from './MobileMenu';
 import UserMenu from './UserMenu';
 
 const pages = [
@@ -69,7 +70,9 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: { xs: 60, md: 80 }, px: 2 }}>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+            <MobileMenu pages={pages} />
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <FilterVintageIcon sx={{ fontSize: { xs: 22, md: 32 }, minWidth: 28 }} />
               <Typography
