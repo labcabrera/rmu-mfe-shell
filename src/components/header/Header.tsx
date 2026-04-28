@@ -67,11 +67,21 @@ const pages = [
 const Header = () => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [popperAnchor, setPopperAnchor] = React.useState<null | HTMLElement>(null);
   const [openSection, setOpenSection] = React.useState<string | null>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [, setTick] = React.useState(0);
+
+  useEffect(() => {
+    const onLang = () => setTick((v) => v + 1);
+    i18n.on?.('languageChanged', onLang);
+    window.addEventListener('rmu:languageChanged', onLang as EventListener);
+    return () => {
+      i18n.off?.('languageChanged', onLang);
+      window.removeEventListener('rmu:languageChanged', onLang as EventListener);
+    };
+  }, [i18n]);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Container, useTheme, useMediaQuery, Link, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -7,7 +8,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { t } from 'i18next';
 import { imageBaseUrl } from '../services/config';
 
 const MODULES = [
@@ -52,6 +52,7 @@ export const Home = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
+  const { t } = useTranslation();
   const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
 
   useEffect(() => {
@@ -144,7 +145,9 @@ export const Home = () => {
             OpenSource Rolemaster assistant for create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a
             clean, extendable toolset.
           </Typography>
-          <Typography>x{t('skill-administration')}x</Typography>
+          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
+            {t('shell.home.subtitle')}
+          </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" color="secondary" href="/docs">
               Get started
@@ -157,7 +160,7 @@ export const Home = () => {
       </Box>
 
       <Container maxWidth="lg" sx={{ py: 10 }}>
-        <Alert severity="info" sx={{ mb: 1 }}>
+        <Alert severity="warning" sx={{ mb: 1 }}>
           This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
           <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises (ICE)</Link>. Please support official publications if you enjoy Rolemaster.
         </Alert>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
 import { Button, Menu, MenuItem } from '@mui/material';
@@ -7,28 +7,36 @@ const LanguageSelector: React.FC = () => {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  React.useEffect(() => {
-    try {
-      const stored = typeof window !== 'undefined' ? localStorage.getItem('locale') : null;
-      if (stored && stored !== i18n.language) {
-        i18n.changeLanguage(stored).catch((e) => console.error('i18n init changeLanguage failed', e));
-      }
-    } catch (e) {
-      // ignore
-    }
-  }, [i18n]);
-
   const open = Boolean(anchorEl);
-  const label = i18n.language === 'es' ? 'ES' : 'EN';
+  const label = i18n.language === 'es' ? 'Es' : 'En';
 
-  const handleOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
+  const LANGUAGES: { code: string; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
+  ];
+
+  const handleOpen = (e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   const change = async (lng: string) => {
+    console.log('LanguageSelector.change', lng);
     try {
       await i18n.changeLanguage(lng);
       try {
         localStorage.setItem('locale', lng);
+      } catch (ignore) {
+        console.log('Error updating language', ignore);
+      }
+      try {
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('rmu:languageChanged', { detail: lng }));
+        }
+      } catch (e) {
+        // ignore
+      }
+      try {
+        // @ts-ignore
+        i18n.emit?.('languageChanged', lng);
       } catch (e) {
         // ignore
       }
@@ -37,6 +45,18 @@ const LanguageSelector: React.FC = () => {
     }
     handleClose();
   };
+
+  useEffect(() => {
+    try {
+      console.log('LanguageSelector.useEffect', i18n);
+      const stored = typeof window !== 'undefined' ? localStorage.getItem('locale') : null;
+      if (stored && stored !== i18n.language) {
+        i18n.changeLanguage(stored).catch((e) => console.error('i18n init changeLanguage failed', e));
+      }
+    } catch (ignore) {
+      console.error('Error loading stored language', ignore);
+    }
+  }, [i18n]);
 
   return (
     <>
@@ -57,20 +77,17 @@ const LanguageSelector: React.FC = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem
-          onClick={() => {
-            change('en');
-          }}
-        >
-          English
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            change('es');
-          }}
-        >
-          Español
-        </MenuItem>
+        {LANGUAGES.map((lng) => (
+          <MenuItem
+            key={lng.code}
+            selected={i18n.language === lng.code}
+            onClick={() => {
+              change(lng.code);
+            }}
+          >
+            {lng.label}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );

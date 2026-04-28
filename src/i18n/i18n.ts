@@ -15,15 +15,12 @@ export async function initI18n() {
       debug: true,
       lng: 'en',
       fallbackLng: 'en',
-
       ns: ['common'],
       defaultNS: 'common',
-
       backend: {
         loadPath: `${base}locales/common_{{lng}}.json`,
         crossDomain: true,
       },
-
       returnNull: false,
       interpolation: {
         escapeValue: false,

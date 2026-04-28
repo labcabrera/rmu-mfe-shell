@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Grid, Typography, Link } from '@mui/material';
 
 const Footer: React.FC = () => {
@@ -64,13 +65,15 @@ const Footer: React.FC = () => {
                   <Box component="ul" sx={{ listStyle: 'none', p: 0, m: 0, '& li': { mb: 1 } }}>
                     {section.links.map((l) => (
                       <li key={l.label}>
-                        <Link
-                          href={l.href}
-                          sx={{ color: 'text.secondary' }}
-                          {...(l.openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                        >
-                          {l.label}
-                        </Link>
+                        {l.openInNewTab ? (
+                          <Link href={l.href} sx={{ color: 'text.secondary' }} target="_blank" rel="noopener noreferrer">
+                            {l.label}
+                          </Link>
+                        ) : (
+                          <Link component={RouterLink} to={l.href} sx={{ color: 'text.secondary', textDecoration: 'none' }}>
+                            {l.label}
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </Box>
