@@ -16,7 +16,6 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const isAuthenticated = !!oidc?.isAuthenticated;
   const login = () => oidc?.signinRedirect?.();
   const logout = () => oidc?.signoutRedirect?.();
-  const user = oidc?.user?.profile ?? oidc?.user ?? null;
   const userName = oidc.user?.profile.preferred_username || 'Undefined';
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
@@ -91,7 +90,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
               navigate('/user-profile');
             }}
           >
-            <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
+            <Typography sx={{ textAlign: 'center' }}>{t('profile')}</Typography>
           </MenuItem>
 
           <MenuItem

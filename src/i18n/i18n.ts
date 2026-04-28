@@ -5,7 +5,7 @@ import { assetsBaseUrl, i18nBase } from '../services/config';
 
 export const i18n = i18next.createInstance();
 
-export async function initI18n() {
+export async function initI18n(locale?: string) {
   const base = i18nBase || assetsBaseUrl || '';
 
   await i18n
@@ -13,7 +13,7 @@ export async function initI18n() {
     .use(initReactI18next)
     .init({
       debug: true,
-      lng: 'en',
+      lng: locale,
       fallbackLng: 'en',
       ns: ['common'],
       defaultNS: 'common',

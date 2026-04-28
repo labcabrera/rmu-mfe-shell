@@ -1,4 +1,4 @@
-import React, { useEffect, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
 import { Button, Menu, MenuItem } from '@mui/material';
@@ -27,36 +27,11 @@ const LanguageSelector: React.FC = () => {
       } catch (ignore) {
         console.log('Error updating language', ignore);
       }
-      try {
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('rmu:languageChanged', { detail: lng }));
-        }
-      } catch (e) {
-        // ignore
-      }
-      try {
-        // @ts-ignore
-        i18n.emit?.('languageChanged', lng);
-      } catch (e) {
-        // ignore
-      }
     } catch (e) {
       console.error('changeLanguage failed', e);
     }
     handleClose();
   };
-
-  useEffect(() => {
-    try {
-      console.log('LanguageSelector.useEffect', i18n);
-      const stored = typeof window !== 'undefined' ? localStorage.getItem('locale') : null;
-      if (stored && stored !== i18n.language) {
-        i18n.changeLanguage(stored).catch((e) => console.error('i18n init changeLanguage failed', e));
-      }
-    } catch (ignore) {
-      console.error('Error loading stored language', ignore);
-    }
-  }, [i18n]);
 
   return (
     <>

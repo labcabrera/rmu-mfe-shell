@@ -7,7 +7,8 @@ import { i18n, initI18n } from './i18n/i18n';
 import AuthProvider from './services/auth/AuthProvider';
 
 const mount = async () => {
-  await initI18n();
+  const locale = localStorage.getItem('locale') || undefined;
+  await initI18n(locale);
   createRoot(document.getElementById('app')!).render(
     <StrictMode>
       <BrowserRouter>

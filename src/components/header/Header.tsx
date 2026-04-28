@@ -195,73 +195,87 @@ const Header = () => {
           >
             RMU-E
           </Typography>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-              gap: 2,
-              alignItems: 'center',
-              flexWrap: 'nowrap',
-              overflowX: 'auto',
-              whiteSpace: 'nowrap',
-              order: { md: 0 },
-            }}
-          >
-            {pages.map((page) => (
-              <Box key={page.label} sx={{ display: 'inline-block', position: 'relative' }}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{
-                    my: 2,
-                    display: 'inline-flex',
-                    whiteSpace: 'nowrap',
-                    mx: 1.5,
-                    px: 1.5,
-                    minWidth: 96,
-                    alignItems: 'center',
-                    '& .MuiButton-endIcon': { ml: 0.5, display: 'inline-flex', alignItems: 'center' },
-                  }}
-                  onClick={(e) => {
-                    if (openSection === page.label) handleCloseSection();
-                    else handleOpenSection(e, page.label);
-                  }}
-                  aria-haspopup="true"
-                  aria-expanded={openSection === page.label}
-                  endIcon={
-                    isMdUp ? openSection === page.label ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" /> : undefined
-                  }
-                >
-                  {t(page.label)}
-                </Button>
-                <Popper
-                  open={openSection === page.label}
-                  anchorEl={popperAnchor}
-                  placement="bottom-start"
-                  disablePortal={false}
-                  style={{ zIndex: 1400 }}
-                >
-                  {openSection === page.label && (
-                    <ClickAwayListener onClickAway={handleCloseSection}>
-                      <Paper onMouseEnter={() => {}} onMouseLeave={() => handleCloseSection()} sx={{ mt: 1, p: 2, minWidth: 240 }} elevation={6}>
-                        <Grid container spacing={2}>
-                          <Grid size={{ xs: 12, sm: 12 }}>
-                            <List disablePadding>
-                              {page.links?.map((l) => (
-                                <ListItemButton key={l.label} component={RouterLink} to={l.href} onClick={handleCloseSection}>
-                                  <ListItemText primary={t(l.label)} />
-                                </ListItemButton>
-                              ))}
-                            </List>
+          <Box sx={{ flexGrow: 1, display: 'flex', width: '100%', alignItems: 'center' }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'none', md: 'flex' },
+                gap: 2,
+                alignItems: 'center',
+                flexWrap: 'nowrap',
+                overflowX: 'auto',
+                whiteSpace: 'nowrap',
+                order: { md: 0 },
+                minWidth: 0,
+              }}
+            >
+              {pages.map((page) => (
+                <Box key={page.label} sx={{ display: 'inline-block', position: 'relative' }}>
+                  <Button
+                    variant="text"
+                    color="primary"
+                    sx={{
+                      my: 2,
+                      display: 'inline-flex',
+                      whiteSpace: 'nowrap',
+                      mx: 1.5,
+                      px: 1.5,
+                      minWidth: 96,
+                      alignItems: 'center',
+                      '& .MuiButton-endIcon': { ml: 0.5, display: 'inline-flex', alignItems: 'center' },
+                    }}
+                    onClick={(e) => {
+                      if (openSection === page.label) handleCloseSection();
+                      else handleOpenSection(e, page.label);
+                    }}
+                    aria-haspopup="true"
+                    aria-expanded={openSection === page.label}
+                    endIcon={
+                      isMdUp ? openSection === page.label ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" /> : undefined
+                    }
+                  >
+                    {t(page.label)}
+                  </Button>
+                  <Popper
+                    open={openSection === page.label}
+                    anchorEl={popperAnchor}
+                    placement="bottom-start"
+                    disablePortal={false}
+                    style={{ zIndex: 1400 }}
+                  >
+                    {openSection === page.label && (
+                      <ClickAwayListener onClickAway={handleCloseSection}>
+                        <Paper onMouseEnter={() => {}} onMouseLeave={() => handleCloseSection()} sx={{ mt: 1, p: 2, minWidth: 240 }} elevation={6}>
+                          <Grid container spacing={2}>
+                            <Grid size={{ xs: 12, sm: 12 }}>
+                              <List disablePadding>
+                                {page.links?.map((l) => (
+                                  <ListItemButton key={l.label} component={RouterLink} to={l.href} onClick={handleCloseSection}>
+                                    <ListItemText primary={t(l.label)} />
+                                  </ListItemButton>
+                                ))}
+                              </List>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </Paper>
-                    </ClickAwayListener>
-                  )}
-                </Popper>
-              </Box>
-            ))}
-            <Box sx={{ ml: 1, pr: { xs: 1, md: 2 }, display: 'flex', alignItems: 'center', gap: 1 }}>
+                        </Paper>
+                      </ClickAwayListener>
+                    )}
+                  </Popper>
+                </Box>
+              ))}
+            </Box>
+
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                ml: 2,
+                pr: { xs: 1, md: 2 },
+                minWidth: 0,
+                gap: 3,
+              }}
+            >
               <LanguageSelector />
               <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
             </Box>
