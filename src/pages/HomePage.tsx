@@ -12,39 +12,39 @@ import { imageBaseUrl } from '../services/config';
 
 const MODULES = [
   {
-    title: 'Core',
-    desc: 'Adjust game settings such as the creation of realms, races and professions, and define the general game configuration. You can use the standard RMU settings or create as many game-specific customisations as you like.',
+    title: 'core',
+    desc: 'shell.home.module-core-desc',
     img: `${imageBaseUrl}images/generic/core.png`,
     backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/core',
   },
   {
-    title: 'Strategic',
-    desc: 'Create a game with your friends using characters from a specific realm. The strategic mode allows you to create characters, equip them, and set the rules for the campaign you’ll be playing. Create your own factions and customise the characters who will be involved in future matches.',
+    title: 'strategic',
+    desc: 'shell.home.module-strategic-desc',
     img: `${imageBaseUrl}images/generic/strategic.png`,
     backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/strategic',
   },
   {
-    title: 'Tactical',
-    desc: 'Once you’ve created a campaign in tactical mode, you can battle against other players or the environment. Simply choose who’s taking part in the battle and roll the dice.',
+    title: 'tactical',
+    desc: 'shell.home.module-tactical-desc',
     img: `${imageBaseUrl}images/generic/tactical.png`,
     backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/tactical',
   },
   {
-    title: 'NPCs',
-    desc: "Use the game's NPCs or create your own. NPCs can range from a level-one sheep to a specific level-500 character. Good luck with it.",
+    title: 'npcs',
+    desc: 'shell.home.module-npcs-desc',
     img: `${imageBaseUrl}images/generic/npcs.png`,
     backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/npcs',
   },
   {
-    title: 'Spells',
-    desc: "Use the spells from the game's default spell lists or create your own spell lists.",
+    title: 'spells',
+    desc: 'shell.home.module-spells-desc',
     img: `${imageBaseUrl}images/generic/spells.png`,
     backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
-    href: '/npcs',
+    href: '/spells',
   },
 ];
 
@@ -142,18 +142,14 @@ export const Home = () => {
             Rolemaster Unified Companion
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            OpenSource Rolemaster assistant for create campaigns, manage factions, resolve tactical combats and keep your sessions organized with a
-            clean, extendable toolset.
-          </Typography>
-          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
             {t('shell.home.subtitle')}
           </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" color="secondary" href="/docs">
-              Get started
+              {t('shell.home.get-started')}
             </Button>
             <Button variant="contained" color="secondary" href="/strategic/games/create">
-              Start a campaign
+              {t('shell.home.start-campaign')}
             </Button>
           </Stack>
         </Container>
@@ -196,9 +192,9 @@ export const Home = () => {
                 }}
               >
                 <CardContent sx={{ p: 0, flex: 1 }}>
-                  <Typography variant="h5">{f.title}</Typography>
+                  <Typography variant="h5">{t(f.title)}</Typography>
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    {f.desc}
+                    {t(f.desc)}
                   </Typography>
                 </CardContent>
                 <Box sx={{ ml: { xs: 0, md: 'auto' }, mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 240 } }}>

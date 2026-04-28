@@ -31,37 +31,44 @@ import UserMenu from './UserMenu';
 
 const pages = [
   {
-    label: 'Core',
+    label: 'core',
     href: '/core',
     links: [
-      { label: 'Core', href: '/core' },
-      { label: 'Realms', href: '/core/realms' },
-      { label: 'Races', href: '/core/races' },
-      { label: 'Professions', href: '/core/professions' },
-      { label: 'Skill categories', href: '/core/skills' },
-      { label: 'Skills', href: '/core/skills' },
-      { label: 'Traits', href: '/core/traits' },
+      { label: 'core', href: '/core' },
+      { label: 'realms', href: '/core/realms' },
+      { label: 'races', href: '/core/races' },
+      { label: 'professions', href: '/core/professions' },
+      { label: 'skill-categories', href: '/core/skills' },
+      { label: 'skills', href: '/core/skills' },
+      { label: 'traits', href: '/core/traits' },
     ],
   },
   {
     label: 'Strategic',
     href: '/strategic',
     links: [
-      { label: 'Strategic', href: '/strategic' },
-      { label: 'Strategic games', href: '/strategic' },
+      { label: 'strategic', href: '/strategic' },
+      { label: 'strategic-games', href: '/strategic' },
     ],
   },
   {
-    label: 'Tactical',
+    label: 'tactical',
     href: '/tactical',
     links: [
-      { label: 'Tactical', href: '/tactical' },
-      { label: 'Games', href: '/tactical' },
+      { label: 'tactical', href: '/tactical' },
+      { label: 'tactical-games', href: '/tactical' },
     ],
   },
-  { label: 'NPCs', href: '/npcs', links: [{ label: 'NPCs', href: '/npcs' }] },
-  { label: 'Items', href: '/items', links: [{ label: 'Games', href: '/items' }] },
-  { label: 'Spells', href: '/spells', links: [{ label: 'Games', href: '/spells' }] },
+  { label: 'npcs', href: '/npcs', links: [{ label: 'npcs', href: '/npcs' }] },
+  { label: 'items', href: '/items', links: [{ label: 'items', href: '/items' }] },
+  {
+    label: 'spells',
+    href: '/spells',
+    links: [
+      { label: 'spells', href: '/spells' },
+      { label: 'spell-lists', href: '/spells/spell-lists' },
+    ],
+  },
 ];
 
 const Header = () => {
