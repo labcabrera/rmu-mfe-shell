@@ -1,7 +1,7 @@
 import React, { FC, useState, MouseEvent } from 'react';
+import { useAuth } from 'react-oidc-context';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { useAuth } from '../../services/auth/AuthProvider';
 
 interface UserMenuProps {
   userName?: string;
@@ -11,7 +11,11 @@ interface UserMenuProps {
 const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { isAuthenticated, user, login, logout } = useAuth();
+  const oidc = useAuth();
+  const isAuthenticated = !!oidc?.isAuthenticated;
+  const user = (oidc?.user as any)?.profile ?? oidc?.user ?? null;
+  const login = () => oidc?.signinRedirect?.();
+  const logout = () => oidc?.signoutRedirect?.();
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -51,7 +55,7 @@ const UserMenu: FC<UserMenuProps> = ({ userName = 'User', avatarUrl = '' }) => {
     );
   }
 
-  const displayName = user?.username || userName;
+  const displayName = user?.username || user?.name || userName;
 
   return (
     <>

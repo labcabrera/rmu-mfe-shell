@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Avatar,
@@ -15,13 +16,13 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-import { useAuth } from '../../services/auth/AuthProvider';
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
+  const user = auth.user;
 
-  const username = user?.username || user?.preferred_username || 'Usuario';
-  const email = user?.email || user?.email_verified || '';
+  const username = auth.user?.profile.preferred_username || 'Unknown';
+  const email = user?.profile.email || 'Not defined email';
 
   const [lang, setLang] = useState<string>(() => {
     try {
