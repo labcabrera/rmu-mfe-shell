@@ -125,7 +125,9 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           items: `items@${process.env.RMU_MFE_ITEMS_PUBLIC_PATH}items-app.js`,
           spells: `spells@${process.env.RMU_MFE_SPELLS_PUBLIC_PATH}spells-app.js`,
         },
-        exposes: {},
+        exposes: {
+          './i18n': './src/i18n/i18n',
+        },
         shared: {
           react: { singleton: true, requiredVersion: deps.react },
           'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
@@ -136,7 +138,9 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           '@emotion/styled': { singleton: true, requiredVersion: deps['@emotion/styled'] },
           'react-oidc-context': { singleton: true, requiredVersion: deps['react-oidc-context'] },
           'oidc-client-ts': { singleton: true, requiredVersion: deps['oidc-client-ts'] },
-          i18next: { singleton: true, requiredVersion: deps['i18next'] },
+          i18next: { singleton: true, requiredVersion: deps.i18next },
+          'react-i18next': { singleton: true, requiredVersion: deps['react-i18next'] },
+          'i18next-http-backend': { singleton: true, requiredVersion: deps['i18next-http-backend'] },
         },
       }),
       new HtmlWebPackPlugin({
