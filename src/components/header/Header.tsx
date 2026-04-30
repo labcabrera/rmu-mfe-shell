@@ -25,7 +25,7 @@ const pages = [
     ],
   },
   {
-    label: 'Strategic',
+    label: 'strategic',
     href: '/strategic',
     links: [
       { label: 'strategic', href: '/strategic' },
