@@ -48,10 +48,10 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
           size="small"
           sx={{ display: 'inline-flex', textTransform: 'none' }}
         >
-          {t('Register')}
+          {t('register')}
         </Button>
         <Button color="primary" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
-          {t('Login')}
+          {t('login')}
         </Button>
       </Box>
     );

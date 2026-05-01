@@ -7,7 +7,6 @@ export const i18n = i18next.createInstance();
 
 export async function initI18n(locale?: string) {
   const base = i18nBase || assetsBaseUrl || '';
-
   await i18n
     .use(HttpBackend)
     .use(initReactI18next)
@@ -15,10 +14,11 @@ export async function initI18n(locale?: string) {
       debug: true,
       lng: locale,
       fallbackLng: 'en',
-      ns: ['common'],
+      ns: ['common', 'items'],
       defaultNS: 'common',
+      fallbackNS: 'items',
       backend: {
-        loadPath: `${base}locales/common_{{lng}}.json`,
+        loadPath: `${base}locales/{{ns}}_{{lng}}.json`,
         crossDomain: true,
       },
       returnNull: false,
@@ -26,6 +26,5 @@ export async function initI18n(locale?: string) {
         escapeValue: false,
       },
     });
-
   return i18n;
 }
