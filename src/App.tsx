@@ -4,8 +4,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
-import Home from './components/home/Home';
 import UserProfile from './components/user/UserProfile';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import DocsPage from './pages/DocsPage';
+import HomePage from './pages/HomePage';
+import LegalPage from './pages/LegalPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import RegisterPage from './pages/RegisterPage';
+import TechnicalInfoPage from './pages/TechnicalInfoPage';
 import theme from './theme';
 
 const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
@@ -22,7 +29,14 @@ const App = () => {
       <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/legal" element={<LegalPage />} />
+          <Route path="/technical-info" element={<TechnicalInfoPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/docs" element={<DocsPage />} />
           <Route path="/core/*" element={<RemoteCoreApp />} />
           <Route path="/strategic/*" element={<RemoteStrategicApp />} />
           <Route path="/tactical/*" element={<RemoteTacticalApp />} />

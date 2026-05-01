@@ -1,122 +1,101 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
-import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 import { imageBaseUrl } from '../../services/config';
+import HeaderNavButtons from './HeaderNavButtons';
+import LanguageSelector from './LanguageSelector';
+import MobileMenu from './MobileMenu';
 import UserMenu from './UserMenu';
 
 const pages = [
-  { label: 'Core', href: '/core' },
-  { label: 'Strategic', href: '/strategic' },
-  { label: 'Tactical', href: '/tactical' },
-  { label: 'NPCs', href: '/npcs' },
-  { label: 'Items', href: '/items' },
-  { label: 'Spells', href: '/spells' },
+  {
+    label: 'core',
+    href: '/core',
+    links: [
+      { label: 'core', href: '/core' },
+      { label: 'realms', href: '/core/realms' },
+      { label: 'races', href: '/core/races' },
+      { label: 'professions', href: '/core/professions' },
+      { label: 'skill-categories', href: '/core/skills' },
+      { label: 'skills', href: '/core/skills' },
+      { label: 'traits', href: '/core/traits' },
+      { label: 'maneuvers', href: '/core/maneuvers' },
+    ],
+  },
+  {
+    label: 'strategic',
+    href: '/strategic',
+    links: [
+      { label: 'strategic', href: '/strategic' },
+      { label: 'strategic-games', href: '/strategic' },
+    ],
+  },
+  {
+    label: 'tactical',
+    href: '/tactical',
+    links: [
+      { label: 'tactical', href: '/tactical' },
+      { label: 'tactical-games', href: '/tactical' },
+    ],
+  },
+  { label: 'npcs', href: '/npcs', links: [{ label: 'npcs', href: '/npcs' }] },
+  { label: 'items', href: '/items', links: [{ label: 'items', href: '/items' }] },
+  {
+    label: 'spells',
+    href: '/spells',
+    links: [
+      { label: 'spells', href: '/spells' },
+      { label: 'spell-lists', href: '/spells/spell-lists' },
+    ],
+  },
 ];
 
 const Header = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const { i18n } = useTranslation();
+  const [, setTick] = React.useState(0);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  useEffect(() => {
+    const onLang = () => setTick((v) => v + 1);
+    i18n.on?.('languageChanged', onLang);
+    window.addEventListener('rmu:languageChanged', onLang as EventListener);
+    return () => {
+      i18n.off?.('languageChanged', onLang);
+      window.removeEventListener('rmu:languageChanged', onLang as EventListener);
+    };
+  }, [i18n]);
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <FilterVintageIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            color="primary"
-            variant="h6"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontWeight: 600,
-              letterSpacing: '.3rem',
-              textDecoration: 'none',
-            }}
-          >
-            RMU-Engine
-          </Typography>
+        <Toolbar disableGutters sx={{ minHeight: { xs: 60, md: 80 }, px: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+            <MobileMenu pages={pages} />
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu} component={RouterLink} to={page.href}>
-                  {page.label}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
-          <FilterVintageIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            RMU-E
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.label}
-                component={RouterLink}
-                to={page.href}
-                onClick={handleCloseNavMenu}
-                variant="text"
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <FilterVintageIcon sx={{ fontSize: { xs: 22, md: 32 }, minWidth: 28 }} />
+              <Typography
                 color="primary"
-                sx={{ my: 2, display: 'block' }}
+                variant="h6"
+                noWrap
+                component={RouterLink}
+                to="/"
+                sx={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}
               >
-                {page.label}
-              </Button>
-            ))}
+                RMU-Engine
+              </Typography>
+            </Box>
+
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+              <HeaderNavButtons pages={pages} />
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <LanguageSelector />
+              <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
+            </Box>
           </Box>
-          <UserMenu userName="User name" avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
         </Toolbar>
       </Container>
     </AppBar>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Avatar,
@@ -15,18 +16,18 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-import { useAuth } from '../../services/auth/AuthProvider';
 
 const UserProfile = () => {
-  const { user } = useAuth();
+  const auth = useAuth();
+  const user = auth.user;
 
-  const username = user?.username || user?.preferred_username || 'Usuario';
-  const email = user?.email || user?.email_verified || '';
+  const username = auth.user?.profile.preferred_username || 'Unknown';
+  const email = user?.profile.email || 'Not defined email';
 
   const [lang, setLang] = useState<string>(() => {
     try {
       return (localStorage.getItem('lang') as string) || 'en';
-    } catch (e) {
+    } catch {
       return 'en';
     }
   });
@@ -34,13 +35,13 @@ const UserProfile = () => {
   useEffect(() => {
     try {
       localStorage.setItem('lang', lang);
-    } catch (e) {}
+    } catch {}
   }, [lang]);
 
   const [unit, setUnit] = useState<string>(() => {
     try {
       return (localStorage.getItem('unit') as string) || 'metric';
-    } catch (e) {
+    } catch {
       return 'metric';
     }
   });
@@ -48,14 +49,16 @@ const UserProfile = () => {
   useEffect(() => {
     try {
       localStorage.setItem('unit', unit);
-    } catch (e) {}
+    } catch {}
   }, [unit]);
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 1 }}>
+    <Container maxWidth="lg" sx={{ mt: 1 }}>
       <Paper sx={{ p: 1 }} elevation={2}>
         <Box display="flex" alignItems="center" gap={2} mb={2}>
-          <Avatar sx={{ width: 80, height: 80 }}>{username[0]}</Avatar>
+          <Avatar sx={{ width: 80, height: 80 }} src="http://localhost:4000/images/generic/races.png">
+            {username[0]}
+          </Avatar>
           <Box>
             <Typography variant="h5">{username}</Typography>
             {email && (
