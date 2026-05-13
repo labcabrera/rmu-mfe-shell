@@ -25,6 +25,13 @@ const isExpectedSilentLoginError = (error: unknown): boolean => {
   return Array.from(silentLoginErrors).some((expectedError) => message.includes(expectedError));
 };
 
+const getPostLoginPath = (state: unknown): string => {
+  if (!state || typeof state !== 'object' || !('returnTo' in state)) return '/';
+  const returnTo = (state as { returnTo?: unknown }).returnTo;
+  if (typeof returnTo !== 'string') return '/';
+  return returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/';
+};
+
 const SilentSignIn: React.FC = () => {
   const { activeNavigator, isAuthenticated, isLoading, signinSilent } = useAuth();
 
@@ -51,15 +58,15 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   const config: AuthProviderProps = {
     authority: oidcAuthority,
     client_id: oidcClientId,
-    redirect_uri: `${appOrigin}/`,
+    redirect_uri: `${appOrigin}/signin-callback`,
     post_logout_redirect_uri: `${appOrigin}/`,
     silent_redirect_uri: `${appOrigin}/silent-check-sso.html`,
     response_type: 'code',
     scope: 'openid profile email',
     automaticSilentRenew: true,
     loadUserInfo: true,
-    onSigninCallback: () => {
-      window.history.replaceState({}, document.title, window.location.pathname);
+    onSigninCallback: (user) => {
+      window.history.replaceState({}, document.title, getPostLoginPath(user?.state));
     },
   };
 

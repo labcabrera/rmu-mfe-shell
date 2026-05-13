@@ -1,7 +1,7 @@
 import React, { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
 
 interface UserMenuProps {
@@ -10,13 +10,20 @@ interface UserMenuProps {
 
 const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation();
   const oidc = useAuth();
   const isAuthenticated = !!oidc?.isAuthenticated;
-  const login = () => oidc.signinRedirect();
+  const login = () => oidc.signinRedirect({ state: { returnTo: `${location.pathname}${location.search}${location.hash}` } });
   const logout = () => oidc?.signoutRedirect?.();
   const userName = oidc.user?.profile.preferred_username || 'Undefined';
+  const avatarInitials = userName
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,7 +77,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
               src={avatarUrl || '/static/images/avatars/avatar-000.png'}
               sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
             >
-              {userName}
+              {avatarInitials}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -103,7 +110,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
               logout();
             }}
           >
-            <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+            <Typography sx={{ textAlign: 'center' }}>{t('logout', 'Logout')}</Typography>
           </MenuItem>
         </Menu>
       </Box>

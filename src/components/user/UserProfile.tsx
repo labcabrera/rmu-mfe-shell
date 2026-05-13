@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Avatar,
   Box,
   Container,
@@ -32,12 +28,18 @@ type UserProfileProps = {
 };
 
 const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange }) => {
-  const auth = useAuth();
+  const { user } = useAuth();
   const { i18n } = useTranslation();
-  const user = auth.user;
 
-  const username = auth.user?.profile.preferred_username || 'Unknown';
+  const username = user?.profile.preferred_username || user?.profile.name || 'Unknown';
   const email = user?.profile.email || 'Not defined email';
+  const displayName = user?.profile.name || username;
+  const avatarInitials = displayName
+    .split(/\s+/)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
   const [lang, setLang] = useState<string>(() => {
     try {
@@ -78,10 +80,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange 
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
             <Avatar sx={{ width: 80, height: 80 }} src={`${imageBaseUrl}images/generic/races.png`}>
-              {username[0]}
+              {avatarInitials}
             </Avatar>
             <Box sx={{ minWidth: 0 }}>
-              <Typography variant="h5">{username}</Typography>
+              <Typography variant="h5">{displayName}</Typography>
               {email && (
                 <Typography variant="body2" color="text.secondary">
                   {email}
@@ -140,28 +142,23 @@ const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange 
             </Stack>
           </Stack>
 
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Profile details</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box
-                component="pre"
-                sx={{
-                  m: 0,
-                  p: 2,
-                  overflow: 'auto',
-                  borderRadius: 1,
-                  color: 'text.secondary',
-                  bgcolor: 'background.default',
-                  fontSize: 12,
-                  whiteSpace: 'pre-wrap',
-                }}
-              >
-                {JSON.stringify(user?.profile || {}, null, 2)}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+          <Stack spacing={1}>
+            <Typography variant="h6">Profile details</Typography>
+            <Stack spacing={1}>
+              <Typography variant="body2">
+                <Box component="span" sx={{ color: 'text.secondary' }}>
+                  Username:
+                </Box>{' '}
+                {username}
+              </Typography>
+              <Typography variant="body2">
+                <Box component="span" sx={{ color: 'text.secondary' }}>
+                  Email:
+                </Box>{' '}
+                {email}
+              </Typography>
+            </Stack>
+          </Stack>
         </Stack>
       </Paper>
     </Container>

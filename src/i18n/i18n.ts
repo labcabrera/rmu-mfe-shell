@@ -11,7 +11,7 @@ export async function initI18n(locale?: string) {
     .use(HttpBackend)
     .use(initReactI18next)
     .init({
-      debug: true,
+      debug: process.env.NODE_ENV !== 'production',
       lng: locale,
       fallbackLng: 'en',
       ns: ['common', 'items'],

@@ -17,7 +17,8 @@ const deps = require_('./package.json').dependencies;
 
 export default function (_: any, argv: any): Configuration & { devServer?: DevServerConfiguration } {
   const mode: string | undefined = argv && argv.mode;
-  dotenv.config({ path: path.resolve(__dirname, `.env.${mode}`) });
+  const envFile = path.resolve(__dirname, `.env.${mode}`);
+  dotenv.config({ path: envFile });
 
   const publicPath = process.env.RMU_MFE_SHELL_PUBLIC_PATH;
   const port = process.env.PORT ? Number(process.env.PORT) : 8080;
@@ -91,7 +92,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       ],
     },
     plugins: [
-      new Dotenv({ systemvars: true }),
+      new Dotenv({ path: envFile, systemvars: true }),
       new CopyWebpackPlugin({
         patterns: [
           {
