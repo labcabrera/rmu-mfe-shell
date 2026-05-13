@@ -66,7 +66,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     automaticSilentRenew: true,
     loadUserInfo: true,
     onSigninCallback: (user) => {
-      window.history.replaceState({}, document.title, getPostLoginPath(user?.state));
+      window.location.replace(getPostLoginPath(user?.state));
     },
   };
 
