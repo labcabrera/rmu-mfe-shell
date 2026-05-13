@@ -30,6 +30,16 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
     login();
   };
 
+  const headerButtonSx = {
+    color: 'inherit',
+    borderColor: 'currentColor',
+    textTransform: 'none',
+    '&:hover': {
+      borderColor: 'currentColor',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    },
+  };
+
   if (!isAuthenticated) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: { xs: 1, md: 0 } }}>
@@ -39,11 +49,11 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
           component={RouterLink}
           to="/register"
           size="small"
-          sx={{ display: 'inline-flex', textTransform: 'none' }}
+          sx={headerButtonSx}
         >
           {t('register')}
         </Button>
-        <Button color="inherit" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
+        <Button color="inherit" variant="outlined" size="small" onClick={handleLoginClick} sx={headerButtonSx}>
           {t('login')}
         </Button>
       </Box>

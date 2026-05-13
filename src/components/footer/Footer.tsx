@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Grid, Typography, Link } from '@mui/material';
 
-const Footer: React.FC = () => {
+export default function Footer() {
   const year = new Date().getFullYear();
 
   const sections: {
@@ -102,6 +102,4 @@ const Footer: React.FC = () => {
       </Container>
     </Box>
   );
-};
-
-export default Footer;
+}
