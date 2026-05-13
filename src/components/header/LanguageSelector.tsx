@@ -37,7 +37,7 @@ const LanguageSelector: React.FC = () => {
     <>
       <Button
         variant="text"
-        color="primary"
+        color="inherit"
         onClick={handleOpen}
         startIcon={<LanguageIcon fontSize="small" />}
         sx={{ textTransform: 'none', minWidth: 48 }}

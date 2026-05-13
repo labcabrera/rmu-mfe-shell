@@ -15,7 +15,7 @@ const MobileMenu: React.FC<{ pages: Page[] }> = ({ pages }) => {
 
   return (
     <>
-      <Box sx={{ display: { xs: 'flex', lg: 'none', xl: 'none' }, alignItems: 'center' }}>
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', flexShrink: 0 }}>
         <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggle(true)} sx={{ mr: 1 }}>
           <MenuIcon />
         </IconButton>

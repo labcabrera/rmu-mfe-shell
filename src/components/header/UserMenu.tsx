@@ -35,7 +35,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: { xs: 1, md: 0 } }}>
         <Button
           variant="outlined"
-          color="primary"
+          color="inherit"
           component={RouterLink}
           to="/register"
           size="small"
@@ -43,7 +43,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
         >
           {t('register')}
         </Button>
-        <Button color="primary" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
+        <Button color="inherit" variant="outlined" size="small" onClick={handleLoginClick} sx={{ textTransform: 'none' }}>
           {t('login')}
         </Button>
       </Box>
