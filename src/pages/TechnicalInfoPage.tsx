@@ -1,10 +1,10 @@
-import React, { JSX } from 'react';
+import React from 'react';
 import { Container, Link, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
 
-export default function TechnicalInfoPage(): JSX.Element {
+export default function TechnicalInfoPage() {
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -19,7 +19,7 @@ export default function TechnicalInfoPage(): JSX.Element {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h2" fontWeight={700} gutterBottom>
+          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
             Technical Information
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>

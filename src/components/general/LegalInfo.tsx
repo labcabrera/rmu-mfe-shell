@@ -18,11 +18,7 @@ const LegalInfoList: FC<{ items: any[] }> = ({ items }) => {
             <PrivacyTipIcon color="primary" />
           </ListItemIcon>
           <ListItemText
-            primary={
-              <Typography fontWeight={600} sx={{ fontSize: '1.5rem' }}>
-                {item.title}
-              </Typography>
-            }
+            primary={<Typography sx={{ fontSize: '1.5rem', fontWeight: 600 }}>{item.title}</Typography>}
             secondary={
               <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.5rem' }}>
                 {item.description}

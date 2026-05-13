@@ -138,7 +138,7 @@ export const Home = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Typography variant="h2" sx={{ fontWeight: 700 }} gutterBottom>
+          <Typography variant="h2" sx={{ fontWeight: 600 }} gutterBottom>
             Rolemaster Unified Companion
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>

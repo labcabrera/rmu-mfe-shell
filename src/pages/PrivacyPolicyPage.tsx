@@ -1,7 +1,6 @@
-import React, { JSX } from 'react';
-import { Container, Paper } from '@mui/material';
+import React from 'react';
+import { Container, Paper, Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
 import LegalInfoList from '../components/general/LegalInfo';
 import { imageBaseUrl } from '../services/config';
 
@@ -46,7 +45,7 @@ const items = [
   },
 ];
 
-export default function PrivacyPolicyPage(): JSX.Element {
+export default function PrivacyPolicyPage() {
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -61,7 +60,7 @@ export default function PrivacyPolicyPage(): JSX.Element {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h2" fontWeight={700} gutterBottom>
+          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
             Privacy Policy
           </Typography>
         </Container>

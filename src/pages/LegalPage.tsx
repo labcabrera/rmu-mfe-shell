@@ -53,14 +53,14 @@ export default function LegalPage(): JSX.Element {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h2" fontWeight={700} gutterBottom>
+          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
             Legal
           </Typography>
         </Container>
       </Box>
       <Container maxWidth="lg" sx={{ py: 6, fontSize: '1.3rem', lineHeight: 1.6 }}>
         <Paper elevation={0} sx={{ p: 4, borderRadius: 3 }}>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
             Legal Information
           </Typography>
           <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
