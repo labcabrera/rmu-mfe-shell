@@ -46,8 +46,8 @@ const pages = [
     label: 'spells',
     href: '/spells',
     links: [
-      { label: 'spells', href: '/spells' },
       { label: 'spell-lists', href: '/spells/spell-lists' },
+      { label: 'spells', href: '/spells/spells' },
     ],
   },
 ];
@@ -70,10 +70,10 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: { xs: 60, md: 80 }, px: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, gap: { xs: 1, md: 2 }, minWidth: 0 }}>
             <MobileMenu pages={pages} />
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
               <FilterVintageIcon sx={{ fontSize: { xs: 22, md: 32 }, minWidth: 28 }} />
               <Typography
                 color="primary"
@@ -87,11 +87,11 @@ const Header = () => {
               </Typography>
             </Box>
 
-            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ flex: '1 1 auto', minWidth: 0, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
               <HeaderNavButtons pages={pages} />
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 }, flexShrink: 0, ml: { xs: 'auto', md: 0 } }}>
               <LanguageSelector />
               <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
             </Box>

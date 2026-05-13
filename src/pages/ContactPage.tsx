@@ -64,7 +64,7 @@ export default function ContactPage(): JSX.Element {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h2" fontWeight={700} gutterBottom>
+          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
             Contact
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>

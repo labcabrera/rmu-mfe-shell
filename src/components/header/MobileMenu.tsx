@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -9,13 +9,13 @@ type Page = { label: string; href: string; links?: LinkItem[] };
 
 const MobileMenu: React.FC<{ pages: Page[] }> = ({ pages }) => {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const toggle = (v: boolean) => () => setOpen(v);
 
   return (
     <>
-      <Box sx={{ display: { xs: 'flex', xl: 'none' }, alignItems: 'center' }}>
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', flexShrink: 0 }}>
         <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggle(true)} sx={{ mr: 1 }}>
           <MenuIcon />
         </IconButton>

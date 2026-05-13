@@ -14,11 +14,11 @@ const __dirname = path.dirname(__filename);
 const ModuleFederationPlugin = require_('webpack/lib/container/ModuleFederationPlugin');
 
 const deps = require_('./package.json').dependencies;
-const printCompilationMessage = require_('./compilation.config.js');
 
 export default function (_: any, argv: any): Configuration & { devServer?: DevServerConfiguration } {
   const mode: string | undefined = argv && argv.mode;
-  dotenv.config({ path: path.resolve(__dirname, `.env.${mode}`) });
+  const envFile = path.resolve(__dirname, `.env.${mode}`);
+  dotenv.config({ path: envFile });
 
   const publicPath = process.env.RMU_MFE_SHELL_PUBLIC_PATH;
   const port = process.env.PORT ? Number(process.env.PORT) : 8080;
@@ -57,19 +57,6 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           pathname: wsPathname,
         },
       },
-      onListening: function (devServer: any) {
-        const port = devServer.server.address().port;
-        printCompilationMessage('compiling', port);
-        devServer.compiler.hooks.done.tap('OutputMessagePlugin', (stats: any) => {
-          setImmediate(() => {
-            if (stats.hasErrors()) {
-              printCompilationMessage('failure', port);
-            } else {
-              printCompilationMessage('success', port);
-            }
-          });
-        });
-      },
     },
     module: {
       rules: [
@@ -105,7 +92,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       ],
     },
     plugins: [
-      new Dotenv({ systemvars: true }),
+      new Dotenv({ path: envFile, systemvars: true }),
       new CopyWebpackPlugin({
         patterns: [
           {

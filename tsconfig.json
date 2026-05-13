@@ -17,6 +17,6 @@
     "strictPropertyInitialization": false,
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src//*", "public//*"],
+  "include": ["src/**/*", "public/**/*"],
   "exclude": ["node_modules", "dist", "build", "scripts"]
 }

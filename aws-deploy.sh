@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
-
-S3_BUCKET=${S3_BUCKET:-rmu-static-assets-pro}
-S3_PREFIX=${S3_PREFIX:-rmu-mfe-shell}
-AWS_REGION=${AWS_REGION:-eu-west-1}
-
-CLOUDFRONT_DISTRIBUTION_ID=EA4Q8655XBZDY
+set -a
+source .env.aws
+set +a 
 
 S3_TARGET="s3://$S3_BUCKET/$S3_PREFIX"
 
