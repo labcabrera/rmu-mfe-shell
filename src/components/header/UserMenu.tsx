@@ -14,7 +14,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
   const { t } = useTranslation();
   const oidc = useAuth();
   const isAuthenticated = !!oidc?.isAuthenticated;
-  const login = () => oidc?.signinRedirect?.();
+  const login = () => oidc.signinRedirect();
   const logout = () => oidc?.signoutRedirect?.();
   const userName = oidc.user?.profile.preferred_username || 'Undefined';
 
@@ -26,14 +26,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
     setAnchorEl(null);
   };
 
-  const handleLoginClick = async () => {
-    try {
-      if (typeof document !== 'undefined' && 'requestStorageAccess' in document) {
-        await document.requestStorageAccess();
-      }
-    } catch (e) {
-      console.warn('[UserMenu] requestStorageAccess failed or denied', e);
-    }
+  const handleLoginClick = () => {
     login();
   };
 

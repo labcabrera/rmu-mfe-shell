@@ -6,7 +6,13 @@
 </head>
 <body>
     <script>
-        parent.postMessage(location.href, location.origin);
+        window.parent.postMessage(
+            {
+                source: 'oidc-client',
+                url: window.location.href,
+            },
+            window.location.origin
+        );
     </script>
 </body>
 </html>

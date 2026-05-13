@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthProvider as OidcProvider } from 'react-oidc-context';
+import { AuthProvider as OidcProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import type { AuthProviderProps } from 'react-oidc-context';
 import { oidcUrl, oidcRealm, oidcClientId } from '../config';
 
@@ -7,21 +7,68 @@ type Props = {
   children: React.ReactNode;
 };
 
-const AuthProvider: React.FC<Props> = ({ children }) => {
-  const OIDC_AUTHORITY = `${oidcUrl}/realms/${oidcRealm}`;
+let silentSignInAttempted = false;
 
-  const config: Partial<AuthProviderProps> = {
-    authority: OIDC_AUTHORITY,
+const silentLoginErrors = new Set([
+  'login_required',
+  'interaction_required',
+  'consent_required',
+  'account_selection_required',
+]);
+
+const isExpectedSilentLoginError = (error: unknown): boolean => {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { error?: unknown; message?: unknown };
+  if (typeof candidate.error === 'string' && silentLoginErrors.has(candidate.error)) return true;
+  if (typeof candidate.message !== 'string') return false;
+  const message = candidate.message;
+  return Array.from(silentLoginErrors).some((expectedError) => message.includes(expectedError));
+};
+
+const SilentSignIn: React.FC = () => {
+  const { activeNavigator, isAuthenticated, isLoading, signinSilent } = useAuth();
+
+  React.useEffect(() => {
+    if (silentSignInAttempted || isLoading || isAuthenticated || activeNavigator || hasAuthParams()) {
+      return;
+    }
+
+    silentSignInAttempted = true;
+    void signinSilent().catch((error) => {
+      if (!isExpectedSilentLoginError(error)) {
+        console.warn('[AuthProvider] Silent sign-in failed', error);
+      }
+    });
+  }, [activeNavigator, isAuthenticated, isLoading, signinSilent]);
+
+  return null;
+};
+
+const AuthProvider: React.FC<Props> = ({ children }) => {
+  const oidcAuthority = `${oidcUrl.replace(/\/$/, '')}/realms/${oidcRealm}`;
+  const appOrigin = window.location.origin;
+
+  const config: AuthProviderProps = {
+    authority: oidcAuthority,
     client_id: oidcClientId,
-    redirect_uri: window.location.origin + '/',
+    redirect_uri: `${appOrigin}/`,
+    post_logout_redirect_uri: `${appOrigin}/`,
+    silent_redirect_uri: `${appOrigin}/silent-check-sso.html`,
     response_type: 'code',
     scope: 'openid profile email',
-    automaticSilentRenew: false,
-    // silent_redirect_uri omitted to avoid iframe sandbox warnings; consider backend refresh for production
+    automaticSilentRenew: true,
     loadUserInfo: true,
+    onSigninCallback: () => {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    },
   };
 
-  return <OidcProvider {...(config as AuthProviderProps)}>{children}</OidcProvider>;
+  return (
+    <OidcProvider {...config}>
+      <SilentSignIn />
+      {children}
+    </OidcProvider>
+  );
 };
 
 export default AuthProvider;
