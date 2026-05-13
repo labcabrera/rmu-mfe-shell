@@ -14,7 +14,6 @@ const __dirname = path.dirname(__filename);
 const ModuleFederationPlugin = require_('webpack/lib/container/ModuleFederationPlugin');
 
 const deps = require_('./package.json').dependencies;
-const printCompilationMessage = require_('./compilation.config.js');
 
 export default function (_: any, argv: any): Configuration & { devServer?: DevServerConfiguration } {
   const mode: string | undefined = argv && argv.mode;
@@ -56,19 +55,6 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           protocol: wsProtocol,
           pathname: wsPathname,
         },
-      },
-      onListening: function (devServer: any) {
-        const port = devServer.server.address().port;
-        printCompilationMessage('compiling', port);
-        devServer.compiler.hooks.done.tap('OutputMessagePlugin', (stats: any) => {
-          setImmediate(() => {
-            if (stats.hasErrors()) {
-              printCompilationMessage('failure', port);
-            } else {
-              printCompilationMessage('success', port);
-            }
-          });
-        });
       },
     },
     module: {
