@@ -1,6 +1,6 @@
-import { createTheme, alpha } from '@mui/material/styles';
+import { alpha, createTheme } from '@mui/material/styles';
 
-const baseColors = {
+export const baseColors = {
   almostBlack: '#060707',
   darkSlate: '#282e2f',
   midSlate: '#495657',
@@ -9,23 +9,33 @@ const baseColors = {
   dialogBackground: '#222626ff',
   dialogBackgroundTop: '#181818ff',
   backgroundDark: '#131414',
+  surfaceLight: '#f7f9f9',
+  paperLight: '#ffffff',
+  textLight: '#253033',
+  mutedLight: '#5d6c70',
+  disabledLight: '#8b999c',
+  success: '#a5d6a7',
+  error: '#ffab91',
+  warning: '#ebeb75ff',
+  info: '#90caf9',
+  scrollbarTrack: '#0f1115',
+  scrollbarThumb: '#2a2f3a',
 };
 
-const theme = createTheme({
-  palette: {
+const palettes = {
+  dark: {
     mode: 'dark',
     primary: {
       main: baseColors.haze,
-      light: '#a8b3b4',
+      light: baseColors.haze,
       dark: baseColors.midSlate,
-      contrastText: '#050505',
-      card: '#1b1e1f',
+      contrastText: baseColors.almostBlack,
     },
     secondary: {
       main: baseColors.mist,
       light: baseColors.haze,
       dark: baseColors.midSlate,
-      contrastText: '#f3f5f5',
+      contrastText: baseColors.surfaceLight,
     },
     background: {
       default: baseColors.almostBlack,
@@ -36,108 +46,129 @@ const theme = createTheme({
     text: {
       primary: baseColors.haze,
       secondary: baseColors.mist,
-      disabled: '#6f7a7c',
-    },
-    success: {
-      main: '#a5d6a7',
-    },
-    error: {
-      main: '#ffab91',
-    },
-    warning: {
-      main: '#ebeb75ff',
-    },
-    info: {
-      main: '#90caf9',
+      disabled: baseColors.disabledLight,
     },
   },
-  shape: { borderRadius: 10 },
-  typography: {
-    fontFamily: 'sans-serif',
-    fontSize: 16,
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: { scrollbarColor: '#2a2f3a #0f1115' },
-        '*::-webkit-scrollbar-thumb': { backgroundColor: '#2a2f3a' },
-      },
+  light: {
+    mode: 'light',
+    primary: {
+      main: baseColors.midSlate,
+      light: baseColors.mist,
+      dark: baseColors.almostBlack,
+      contrastText: baseColors.paperLight,
     },
-    MuiButton: {
-      defaultProps: { size: 'small', variant: 'contained' },
-      styleOverrides: {
-        outlined: {
-          color: baseColors.haze,
-          backgroundColor: alpha(baseColors.haze, 0.06),
-          border: `1px solid ${alpha(baseColors.haze, 0.18)}`,
-          '&:hover': { backgroundColor: alpha(baseColors.haze, 0.12) },
-        },
-      },
+    secondary: {
+      main: baseColors.mist,
+      light: baseColors.haze,
+      dark: baseColors.midSlate,
+      contrastText: baseColors.paperLight,
     },
-    MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
-    MuiSelect: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
-    MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
-    MuiToggleButton: {
-      defaultProps: { size: 'small' },
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          color: baseColors.haze,
-          backgroundColor: alpha(baseColors.haze, 0.06),
-          '&:hover': { backgroundColor: alpha(baseColors.haze, 0.12) },
-          '&.Mui-selected': {
-            color: baseColors.almostBlack,
-            backgroundColor: baseColors.haze,
-          },
-          '&.Mui-selected:hover': {
-            backgroundColor: baseColors.midSlate,
-          },
-          '&.Mui-disabled': {
-            border: `1px solid ${alpha(baseColors.darkSlate, 0.36)}`,
-            color: alpha(baseColors.mist, 0.9),
-            backgroundColor: alpha(baseColors.haze, 0.03),
-          },
-          '&.Mui-disabled:hover': {
-            backgroundColor: alpha(baseColors.darkSlate, 0.12),
-          },
-        },
-      },
+    background: {
+      default: baseColors.surfaceLight,
+      light: baseColors.paperLight,
+      paper: baseColors.paperLight,
     },
-    MuiDialog: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: baseColors.dialogBackground,
-          overflow: 'hidden',
-        },
-      },
-    },
-    MuiDialogTitle: {
-      styleOverrides: {
-        root: {
-          background: `linear-gradient(180deg, ${baseColors.dialogBackgroundTop} 0%, ${baseColors.dialogBackground} 100%)`,
-          padding: '16px 24px',
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        },
-      },
-    },
-    MuiDialogActions: {
-      styleOverrides: {
-        root: {
-          background: `linear-gradient(180deg, ${baseColors.dialogBackground} 0%, ${baseColors.dialogBackgroundTop} 100%)`,
-          borderBottomLeftRadius: 10,
-          borderBottomRightRadius: 10,
-        },
-      },
-    },
-    MuiDialogContent: {
-      styleOverrides: {
-        root: {
-          backgroundColor: baseColors.dialogBackground,
-        },
-      },
+    divider: baseColors.haze,
+    text: {
+      primary: baseColors.textLight,
+      secondary: baseColors.mutedLight,
+      disabled: baseColors.disabledLight,
     },
   },
-});
+};
 
-export default theme;
+const createAppTheme = (mode = 'dark') => {
+  const palette = palettes[mode] || palettes.dark;
+
+  return createTheme({
+    palette: {
+      ...palette,
+      success: { main: baseColors.success },
+      error: { main: baseColors.error },
+      warning: { main: baseColors.warning },
+      info: { main: baseColors.info },
+    },
+    shape: { borderRadius: 10 },
+    typography: {
+      fontFamily: 'sans-serif',
+      fontSize: 16,
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: { scrollbarColor: `${baseColors.scrollbarThumb} ${baseColors.scrollbarTrack}` },
+          '*::-webkit-scrollbar-thumb': { backgroundColor: baseColors.scrollbarThumb },
+        },
+      },
+      MuiButton: {
+        defaultProps: { size: 'small', variant: 'contained' },
+        styleOverrides: {
+          outlined: {
+            color: palette.primary.main,
+            backgroundColor: alpha(palette.primary.main, 0.06),
+            border: `1px solid ${alpha(palette.primary.main, 0.18)}`,
+            '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
+          },
+        },
+      },
+      MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
+      MuiSelect: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
+      MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
+      MuiToggleButton: {
+        defaultProps: { size: 'small' },
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            color: palette.primary.main,
+            backgroundColor: alpha(palette.primary.main, 0.06),
+            '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
+            '&.Mui-selected': {
+              color: palette.primary.contrastText,
+              backgroundColor: palette.primary.main,
+            },
+            '&.Mui-selected:hover': {
+              backgroundColor: palette.primary.dark,
+            },
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: mode === 'dark' ? baseColors.dialogBackground : palette.background.paper,
+            overflow: 'hidden',
+          },
+        },
+      },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: {
+            background:
+              mode === 'dark'
+                ? `linear-gradient(180deg, ${baseColors.dialogBackgroundTop} 0%, ${baseColors.dialogBackground} 100%)`
+                : palette.background.paper,
+          },
+        },
+      },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: {
+            background:
+              mode === 'dark'
+                ? `linear-gradient(180deg, ${baseColors.dialogBackground} 0%, ${baseColors.dialogBackgroundTop} 100%)`
+                : palette.background.paper,
+          },
+        },
+      },
+      MuiDialogContent: {
+        styleOverrides: {
+          root: {
+            backgroundColor: mode === 'dark' ? baseColors.dialogBackground : palette.background.paper,
+          },
+        },
+      },
+    },
+  });
+};
+
+export default createAppTheme;
