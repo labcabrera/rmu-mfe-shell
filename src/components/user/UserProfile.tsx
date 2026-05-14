@@ -20,8 +20,8 @@ import {
   Typography,
 } from '@mui/material';
 import type { ThemeMode } from '../../App';
-import { ApiUser } from '../../api/user-api';
-import { userApiClient } from '../../api/user-api';
+import { ApiUser } from '../../api/user-api-client';
+import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
@@ -169,6 +169,9 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
         <Box>
           <pre>User info:{JSON.stringify(apiUser, null, 2)}</pre>
+        </Box>
+        <Box>
+          <pre>JWT: {auth.user?.access_token}</pre>
         </Box>
       </Paper>
     </Container>
