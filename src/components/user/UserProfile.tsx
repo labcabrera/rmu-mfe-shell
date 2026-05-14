@@ -1,4 +1,4 @@
-import React, { useEffect, useEffectEvent, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -20,9 +20,10 @@ import {
   Typography,
 } from '@mui/material';
 import type { ThemeMode } from '../../App';
-import { ApiUser } from '../../api/user-api-client';
+import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
+import ActivationCodeForm from './ActivationCodeForm';
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
@@ -147,6 +148,12 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
               </FormControl>
             </Stack>
           </Stack>
+
+          <Stack spacing={1}>
+            <ActivationCodeForm />
+          </Stack>
+
+          <Divider />
 
           <Stack spacing={1}>
             <Typography variant="h6">Profile details</Typography>
