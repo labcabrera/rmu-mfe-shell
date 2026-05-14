@@ -7,6 +7,8 @@ const getRequiredEnv = (name: string, value: string | undefined): string => {
 
 const withTrailingSlash = (value: string): string => (value.endsWith('/') ? value : `${value}/`);
 
+export const userApiBaseUrl = process.env.RMU_API_USERS_URL;
+
 export const assetsBaseUrl = withTrailingSlash(getRequiredEnv('RMU_MFE_ASSETS', process.env.RMU_MFE_ASSETS));
 export const imageBaseUrl = assetsBaseUrl;
 export const oidcUrl = getRequiredEnv('KC_URL', process.env.KC_URL);

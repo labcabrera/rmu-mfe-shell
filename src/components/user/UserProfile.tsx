@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useEffectEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -20,16 +20,15 @@ import {
   Typography,
 } from '@mui/material';
 import type { ThemeMode } from '../../App';
+import { ApiUser } from '../../api/user-api';
+import { userApiClient } from '../../api/user-api';
 import { imageBaseUrl } from '../../services/config';
 
-type UserProfileProps = {
-  themeMode: ThemeMode;
-  onThemeModeChange: (mode: ThemeMode) => void;
-};
-
-const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange }) => {
+export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
+  const auth = useAuth();
   const { i18n } = useTranslation();
+  const [apiUser, setApiUser] = useState<ApiUser>();
 
   const username = user?.profile.preferred_username || user?.profile.name || 'Unknown';
   const email = user?.profile.email || 'Not defined email';
@@ -48,14 +47,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange 
       return 'en';
     }
   });
-
-  useEffect(() => {
-    try {
-      localStorage.setItem('locale', lang);
-    } catch {}
-    void i18n.changeLanguage(lang);
-  }, [i18n, lang]);
-
   const [unit, setUnit] = useState<string>(() => {
     try {
       return localStorage.getItem('unit') || 'metric';
@@ -66,16 +57,31 @@ const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange 
 
   useEffect(() => {
     try {
+      localStorage.setItem('locale', lang);
+    } catch {}
+    void i18n.changeLanguage(lang);
+  }, [i18n, lang]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem('unit', unit);
     } catch {}
   }, [unit]);
+
+  useEffect(() => {
+    if (!auth) return;
+    userApiClient
+      .fetchUser(auth)
+      .then((response) => setApiUser(response))
+      .catch((err) => console.error(err));
+  }, [auth]);
 
   const handleThemeModeChange = (_: React.MouseEvent<HTMLElement>, value: ThemeMode | null) => {
     if (value) onThemeModeChange(value);
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3 }}>
       <Paper sx={{ p: { xs: 2, md: 3 } }} elevation={2}>
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
@@ -160,9 +166,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ themeMode, onThemeModeChange 
             </Stack>
           </Stack>
         </Stack>
+
+        <Box>
+          <pre>User info:{JSON.stringify(apiUser, null, 2)}</pre>
+        </Box>
       </Paper>
     </Container>
   );
-};
-
-export default UserProfile;
+}
