@@ -1,92 +1,107 @@
 import { alpha, createTheme } from '@mui/material/styles';
 
 export const baseColors = {
-  almostBlack: '#060707',
-  darkSlate: '#282e2f',
-  midSlate: '#495657',
-  mist: '#617274',
-  haze: '#99b3b6ff',
-  dialogBackground: '#222626ff',
-  dialogBackgroundTop: '#181818ff',
-  backgroundDark: '#131414',
-  surfaceLight: '#f7f9f9',
-  paperLight: '#ffffff',
-  textLight: '#253033',
-  mutedLight: '#5d6c70',
-  disabledLight: '#8b999c',
-  success: '#a5d6a7',
-  error: '#ffab91',
-  warning: '#ebeb75ff',
-  info: '#90caf9',
   scrollbarTrack: '#0f1115',
   scrollbarThumb: '#2a2f3a',
+  dark: {
+    almostBlack: '#060707',
+    darkSlate: '#282e2f',
+    midSlate: '#495657',
+    mist: '#617274',
+    haze: '#99b3b6ff',
+    dialogBackground: '#222626ff',
+    dialogBackgroundTop: '#181818ff',
+    backgroundDark: '#131414',
+    surfaceLight: '#f7f9f9',
+    disabledLight: '#8b999c',
+    success: '#a5d6a7',
+    error: '#ffab91',
+    warning: '#ebeb75ff',
+    info: '#90caf9',
+  },
+  light: {
+    almostBlack: '#060707',
+    midSlate: '#495657',
+    mist: '#617274',
+    haze: '#99b3b6ff',
+    surfaceLight: '#f7f9f9',
+    paperLight: '#ffffff',
+    textLight: '#253033',
+    mutedLight: '#5d6c70',
+    disabledLight: '#8b999c',
+    success: '#51b256',
+    error: '#f97249',
+    warning: '#c8c830',
+    info: '#64b5f6',
+  },
 };
 
 const palettes = {
   dark: {
     mode: 'dark',
     primary: {
-      main: baseColors.haze,
-      light: baseColors.haze,
-      dark: baseColors.midSlate,
-      contrastText: baseColors.almostBlack,
+      main: baseColors.dark.haze,
+      light: baseColors.dark.haze,
+      dark: baseColors.dark.midSlate,
+      contrastText: baseColors.dark.almostBlack,
     },
     secondary: {
-      main: baseColors.mist,
-      light: baseColors.haze,
-      dark: baseColors.midSlate,
-      contrastText: baseColors.surfaceLight,
+      main: baseColors.dark.mist,
+      light: baseColors.dark.haze,
+      dark: baseColors.dark.midSlate,
+      contrastText: baseColors.dark.surfaceLight,
     },
     background: {
-      default: baseColors.almostBlack,
-      light: baseColors.darkSlate,
-      paper: baseColors.backgroundDark,
+      default: baseColors.dark.almostBlack,
+      light: baseColors.dark.darkSlate,
+      paper: baseColors.dark.backgroundDark,
     },
-    divider: baseColors.darkSlate,
+    divider: baseColors.dark.darkSlate,
     text: {
-      primary: baseColors.haze,
-      secondary: baseColors.mist,
-      disabled: baseColors.disabledLight,
+      primary: baseColors.dark.haze,
+      secondary: baseColors.dark.mist,
+      disabled: baseColors.dark.disabledLight,
     },
   },
   light: {
     mode: 'light',
     primary: {
-      main: baseColors.midSlate,
-      light: baseColors.mist,
-      dark: baseColors.almostBlack,
-      contrastText: baseColors.paperLight,
+      main: baseColors.light.midSlate,
+      light: baseColors.light.mist,
+      dark: baseColors.light.almostBlack,
+      contrastText: baseColors.light.paperLight,
     },
     secondary: {
-      main: baseColors.mist,
-      light: baseColors.haze,
-      dark: baseColors.midSlate,
-      contrastText: baseColors.paperLight,
+      main: baseColors.light.mist,
+      light: baseColors.light.haze,
+      dark: baseColors.light.midSlate,
+      contrastText: baseColors.light.paperLight,
     },
     background: {
-      default: baseColors.surfaceLight,
-      light: baseColors.paperLight,
-      paper: baseColors.paperLight,
+      default: baseColors.light.surfaceLight,
+      light: baseColors.light.paperLight,
+      paper: baseColors.light.paperLight,
     },
-    divider: baseColors.haze,
+    divider: baseColors.light.haze,
     text: {
-      primary: baseColors.textLight,
-      secondary: baseColors.mutedLight,
-      disabled: baseColors.disabledLight,
+      primary: baseColors.light.textLight,
+      secondary: baseColors.light.mutedLight,
+      disabled: baseColors.light.disabledLight,
     },
   },
 };
 
 const createAppTheme = (mode = 'dark') => {
   const palette = palettes[mode] || palettes.dark;
+  const colors = baseColors[mode] || baseColors.dark;
 
   return createTheme({
     palette: {
       ...palette,
-      success: { main: baseColors.success },
-      error: { main: baseColors.error },
-      warning: { main: baseColors.warning },
-      info: { main: baseColors.info },
+      success: { main: colors.success },
+      error: { main: colors.error },
+      warning: { main: colors.warning },
+      info: { main: colors.info },
     },
     shape: { borderRadius: 10 },
     typography: {
@@ -135,7 +150,7 @@ const createAppTheme = (mode = 'dark') => {
       MuiDialog: {
         styleOverrides: {
           paper: {
-            backgroundColor: mode === 'dark' ? baseColors.dialogBackground : palette.background.paper,
+            backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
             overflow: 'hidden',
           },
         },
@@ -145,7 +160,7 @@ const createAppTheme = (mode = 'dark') => {
           root: {
             background:
               mode === 'dark'
-                ? `linear-gradient(180deg, ${baseColors.dialogBackgroundTop} 0%, ${baseColors.dialogBackground} 100%)`
+                ? `linear-gradient(180deg, ${baseColors.dark.dialogBackgroundTop} 0%, ${baseColors.dark.dialogBackground} 100%)`
                 : palette.background.paper,
           },
         },
@@ -155,7 +170,7 @@ const createAppTheme = (mode = 'dark') => {
           root: {
             background:
               mode === 'dark'
-                ? `linear-gradient(180deg, ${baseColors.dialogBackground} 0%, ${baseColors.dialogBackgroundTop} 100%)`
+                ? `linear-gradient(180deg, ${baseColors.dark.dialogBackground} 0%, ${baseColors.dark.dialogBackgroundTop} 100%)`
                 : palette.background.paper,
           },
         },
@@ -163,7 +178,7 @@ const createAppTheme = (mode = 'dark') => {
       MuiDialogContent: {
         styleOverrides: {
           root: {
-            backgroundColor: mode === 'dark' ? baseColors.dialogBackground : palette.background.paper,
+            backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
           },
         },
       },
