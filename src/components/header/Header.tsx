@@ -28,16 +28,16 @@ const pages = [
     label: 'strategic',
     href: '/strategic',
     links: [
-      { label: 'strategic', href: '/strategic' },
-      { label: 'strategic-games', href: '/strategic' },
+      { label: 'strategic-module', href: '/strategic' },
+      { label: 'strategic-games', href: '/strategic/games' },
     ],
   },
   {
     label: 'tactical',
     href: '/tactical',
     links: [
-      { label: 'tactical', href: '/tactical' },
-      { label: 'tactical-games', href: '/tactical' },
+      { label: 'tactical-module', href: '/tactical' },
+      { label: 'tactical-games', href: '/tactical/tactical-games' },
     ],
   },
   { label: 'npcs', href: '/npcs', links: [{ label: 'npcs', href: '/npcs' }] },
