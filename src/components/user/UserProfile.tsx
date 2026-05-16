@@ -27,6 +27,7 @@ import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 import ActivationCodeDialog from './ActivationCodeDialog';
+import FriendPanel from './FriendPanel';
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
@@ -148,6 +149,10 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
               </FormControl>
             </Stack>
           </Stack>
+
+          <Divider />
+
+          <FriendPanel />
 
           <Divider />
 

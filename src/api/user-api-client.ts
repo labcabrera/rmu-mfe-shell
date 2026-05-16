@@ -22,11 +22,15 @@ export type ActivationCode = {
   features: string[];
 };
 
+export type FriendshipStatus = 'pending' | 'accepted' | 'rejected' | 'blocked';
+
 export type Friendship = {
   id: string;
   requesterId: string;
+  requesterName: string;
+  addresseeId: string;
   addresseeName: string;
-  status: string;
+  status: FriendshipStatus;
   message: string;
   createdAt: Date;
   updatedAt: Date;
@@ -56,8 +60,8 @@ export const userApiClient = {
 
   async fetchFriends(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
-    const rsql = `(requesterId==${userId},addresseeId==${userId});status==accepted)`;
-    const response = await fetch(`${userApiBaseUrl}/activation-codes/friendships`, {
+    const rsql = `(requesterId==${userId},addresseeId==${userId});status==accepted`;
+    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${auth.user?.access_token}`,
@@ -72,7 +76,7 @@ export const userApiClient = {
 
   async fecthInvitationsPending(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
-    const rsql = `(addresseeId==${userId});status==pending)`;
+    const rsql = `addresseeId==${userId};status==pending`;
     //TODO page and size
     const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
       method: 'GET',
@@ -89,7 +93,7 @@ export const userApiClient = {
 
   async fecthInvitationsSent(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
-    const rsql = `(requesterId==${userId});status==pending)`;
+    const rsql = `requesterId==${userId};status==pending`;
     const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
       method: 'GET',
       headers: {
@@ -130,6 +134,37 @@ export const userApiClient = {
     });
     if (!response.ok) {
       throw new ApiError(`Failed to activate code: ${response.statusText}`, response.status);
+    }
+  },
+
+  async sendFriendRequest(addresseeName: string, message: string, auth: AuthContextProps): Promise<Friendship> {
+    const response = await fetch(`${userApiBaseUrl}/friendships`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+      body: JSON.stringify({ addresseeName, message }),
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    const err = await response.json();
+    throw new ApiError(err.message || `Failed to send friend request: ${response.statusText}`, response.status);
+  },
+
+  async updateFriendRequest(friendshipId: string, status: FriendshipStatus, auth: AuthContextProps): Promise<void> {
+    const response = await fetch(`${userApiBaseUrl}/friendships/${friendshipId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new ApiError((err as { message?: string }).message || `Failed to accept friend request: ${response.statusText}`, response.status);
     }
   },
 };
