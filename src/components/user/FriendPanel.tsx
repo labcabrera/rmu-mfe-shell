@@ -64,6 +64,13 @@ export default function FriendPanel() {
 
   const [actionError, setActionError] = useState<string>();
 
+  type ConfirmAction = 'remove-friend' | 'block-user';
+  const [confirmDialog, setConfirmDialog] = useState<{ open: boolean; action: ConfirmAction | null; friendship: Friendship | null }>({
+    open: false,
+    action: null,
+    friendship: null,
+  });
+
   const loadData = () => {
     setLoading(true);
     setError(undefined);
@@ -88,21 +95,29 @@ export default function FriendPanel() {
     if (auth.isAuthenticated) loadData();
   }, [auth.isAuthenticated]);
 
-  const handleRemoveFriend = (friendshipId: string) => {
-    setActionError(undefined);
-    userApiClient
-      .removeFriend(friendshipId, auth)
-      .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+  const openConfirm = (action: ConfirmAction, friendship: Friendship) => {
+    setConfirmDialog({ open: true, action, friendship });
   };
 
-  const handleBlock = (friendshipId: string) => {
-    setActionError(undefined);
-    userApiClient
-      .updateFriendRequest(friendshipId, 'blocked', auth)
-      .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+  const closeConfirm = () => {
+    setConfirmDialog({ open: false, action: null, friendship: null });
   };
+
+  const handleConfirm = () => {
+    const { action, friendship } = confirmDialog;
+    if (!action || !friendship) return;
+    closeConfirm();
+    setActionError(undefined);
+    const promise =
+      action === 'remove-friend'
+        ? userApiClient.removeFriend(friendship.id, auth)
+        : userApiClient.updateFriendRequest(friendship.id, 'blocked', auth);
+    promise.then(() => loadData()).catch((err) => setActionError(err.message));
+  };
+
+  const handleRemoveFriend = (friendship: Friendship) => openConfirm('remove-friend', friendship);
+
+  const handleBlock = (friendship: Friendship) => openConfirm('block-user', friendship);
 
   const handleUnblock = (friendshipId: string) => {
     setActionError(undefined);
@@ -195,12 +210,12 @@ export default function FriendPanel() {
                     secondaryAction={
                       <Stack direction="row" spacing={1}>
                         <Tooltip title={t('remove-friend')}>
-                          <IconButton color="error" onClick={() => handleRemoveFriend(f.id)} title={t('remove-friend')}>
+                          <IconButton color="error" onClick={() => handleRemoveFriend(f)}>
                             <PersonRemoveIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('block-friend')}>
-                          <IconButton color="error" onClick={() => handleBlock(f.id)} title={t('block-user')}>
+                        <Tooltip title={t('block-user')}>
+                          <IconButton color="error" onClick={() => handleBlock(f)}>
                             <BlockIcon />
                           </IconButton>
                         </Tooltip>
@@ -225,13 +240,13 @@ export default function FriendPanel() {
                     divider
                     secondaryAction={
                       <Stack direction="row" spacing={1}>
-                        <Tooltip title={t('accept')}>
-                          <IconButton color="success" onClick={() => handleAccept(f.id)} title={t('accept')}>
+                        <Tooltip title={t('accept-invitation')}>
+                          <IconButton color="success" onClick={() => handleAccept(f.id)} title={t('accept-invitation')}>
                             <CheckIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('reject')}>
-                          <IconButton color="error" onClick={() => handleReject(f.id)} title={t('reject')}>
+                        <Tooltip title={t('decline-invitation')}>
+                          <IconButton color="error" onClick={() => handleReject(f.id)} title={t('decline-invitation')}>
                             <CloseIcon />
                           </IconButton>
                         </Tooltip>
@@ -282,6 +297,33 @@ export default function FriendPanel() {
           </TabPanel>
         </>
       )}
+
+      <Dialog open={confirmDialog.open} onClose={closeConfirm} maxWidth="xs" fullWidth>
+        <DialogTitle>{confirmDialog.action === 'remove-friend' ? t('remove-friend') : t('block-user')}</DialogTitle>
+        <DialogContent>
+          <Typography>
+            {confirmDialog.action === 'remove-friend'
+              ? t('confirm-remove-friend', {
+                  name:
+                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
+                      ? confirmDialog.friendship?.requesterName
+                      : confirmDialog.friendship?.addresseeName,
+                })
+              : t('confirm-block-user', {
+                  name:
+                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
+                      ? confirmDialog.friendship?.requesterName
+                      : confirmDialog.friendship?.addresseeName,
+                })}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirm}>{t('cancel')}</Button>
+          <Button variant="contained" color="error" onClick={handleConfirm}>
+            {t('confirm')}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog open={sendDialogOpen} onClose={handleCloseSendDialog} fullWidth maxWidth="sm">
         <DialogTitle>
