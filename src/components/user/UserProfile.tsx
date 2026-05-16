@@ -27,7 +27,6 @@ import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 import ActivationCodeDialog from './ActivationCodeDialog';
-import ActivationCodeForm from './ActivationCodeForm';
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
@@ -95,7 +94,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           <Divider />
 
           <Box>
-            <Typography variant="h6">{t('features')}</Typography>
+            <Typography variant="h6">{t('enabled-features')}</Typography>
             {groups.length === 0 ? (
               <>
                 <Alert color="error">{t('user-has-no-groups')}</Alert>
@@ -103,8 +102,8 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
             ) : (
               <>
                 <Stack direction="row" spacing={1}>
-                  {groups.map((g, index) => (
-                    <Chip key={index} label={g} color="primary" />
+                  {groups.map((feature, index) => (
+                    <Chip key={index} label={t(feature)} color="success" />
                   ))}
                 </Stack>
               </>
@@ -148,10 +147,6 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
                 </Select>
               </FormControl>
             </Stack>
-          </Stack>
-
-          <Stack spacing={1}>
-            <ActivationCodeForm />
           </Stack>
 
           <Divider />

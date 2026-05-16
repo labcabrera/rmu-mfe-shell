@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Button, Stack, Alert, Box } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Button, Stack, Alert, Box, Chip, Typography } from '@mui/material';
 import { ActivationCode, userApiClient } from '../../api/user-api-client';
 
 export default function ActivationCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -11,6 +11,10 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
   const [code, setCode] = useState('');
   const [activationCode, setActivationCode] = useState<ActivationCode>();
   const [errorMessage, setErrorMessage] = useState<string>();
+
+  const currentFeatures = (auth.user?.profile.groups as string[]) || [];
+  const newFeatures = activationCode ? activationCode.features.filter((e) => !currentFeatures.includes(e)) : [];
+  const ownedFeatures = activationCode ? activationCode.features.filter((e) => currentFeatures.includes(e)) : [];
 
   const handleCheck = () => {
     if (!code) return;
@@ -25,7 +29,7 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
     if (!activationCode) return;
     userApiClient
       .activateCode(activationCode.code, auth)
-      .then((response) => {
+      .then(() => {
         auth.signinSilent().then(() => onClose());
       })
       .catch((err) => console.error(err));
@@ -51,13 +55,27 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
 
         {errorMessage && (
           <Box sx={{ mt: 2 }}>
-            <Alert color="error">{errorMessage}</Alert>
+            <Alert color="warning">{errorMessage}</Alert>
           </Box>
         )}
 
         {activationCode && (
           <Box>
-            <pre>{JSON.stringify(activationCode, null, 2)} </pre>
+            <Stack spacing={1} sx={{ mt: 2 }}>
+              <Typography>{t('new-features')}</Typography>
+              <Stack direction="column" spacing={1}>
+                {newFeatures.map((feature, index) => (
+                  <Chip key={index} label={t(feature)} color="success" />
+                ))}
+              </Stack>
+              {newFeatures.length === 0 && <Alert color="warning">{t('no-new-features')}</Alert>}
+              <Typography>{t('already-owned-features')}</Typography>
+              <Stack direction="column" spacing={1}>
+                {ownedFeatures.map((feature, index) => (
+                  <Chip key={index} label={t(feature)} color="secondary" disabled />
+                ))}
+              </Stack>
+            </Stack>
           </Box>
         )}
       </DialogContent>
@@ -69,7 +87,7 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
         <Button variant="contained" color="success" onClick={handleCheck} disabled={!code}>
           {t('check')}
         </Button>
-        <Button variant="contained" color="success" onClick={handleActivate} disabled={!activationCode}>
+        <Button variant="contained" color="success" onClick={handleActivate} disabled={!activationCode || newFeatures.length === 0}>
           {t('activate')}
         </Button>
       </DialogActions>

@@ -35,7 +35,7 @@ export const userApiClient = {
   },
 
   async fetchActivateCode(code: string, auth: AuthContextProps): Promise<ActivationCode> {
-    const response = await fetch(`${userApiBaseUrl}/activation-codes/activate`, {
+    const response = await fetch(`${userApiBaseUrl}/activation-codes/check`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +46,8 @@ export const userApiClient = {
     if (response.ok) {
       return await response.json();
     }
-    throw new ApiError(`Failed to activate code: ${response.statusText}`, response.status);
+    const err = await response.json();
+    throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
   },
 
   async activateCode(code: string, auth: AuthContextProps): Promise<void> {
