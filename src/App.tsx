@@ -24,11 +24,24 @@ const RemoteNpcsApp = React.lazy(() => import('npcs/NpcsApp'));
 const RemoteItemsApp = React.lazy(() => import('items/ItemsApp'));
 const RemoteSpellsApp = React.lazy(() => import('spells/SpellsApp'));
 
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'system';
+
+const resolveThemeMode = (mode: ThemeMode): 'light' | 'dark' => {
+  if (mode === 'system') {
+    try {
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  }
+  return mode;
+};
 
 const getStoredThemeMode = (): ThemeMode => {
   try {
-    return localStorage.getItem('themeMode') === 'light' ? 'light' : 'dark';
+    const stored = localStorage.getItem('themeMode');
+    if (stored === 'light' || stored === 'dark' || stored === 'system') return stored;
+    return 'dark';
   } catch {
     return 'dark';
   }
@@ -36,7 +49,7 @@ const getStoredThemeMode = (): ThemeMode => {
 
 const App = () => {
   const [themeMode, setThemeMode] = React.useState<ThemeMode>(getStoredThemeMode);
-  const theme = React.useMemo(() => createAppTheme(themeMode), [themeMode]);
+  const theme = React.useMemo(() => createAppTheme(resolveThemeMode(themeMode)), [themeMode]);
 
   const handleThemeModeChange = React.useCallback((mode: ThemeMode) => {
     setThemeMode(mode);

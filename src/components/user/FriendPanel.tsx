@@ -167,7 +167,7 @@ export default function FriendPanel() {
   };
 
   return (
-    <Paper sx={{ p: { xs: 2, md: 3 } }} elevation={2}>
+    <Paper sx={{ p: { xs: 2, md: 3 } }}>
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h6">{t('friends')}</Typography>
         <Button variant="contained" startIcon={<PersonAddIcon />} onClick={() => setSendDialogOpen(true)}>

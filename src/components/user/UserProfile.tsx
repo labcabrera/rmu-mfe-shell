@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
+import AddIcon from '@mui/icons-material/Add';
+import ComputerIcon from '@mui/icons-material/Computer';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import SecurityIcon from '@mui/icons-material/Security';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Alert,
   Avatar,
@@ -12,7 +16,7 @@ import {
   Container,
   Divider,
   FormControl,
-  InputLabel,
+  Grid,
   MenuItem,
   Paper,
   Select,
@@ -22,7 +26,6 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { maxWidth } from '@mui/system';
 import type { ThemeMode } from '../../App';
 import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
@@ -95,61 +98,83 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
           <Divider />
 
-          <Box>
-            <Typography variant="h6">{t('enabled-features')}</Typography>
-            {groups.length === 0 ? (
-              <>
-                <Alert color="error">{t('user-has-no-groups')}</Alert>
-              </>
-            ) : (
-              <>
-                <Stack direction="row" spacing={1}>
-                  {groups.map((feature, index) => (
-                    <Chip key={index} label={t(feature)} color="success" />
-                  ))}
-                </Stack>
-              </>
-            )}
-            <Button variant="contained" onClick={() => setActivationCodeDialogOpen(true)} sx={{ mt: 1 }}>
-              {t('add-activation-code')}
-            </Button>
-          </Box>
-
-          <Divider />
-
-          <Stack spacing={2}>
-            <Typography variant="h6">{t('settings')}</Typography>
-
-            <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                {t('theme')}
-              </Typography>
-              <ToggleButtonGroup color="primary" exclusive value={themeMode} onChange={handleThemeModeChange} aria-label="theme mode">
-                <ToggleButton value="light" aria-label="light theme">
-                  <LightModeIcon fontSize="small" />
-                </ToggleButton>
-                <ToggleButton value="dark" aria-label="dark theme">
-                  <DarkModeIcon fontSize="small" />
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
-
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ maxWidth: 300 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="unit-select-label">Units</InputLabel>
-                <Select
-                  labelId="unit-select-label"
-                  id="unit-select"
-                  value={unit}
-                  label="Units"
-                  onChange={(e: SelectChangeEvent<string>) => setUnit(e.target.value)}
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 0.5 }}>
+                    <SecurityIcon fontSize="small" color="primary" />
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                      {t('enabled-features')}
+                    </Typography>
+                  </Stack>
+                </Box>
+                {groups.length === 0 ? (
+                  <Alert severity="error">{t('user-has-no-groups')}</Alert>
+                ) : (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {groups.map((feature, index) => (
+                      <Chip key={index} label={t(feature)} variant="outlined" color="success" size="small" />
+                    ))}
+                  </Box>
+                )}
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={() => setActivationCodeDialogOpen(true)}
+                  sx={{ mt: 'auto', borderStyle: 'dashed' }}
                 >
-                  <MenuItem value="metric">Metric</MenuItem>
-                  <MenuItem value="imperial">Imperial</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
-          </Stack>
+                  {t('add-activation-code')}
+                </Button>
+              </Paper>
+            </Grid>
+
+            {/* Preferences */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 0.5 }}>
+                    <SettingsIcon fontSize="small" color="primary" />
+                    <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                      {t('settings')}
+                    </Typography>
+                  </Stack>
+                </Box>
+
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    {t('theme')}
+                  </Typography>
+                  <ToggleButtonGroup color="primary" exclusive value={themeMode} onChange={handleThemeModeChange} size="small">
+                    <ToggleButton value="light">
+                      <LightModeIcon fontSize="small" sx={{ mr: 0.5 }} />
+                      {t('light')}
+                    </ToggleButton>
+                    <ToggleButton value="dark">
+                      <DarkModeIcon fontSize="small" sx={{ mr: 0.5 }} />
+                      {t('dark')}
+                    </ToggleButton>
+                    <ToggleButton value="system">
+                      <ComputerIcon fontSize="small" sx={{ mr: 0.5 }} />
+                      {t('system')}
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Box>
+
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    {t('units')}
+                  </Typography>
+                  <FormControl size="small" sx={{ minWidth: 180 }}>
+                    <Select value={unit} onChange={(e: SelectChangeEvent<string>) => setUnit(e.target.value)}>
+                      <MenuItem value="metric">{t('metric')}</MenuItem>
+                      <MenuItem value="imperial">{t('imperial')}</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
 
           <Divider />
 
