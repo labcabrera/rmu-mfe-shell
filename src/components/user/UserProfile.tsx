@@ -4,8 +4,11 @@ import { useAuth } from 'react-oidc-context';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import {
+  Alert,
   Avatar,
   Box,
+  Button,
+  Chip,
   Container,
   Divider,
   FormControl,
@@ -23,13 +26,16 @@ import type { ThemeMode } from '../../App';
 import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
+import ActivationCodeDialog from './ActivationCodeDialog';
 import ActivationCodeForm from './ActivationCodeForm';
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
   const auth = useAuth();
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
+  const [activationCodeDialogOpen, setActivationCodeDialogOpen] = useState<boolean>(false);
   const [apiUser, setApiUser] = useState<ApiUser>();
+  const groups: string[] = (auth.user?.profile.groups as string[]) || [];
 
   const username = user?.profile.preferred_username || user?.profile.name || 'Unknown';
   const email = user?.profile.email || 'Not defined email';
@@ -41,13 +47,6 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
     .slice(0, 2)
     .toUpperCase();
 
-  const [lang, setLang] = useState<string>(() => {
-    try {
-      return localStorage.getItem('locale') || i18n.language || 'en';
-    } catch {
-      return 'en';
-    }
-  });
   const [unit, setUnit] = useState<string>(() => {
     try {
       return localStorage.getItem('unit') || 'metric';
@@ -58,19 +57,13 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
   useEffect(() => {
     try {
-      localStorage.setItem('locale', lang);
-    } catch {}
-    void i18n.changeLanguage(lang);
-  }, [i18n, lang]);
-
-  useEffect(() => {
-    try {
       localStorage.setItem('unit', unit);
     } catch {}
   }, [unit]);
 
   useEffect(() => {
     if (!auth) return;
+    console.log('User profile loaded. Fetching user data...');
     userApiClient
       .fetchUser(auth)
       .then((response) => setApiUser(response))
@@ -101,12 +94,34 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
           <Divider />
 
+          <Box>
+            <Typography variant="h6">{t('features')}</Typography>
+            {groups.length === 0 ? (
+              <>
+                <Alert color="error">{t('user-has-no-groups')}</Alert>
+              </>
+            ) : (
+              <>
+                <Stack direction="row" spacing={1}>
+                  {groups.map((g, index) => (
+                    <Chip key={index} label={g} color="primary" />
+                  ))}
+                </Stack>
+              </>
+            )}
+            <Button variant="contained" onClick={() => setActivationCodeDialogOpen(true)} sx={{ mt: 1 }}>
+              {t('add-activation-code')}
+            </Button>
+          </Box>
+
+          <Divider />
+
           <Stack spacing={2}>
-            <Typography variant="h6">Settings</Typography>
+            <Typography variant="h6">{t('settings')}</Typography>
 
             <Box>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                Theme
+                {t('theme')}
               </Typography>
               <ToggleButtonGroup color="primary" exclusive value={themeMode} onChange={handleThemeModeChange} aria-label="theme mode">
                 <ToggleButton value="light" aria-label="light theme">
@@ -119,20 +134,6 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
             </Box>
 
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="lang-select-label">Language</InputLabel>
-                <Select
-                  labelId="lang-select-label"
-                  id="lang-select"
-                  value={lang}
-                  label="Language"
-                  onChange={(e: SelectChangeEvent<string>) => setLang(e.target.value)}
-                >
-                  <MenuItem value="en">English</MenuItem>
-                  <MenuItem value="es">Español</MenuItem>
-                </Select>
-              </FormControl>
-
               <FormControl fullWidth size="small">
                 <InputLabel id="unit-select-label">Units</InputLabel>
                 <Select
@@ -160,13 +161,13 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
             <Stack spacing={1}>
               <Typography variant="body2">
                 <Box component="span" sx={{ color: 'text.secondary' }}>
-                  Username:
+                  {t('username')}
                 </Box>{' '}
                 {username}
               </Typography>
               <Typography variant="body2">
                 <Box component="span" sx={{ color: 'text.secondary' }}>
-                  Email:
+                  {t('email')}
                 </Box>{' '}
                 {email}
               </Typography>
@@ -174,13 +175,73 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           </Stack>
         </Stack>
 
-        <Box>
-          <pre>User info:{JSON.stringify(apiUser, null, 2)}</pre>
-        </Box>
-        <Box>
-          <pre>JWT: {auth.user?.access_token}</pre>
+        <Box
+          sx={{
+            p: 2,
+            borderRadius: 1,
+            overflowX: 'auto',
+            maxWidth: '100%',
+          }}
+        >
+          <Typography>API User</Typography>
+          <Typography
+            component="pre"
+            sx={{
+              fontFamily: 'monospace',
+              fontSize: 12,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              m: 0,
+            }}
+          >
+            {JSON.stringify(apiUser, null, 2)}
+          </Typography>
+          <Typography>JWT</Typography>
+          <Typography
+            component="pre"
+            sx={{
+              fontFamily: 'monospace',
+              fontSize: 12,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              m: 0,
+            }}
+          >
+            {auth.user?.access_token}
+          </Typography>
+          <Typography>Auth</Typography>
+          <Typography
+            component="pre"
+            sx={{
+              fontFamily: 'monospace',
+              fontSize: 12,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              m: 0,
+            }}
+          >
+            {JSON.stringify(auth, null, 2)}
+          </Typography>
+          <Typography>Groups</Typography>
+          <Typography
+            component="pre"
+            sx={{
+              fontFamily: 'monospace',
+              fontSize: 12,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-all',
+              m: 0,
+            }}
+          >
+            {JSON.stringify(auth.user?.profile.groups, null, 2)}
+          </Typography>
         </Box>
       </Paper>
+      <ActivationCodeDialog
+        open={activationCodeDialogOpen}
+        onClose={() => setActivationCodeDialogOpen(false)}
+        onActivate={() => auth.signinSilent()}
+      />
     </Container>
   );
 }

@@ -6,6 +6,12 @@ export type ApiUser = {
   name: string;
 };
 
+export type ActivationCode = {
+  id: string;
+  code: string;
+  features: string[];
+};
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -23,13 +29,27 @@ export const userApiClient = {
       },
     });
     if (response.ok) {
-      const json = await response.json();
-      return json as ApiUser;
+      return await response.json();
     }
     throw new ApiError(`Failed to fetch user: ${response.statusText}`, response.status);
   },
 
-  async activateCode(auth: AuthContextProps, code: string): Promise<void> {
+  async fetchActivateCode(code: string, auth: AuthContextProps): Promise<ActivationCode> {
+    const response = await fetch(`${userApiBaseUrl}/activation-codes/activate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+      body: JSON.stringify({ code }),
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new ApiError(`Failed to activate code: ${response.statusText}`, response.status);
+  },
+
+  async activateCode(code: string, auth: AuthContextProps): Promise<void> {
     const response = await fetch(`${userApiBaseUrl}/activation-codes/activate`, {
       method: 'POST',
       headers: {

@@ -39,7 +39,7 @@ const ActivationCodeForm: React.FC = () => {
     setMessage(undefined);
 
     try {
-      await userApiClient.activateCode(auth, trimmedCode);
+      await userApiClient.activateCode(trimmedCode, auth);
       const refreshedUser = await auth.signinSilent();
 
       if (!refreshedUser) {
