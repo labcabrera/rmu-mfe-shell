@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
+import BlockIcon from '@mui/icons-material/Block';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import MailIcon from '@mui/icons-material/Mail';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Alert,
@@ -27,6 +30,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import type { Friendship } from '../../api/user-api-client';
@@ -48,6 +52,7 @@ export default function FriendPanel() {
   const [friends, setFriends] = useState<Friendship[]>([]);
   const [pendingReceived, setPendingReceived] = useState<Friendship[]>([]);
   const [pendingSent, setPendingSent] = useState<Friendship[]>([]);
+  const [blocked, setBlocked] = useState<Friendship[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
 
@@ -63,11 +68,17 @@ export default function FriendPanel() {
     setLoading(true);
     setError(undefined);
     setActionError(undefined);
-    Promise.all([userApiClient.fetchFriends(auth), userApiClient.fecthInvitationsPending(auth), userApiClient.fecthInvitationsSent(auth)])
-      .then(([friendsPage, pendingPage, sentPage]) => {
+    Promise.all([
+      userApiClient.fetchFriends(auth),
+      userApiClient.fecthInvitationsPending(auth),
+      userApiClient.fecthInvitationsSent(auth),
+      userApiClient.fetchBlockedUsers(auth),
+    ])
+      .then(([friendsPage, pendingPage, sentPage, blockedPage]) => {
         setFriends(friendsPage.content);
         setPendingReceived(pendingPage.content);
         setPendingSent(sentPage.content);
+        setBlocked(blockedPage.content);
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -76,6 +87,30 @@ export default function FriendPanel() {
   useEffect(() => {
     if (auth.isAuthenticated) loadData();
   }, [auth.isAuthenticated]);
+
+  const handleRemoveFriend = (friendshipId: string) => {
+    setActionError(undefined);
+    userApiClient
+      .removeFriend(friendshipId, auth)
+      .then(() => loadData())
+      .catch((err) => setActionError(err.message));
+  };
+
+  const handleBlock = (friendshipId: string) => {
+    setActionError(undefined);
+    userApiClient
+      .updateFriendRequest(friendshipId, 'blocked', auth)
+      .then(() => loadData())
+      .catch((err) => setActionError(err.message));
+  };
+
+  const handleUnblock = (friendshipId: string) => {
+    setActionError(undefined);
+    userApiClient
+      .removeFriend(friendshipId, auth)
+      .then(() => loadData())
+      .catch((err) => setActionError(err.message));
+  };
 
   const handleAccept = (friendshipId: string) => {
     setActionError(undefined);
@@ -143,6 +178,7 @@ export default function FriendPanel() {
             <Tab icon={<PeopleIcon />} iconPosition="start" label={`${t('friends')} (${friends.length})`} />
             <Tab icon={<MailIcon />} iconPosition="start" label={`${t('received-invitations')} (${pendingReceived.length})`} />
             <Tab icon={<SendIcon />} iconPosition="start" label={`${t('sent-invitations')} (${pendingSent.length})`} />
+            <Tab icon={<BlockIcon />} iconPosition="start" label={`${t('blocked-users')} (${blocked.length})`} />
           </Tabs>
 
           <Divider />
@@ -153,7 +189,24 @@ export default function FriendPanel() {
             ) : (
               <List disablePadding>
                 {friends.map((f) => (
-                  <ListItem key={f.id} divider>
+                  <ListItem
+                    key={f.id}
+                    divider
+                    secondaryAction={
+                      <Stack direction="row" spacing={1}>
+                        <Tooltip title={t('remove-friend')}>
+                          <IconButton color="error" onClick={() => handleRemoveFriend(f.id)} title={t('remove-friend')}>
+                            <PersonRemoveIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('block-friend')}>
+                          <IconButton color="error" onClick={() => handleBlock(f.id)} title={t('block-user')}>
+                            <BlockIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    }
+                  >
                     <ListItemText primary={f.addresseeId === auth.user?.profile.sub ? f.requesterName : f.addresseeName} />
                   </ListItem>
                 ))}
@@ -172,12 +225,16 @@ export default function FriendPanel() {
                     divider
                     secondaryAction={
                       <Stack direction="row" spacing={1}>
-                        <IconButton color="success" onClick={() => handleAccept(f.id)} title={t('accept')}>
-                          <CheckIcon />
-                        </IconButton>
-                        <IconButton color="error" onClick={() => handleReject(f.id)} title={t('reject')}>
-                          <CloseIcon />
-                        </IconButton>
+                        <Tooltip title={t('accept')}>
+                          <IconButton color="success" onClick={() => handleAccept(f.id)} title={t('accept')}>
+                            <CheckIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={t('reject')}>
+                          <IconButton color="error" onClick={() => handleReject(f.id)} title={t('reject')}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Stack>
                     }
                   >
@@ -194,8 +251,30 @@ export default function FriendPanel() {
             ) : (
               <List disablePadding>
                 {pendingSent.map((f) => (
-                  <ListItem key={f.id} divider secondaryAction={<Chip label={t('pending')} size="small" color="warning" />}>
+                  <ListItem key={f.id} divider secondaryAction={<Chip label={t('pending')} color="secondary" />}>
                     <ListItemText primary={f.addresseeName} secondary={f.message || undefined} />
+                  </ListItem>
+                ))}
+              </List>
+            )}
+          </TabPanel>
+
+          <TabPanel value={tab} index={3}>
+            {blocked.length === 0 ? (
+              <Typography color="text.secondary">{t('no-blocked-users')}</Typography>
+            ) : (
+              <List disablePadding>
+                {blocked.map((f) => (
+                  <ListItem
+                    key={f.id}
+                    divider
+                    secondaryAction={
+                      <IconButton color="primary" onClick={() => handleUnblock(f.id)} title={t('unblock-user')}>
+                        <LockOpenIcon />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText primary={f.addresseeName} />
                   </ListItem>
                 ))}
               </List>

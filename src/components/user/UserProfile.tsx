@@ -22,6 +22,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
+import { maxWidth } from '@mui/system';
 import type { ThemeMode } from '../../App';
 import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
@@ -133,7 +134,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
               </ToggleButtonGroup>
             </Box>
 
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ maxWidth: 300 }}>
               <FormControl fullWidth size="small">
                 <InputLabel id="unit-select-label">Units</InputLabel>
                 <Select

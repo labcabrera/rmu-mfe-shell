@@ -164,7 +164,36 @@ export const userApiClient = {
     });
     if (!response.ok) {
       const err = await response.json().catch(() => ({}));
-      throw new ApiError((err as { message?: string }).message || `Failed to accept friend request: ${response.statusText}`, response.status);
+      throw new ApiError((err as { message?: string }).message || `Failed to update friend request: ${response.statusText}`, response.status);
+    }
+  },
+
+  async fetchBlockedUsers(auth: AuthContextProps): Promise<Page<Friendship>> {
+    const userId = auth.user?.profile.sub;
+    const rsql = `requesterId==${userId};status==blocked`;
+    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    const err = await response.json();
+    throw new ApiError(err.message || `Failed to fetch blocked users: ${response.statusText}`, response.status);
+  },
+
+  async removeFriend(friendshipId: string, auth: AuthContextProps): Promise<void> {
+    const response = await fetch(`${userApiBaseUrl}/friendships/${friendshipId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new ApiError((err as { message?: string }).message || `Failed to remove friendship: ${response.statusText}`, response.status);
     }
   },
 };
