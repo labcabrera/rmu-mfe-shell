@@ -237,11 +237,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           </Typography>
         </Box>
       </Paper>
-      <ActivationCodeDialog
-        open={activationCodeDialogOpen}
-        onClose={() => setActivationCodeDialogOpen(false)}
-        onActivate={() => auth.signinSilent()}
-      />
+      <ActivationCodeDialog open={activationCodeDialogOpen} onClose={() => setActivationCodeDialogOpen(false)} />
     </Container>
   );
 }

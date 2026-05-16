@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Button, Stack, Alert, Box } from '@mui/material';
 import { ActivationCode, userApiClient } from '../../api/user-api-client';
 
-export default function ActivationCodeDialog({ open, onActivate, onClose }: { open: boolean; onActivate: () => void; onClose: () => void }) {
+export default function ActivationCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const auth = useAuth();
   const { t } = useTranslation();
   const [code, setCode] = useState('');
@@ -25,7 +25,9 @@ export default function ActivationCodeDialog({ open, onActivate, onClose }: { op
     if (!activationCode) return;
     userApiClient
       .activateCode(activationCode.code, auth)
-      .then((response) => onActivate())
+      .then((response) => {
+        auth.signinSilent().then(() => onClose());
+      })
       .catch((err) => console.error(err));
   };
 
