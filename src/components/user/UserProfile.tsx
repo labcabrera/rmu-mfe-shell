@@ -17,6 +17,7 @@ import {
   Divider,
   FormControl,
   Grid,
+  IconButton,
   MenuItem,
   Paper,
   Select,
@@ -30,14 +31,18 @@ import type { ThemeMode } from '../../App';
 import type { ApiUser } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
+import ImageDialog from '../images/ImageDialog';
 import ActivationCodeDialog from './ActivationCodeDialog';
 import FriendPanel from './FriendPanel';
+
+const DEFAULT_IMAGE = `${imageBaseUrl}images/generic/races.png`;
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
   const auth = useAuth();
   const { t } = useTranslation();
   const [activationCodeDialogOpen, setActivationCodeDialogOpen] = useState<boolean>(false);
+  const [imageDialogOpen, setImageDialogOpen] = useState<boolean>(false);
   const [apiUser, setApiUser] = useState<ApiUser>();
   const groups: string[] = (auth.user?.profile.groups as string[]) || [];
 
@@ -59,6 +64,17 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
     }
   });
 
+  const updateImage = (imageUrl: string) => {
+    userApiClient
+      .updateCurrentUser({ imageUrl }, auth)
+      .then((response) => setApiUser(response))
+      .catch((err) => console.error(err));
+  };
+
+  const handleThemeModeChange = (_: React.MouseEvent<HTMLElement>, value: ThemeMode | null) => {
+    if (value) onThemeModeChange(value);
+  };
+
   useEffect(() => {
     try {
       localStorage.setItem('unit', unit);
@@ -74,18 +90,16 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
       .catch((err) => console.error(err));
   }, [auth]);
 
-  const handleThemeModeChange = (_: React.MouseEvent<HTMLElement>, value: ThemeMode | null) => {
-    if (value) onThemeModeChange(value);
-  };
-
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
       <Paper sx={{ p: { xs: 2, md: 3 } }} elevation={2}>
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
-            <Avatar sx={{ width: 80, height: 80 }} src={`${imageBaseUrl}images/generic/races.png`}>
-              {avatarInitials}
-            </Avatar>
+            <IconButton aria-label="change profile image" onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
+              <Avatar sx={{ width: 80, height: 80 }} src={apiUser?.imageUrl || DEFAULT_IMAGE}>
+                {avatarInitials}
+              </Avatar>
+            </IconButton>
             <Box sx={{ minWidth: 0 }}>
               <Typography variant="h5">{displayName}</Typography>
               {email && (
@@ -264,6 +278,12 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
         </Box>
       </Paper>
       <ActivationCodeDialog open={activationCodeDialogOpen} onClose={() => setActivationCodeDialogOpen(false)} />
+      <ImageDialog
+        open={imageDialogOpen}
+        onClose={() => setImageDialogOpen(false)}
+        onImageSelected={(image) => updateImage(image.url)}
+        onImageUploaded={(image) => updateImage(image.url)}
+      />
     </Container>
   );
 }

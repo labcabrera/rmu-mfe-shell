@@ -11,9 +11,29 @@ export type Pagination = {
   pageSize: number;
 };
 
+export type MeasurementSystem = 'metric' | 'imperial';
+
+export type UserSettings = {
+  measurementSystem: MeasurementSystem;
+};
+
 export type ApiUser = {
   id: string;
   name: string;
+  email?: string;
+  emailVerified?: boolean;
+  enabled?: boolean;
+  features?: string[];
+  settings?: UserSettings;
+  imageUrl?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date | null;
+};
+
+export type UpdateCurrentUserInput = {
+  name?: string;
+  settings?: Partial<UserSettings>;
+  imageUrl?: string | null;
 };
 
 export type ActivationCode = {
@@ -56,6 +76,22 @@ export const userApiClient = {
       return await response.json();
     }
     throw new ApiError(`Failed to fetch user: ${response.statusText}`, response.status);
+  },
+
+  async updateCurrentUser(input: UpdateCurrentUserInput, auth: AuthContextProps): Promise<ApiUser> {
+    const response = await fetch(`${userApiBaseUrl}/users/me`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+      body: JSON.stringify(input),
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    const err = await response.json().catch(() => ({}));
+    throw new ApiError((err as { message?: string }).message || `Failed to update user: ${response.statusText}`, response.status);
   },
 
   async fetchFriends(auth: AuthContextProps): Promise<Page<Friendship>> {
