@@ -29,6 +29,8 @@ const pages = [
     links: [
       { label: 'strategic-module', href: '/strategic' },
       { label: 'strategic-games', href: '/strategic/games' },
+      { label: 'factions', href: '/strategic/factions' },
+      { label: 'characters', href: '/strategic/characters' },
     ],
   },
   {
