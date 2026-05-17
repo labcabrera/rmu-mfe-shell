@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthProvider as OidcProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import type { AuthProviderProps } from 'react-oidc-context';
+import { useNavigate } from 'react-router-dom';
 import { oidcUrl, oidcRealm, oidcClientId } from '../config';
 
 type Props = {
@@ -52,6 +53,7 @@ const SilentSignIn: React.FC = () => {
 };
 
 const AuthProvider: React.FC<Props> = ({ children }) => {
+  const navigate = useNavigate();
   const oidcAuthority = `${oidcUrl.replace(/\/$/, '')}/realms/${oidcRealm}`;
   const appOrigin = window.location.origin;
 
@@ -66,7 +68,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     automaticSilentRenew: true,
     loadUserInfo: true,
     onSigninCallback: (user) => {
-      window.location.replace(getPostLoginPath(user?.state));
+      navigate(getPostLoginPath(user?.state), { replace: true });
     },
   };
 
