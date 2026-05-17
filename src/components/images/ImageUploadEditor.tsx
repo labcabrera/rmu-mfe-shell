@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import AvatarEditor, { AvatarEditorRef } from 'react-avatar-editor';
 import { useAuth } from 'react-oidc-context';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -16,12 +17,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import AvatarEditor, { AvatarEditorRef } from 'react-avatar-editor';
 import { IMAGE_CATEGORIES, mediaApiClient } from '../../api/media-api-client';
 import type { ImageCategory, MediaImage } from '../../api/media-api-client';
 
 export type ImageUploadEditorProps = {
   defaultCategory?: ImageCategory;
+  displayAltText?: boolean;
   width?: number;
   height?: number;
   onUploaded?: (image: MediaImage) => void;
@@ -40,8 +41,15 @@ const toBlob = (canvas: HTMLCanvasElement, type: string): Promise<Blob> =>
 
 const uploadContentType = (type: string): string => (['image/jpeg', 'image/png', 'image/webp'].includes(type) ? type : 'image/png');
 
-export default function ImageUploadEditor({ defaultCategory = 'avatars', width = 240, height = 240, onUploaded }: ImageUploadEditorProps) {
+export default function ImageUploadEditor({
+  defaultCategory = 'user-data',
+  displayAltText = false,
+  width = 240,
+  height = 240,
+  onUploaded,
+}: ImageUploadEditorProps) {
   const auth = useAuth();
+  const isAdmin = ((auth.user?.profile.groups as string[]) || []).includes('rmu-admin');
   const editorRef = useRef<AvatarEditorRef>(null);
   const [file, setFile] = useState<File>();
   const [category, setCategory] = useState<ImageCategory>(defaultCategory);
@@ -133,23 +141,27 @@ export default function ImageUploadEditor({ defaultCategory = 'avatars', width =
         </Box>
 
         <Stack spacing={2} sx={{ flex: 1, minWidth: 220 }}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="upload-image-category-label">Category</InputLabel>
-            <Select
-              labelId="upload-image-category-label"
-              value={category}
-              label="Category"
-              onChange={(event: SelectChangeEvent<ImageCategory>) => setCategory(event.target.value as ImageCategory)}
-            >
-              {IMAGE_CATEGORIES.map((imageCategory) => (
-                <MenuItem key={imageCategory} value={imageCategory}>
-                  {imageCategory}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {isAdmin && (
+            <FormControl fullWidth size="small">
+              <InputLabel id="upload-image-category-label">Category</InputLabel>
+              <Select
+                labelId="upload-image-category-label"
+                value={category}
+                label="Category"
+                onChange={(event: SelectChangeEvent<ImageCategory>) => setCategory(event.target.value as ImageCategory)}
+              >
+                {IMAGE_CATEGORIES.map((imageCategory) => (
+                  <MenuItem key={imageCategory} value={imageCategory}>
+                    {imageCategory}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
 
-          <TextField label="Alternative text" size="small" value={altText} onChange={(event) => setAltText(event.target.value)} fullWidth />
+          {displayAltText && (
+            <TextField label="Alternative text" size="small" value={altText} onChange={(event) => setAltText(event.target.value)} fullWidth />
+          )}
 
           <Box>
             <Typography variant="body2" color="text.secondary">
