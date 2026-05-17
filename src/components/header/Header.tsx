@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
-import { imageBaseUrl } from '../../services/config';
 import HeaderNavButtons from './HeaderNavButtons';
 import LanguageSelector from './LanguageSelector';
 import MobileMenu from './MobileMenu';
@@ -93,7 +92,7 @@ const Header = () => {
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 }, flexShrink: 0, ml: { xs: 'auto', md: 0 } }}>
               <LanguageSelector />
-              <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
+              <UserMenu />
             </Box>
           </Box>
         </Toolbar>

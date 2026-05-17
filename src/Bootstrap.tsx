@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { i18n, initI18n } from './i18n/i18n';
 import AuthProvider from './services/auth/AuthProvider';
+import { ApiUserProvider } from './services/user/ApiUserProvider';
 
 const mount = async () => {
   const locale = localStorage.getItem('locale') || undefined;
@@ -14,7 +15,9 @@ const mount = async () => {
       <BrowserRouter>
         <I18nextProvider i18n={i18n}>
           <AuthProvider>
-            <App />
+            <ApiUserProvider>
+              <App />
+            </ApiUserProvider>
           </AuthProvider>
         </I18nextProvider>
       </BrowserRouter>

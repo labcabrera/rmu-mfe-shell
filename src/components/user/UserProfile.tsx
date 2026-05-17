@@ -28,14 +28,23 @@ import {
   Typography,
 } from '@mui/material';
 import type { ThemeMode } from '../../App';
-import type { ApiUser } from '../../api/user-api-client';
-import { userApiClient } from '../../api/user-api-client';
+import type { MeasurementSystem } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
+import { useApiUser } from '../../services/user/ApiUserProvider';
 import ImageDialog from '../images/ImageDialog';
 import ActivationCodeDialog from './ActivationCodeDialog';
 import FriendPanel from './FriendPanel';
 
 const DEFAULT_IMAGE = `${imageBaseUrl}images/generic/races.png`;
+
+const getStoredMeasurementSystem = (): MeasurementSystem => {
+  try {
+    const stored = localStorage.getItem('unit');
+    return stored === 'imperial' ? 'imperial' : 'metric';
+  } catch {
+    return 'metric';
+  }
+};
 
 export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
   const { user } = useAuth();
@@ -43,12 +52,12 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
   const { t } = useTranslation();
   const [activationCodeDialogOpen, setActivationCodeDialogOpen] = useState<boolean>(false);
   const [imageDialogOpen, setImageDialogOpen] = useState<boolean>(false);
-  const [apiUser, setApiUser] = useState<ApiUser>();
-  const groups: string[] = (auth.user?.profile.groups as string[]) || [];
+  const { apiUser, error: apiUserError, updateApiUser } = useApiUser();
+  const groups: string[] = apiUser?.features || (auth.user?.profile.groups as string[]) || [];
 
   const username = user?.profile.preferred_username || user?.profile.name || 'Unknown';
   const email = user?.profile.email || 'Not defined email';
-  const displayName = user?.profile.name || username;
+  const displayName = apiUser?.name || user?.profile.name || username;
   const avatarInitials = displayName
     .split(/\s+/)
     .map((part) => part[0])
@@ -56,23 +65,20 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
     .slice(0, 2)
     .toUpperCase();
 
-  const [unit, setUnit] = useState<string>(() => {
-    try {
-      return localStorage.getItem('unit') || 'metric';
-    } catch {
-      return 'metric';
-    }
-  });
+  const [unit, setUnit] = useState<MeasurementSystem>(getStoredMeasurementSystem);
 
   const updateImage = (imageUrl: string) => {
-    userApiClient
-      .updateCurrentUser({ imageUrl }, auth)
-      .then((response) => setApiUser(response))
-      .catch((err) => console.error(err));
+    updateApiUser({ imageUrl }).catch((err) => console.error(err));
   };
 
   const handleThemeModeChange = (_: React.MouseEvent<HTMLElement>, value: ThemeMode | null) => {
     if (value) onThemeModeChange(value);
+  };
+
+  const handleUnitChange = (event: SelectChangeEvent<MeasurementSystem>) => {
+    const nextUnit = event.target.value as MeasurementSystem;
+    setUnit(nextUnit);
+    updateApiUser({ settings: { measurementSystem: nextUnit } }).catch((err) => console.error(err));
   };
 
   useEffect(() => {
@@ -82,18 +88,17 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
   }, [unit]);
 
   useEffect(() => {
-    if (!auth) return;
-    console.log('User profile loaded. Fetching user data...');
-    userApiClient
-      .fetchUser(auth)
-      .then((response) => setApiUser(response))
-      .catch((err) => console.error(err));
-  }, [auth]);
+    if (apiUser?.settings?.measurementSystem) {
+      setUnit(apiUser.settings.measurementSystem);
+    }
+  }, [apiUser?.settings?.measurementSystem]);
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
       <Paper sx={{ p: { xs: 2, md: 3 } }} elevation={2}>
         <Stack spacing={3}>
+          {apiUserError && <Alert severity="warning">{apiUserError}</Alert>}
+
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
             <IconButton aria-label="change profile image" onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
               <Avatar sx={{ width: 80, height: 80 }} src={apiUser?.imageUrl || DEFAULT_IMAGE}>
@@ -180,7 +185,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
                     {t('units')}
                   </Typography>
                   <FormControl size="small" sx={{ minWidth: 180 }}>
-                    <Select value={unit} onChange={(e: SelectChangeEvent<string>) => setUnit(e.target.value)}>
+                    <Select value={unit} onChange={handleUnitChange}>
                       <MenuItem value="metric">{t('metric')}</MenuItem>
                       <MenuItem value="imperial">{t('imperial')}</MenuItem>
                     </Select>

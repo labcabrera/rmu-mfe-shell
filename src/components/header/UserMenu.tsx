@@ -3,21 +3,23 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { imageBaseUrl } from '../../services/config';
+import { useApiUser } from '../../services/user/ApiUserProvider';
 
-interface UserMenuProps {
-  avatarUrl?: string;
-}
+const DEFAULT_IMAGE = `${imageBaseUrl}images/generic/races.png`;
 
-const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
+const UserMenu: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation();
   const oidc = useAuth();
+  const { apiUser } = useApiUser();
   const isAuthenticated = !!oidc?.isAuthenticated;
   const login = () => oidc.signinRedirect({ state: { returnTo: `${location.pathname}${location.search}${location.hash}` } });
   const logout = () => oidc?.signoutRedirect?.();
-  const userName = oidc.user?.profile.preferred_username || 'Undefined';
+  const userName = apiUser?.name || oidc.user?.profile.preferred_username || 'Undefined';
+  const avatarUrl = apiUser?.imageUrl || DEFAULT_IMAGE;
   const avatarInitials = userName
     .split(/\s+/)
     .map((part) => part[0])
@@ -74,7 +76,7 @@ const UserMenu: FC<UserMenuProps> = ({ avatarUrl = '' }) => {
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
             <Avatar
               alt={userName}
-              src={avatarUrl || '/static/images/avatars/avatar-000.png'}
+              src={avatarUrl}
               sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
             >
               {avatarInitials}
