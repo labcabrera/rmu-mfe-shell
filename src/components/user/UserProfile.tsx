@@ -31,7 +31,7 @@ import type { ThemeMode } from '../../App';
 import type { MeasurementSystem } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
-import ImageDialog from '../images/ImageDialog';
+import ImageSelectorDialog from '../images/ImageSelectorDialog';
 import ActivationCodeDialog from './ActivationCodeDialog';
 import FriendPanel from './FriendPanel';
 
@@ -283,11 +283,12 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
         </Box>
       </Paper>
       <ActivationCodeDialog open={activationCodeDialogOpen} onClose={() => setActivationCodeDialogOpen(false)} />
-      <ImageDialog
+      <ImageSelectorDialog
+        value={apiUser?.imageUrl || DEFAULT_IMAGE}
         open={imageDialogOpen}
         onClose={() => setImageDialogOpen(false)}
-        onImageSelected={(image) => updateImage(image.url)}
-        onImageUploaded={(image) => updateImage(image.url)}
+        onSelect={(image) => updateImage(image.url)}
+        onUpload={(image) => updateImage(image.url)}
       />
     </Container>
   );

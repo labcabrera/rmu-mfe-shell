@@ -21,6 +21,7 @@ import { IMAGE_CATEGORIES, mediaApiClient } from '../../api/media-api-client';
 import type { ImageCategory, MediaImage } from '../../api/media-api-client';
 
 export type ImageUploadEditorProps = {
+  value?: string;
   defaultCategory?: ImageCategory;
   displayAltText?: boolean;
   width?: number;
@@ -42,6 +43,7 @@ const toBlob = (canvas: HTMLCanvasElement, type: string): Promise<Blob> =>
 const uploadContentType = (type: string): string => (['image/jpeg', 'image/png', 'image/webp'].includes(type) ? type : 'image/png');
 
 export default function ImageUploadEditor({
+  value,
   defaultCategory = 'user-data',
   displayAltText = false,
   width = 240,
@@ -135,6 +137,8 @@ export default function ImageUploadEditor({
               scale={scale}
               color={[0, 0, 0, 0.45]}
             />
+          ) : value ? (
+            <Box component="img" src={value} alt={altText || 'Selected image'} sx={{ width, height, objectFit: 'cover' }} />
           ) : (
             <Typography color="text.secondary">No image selected</Typography>
           )}

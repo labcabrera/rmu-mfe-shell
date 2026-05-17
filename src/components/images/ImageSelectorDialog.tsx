@@ -8,10 +8,11 @@ import ImageCategorySelector from './ImageCategorySelector';
 import ImageUploadEditor from './ImageUploadEditor';
 
 export type ImageDialogProps = {
+  value?: string;
   open: boolean;
   onClose: () => void;
-  onImageSelected?: (image: MediaImage) => void;
-  onImageUploaded?: (image: MediaImage) => void;
+  onSelect: (image: MediaImage) => void;
+  onUpload?: (image: MediaImage) => void;
 };
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
@@ -22,7 +23,7 @@ function TabPanel({ children, value, index }: { children: React.ReactNode; value
   );
 }
 
-export default function ImageDialog({ open, onClose, onImageSelected, onImageUploaded }: ImageDialogProps) {
+export default function ImageSelectorDialog({ value, open, onClose, onSelect: onImageSelected, onUpload: onImageUploaded }: ImageDialogProps) {
   const [tab, setTab] = useState(0);
   const [selectedImage, setSelectedImage] = useState<MediaImage>();
 
@@ -57,7 +58,7 @@ export default function ImageDialog({ open, onClose, onImageSelected, onImageUpl
         </Tabs>
         <Divider />
         <TabPanel value={tab} index={0}>
-          <ImageUploadEditor onUploaded={handleUploaded} />
+          <ImageUploadEditor value={value} onUploaded={handleUploaded} />
         </TabPanel>
         <TabPanel value={tab} index={1}>
           <ImageCategorySelector selectedImageId={selectedImage?.id} onSelect={setSelectedImage} />

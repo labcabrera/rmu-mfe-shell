@@ -22,10 +22,16 @@ import type { ImageCategory, MediaImage } from '../../api/media-api-client';
 export type ImageCategorySelectorProps = {
   defaultCategory?: ImageCategory;
   selectedImageId?: string;
+  categories?: string[];
   onSelect?: (image: MediaImage) => void;
 };
 
-export default function ImageCategorySelector({ defaultCategory = 'avatars', selectedImageId, onSelect }: ImageCategorySelectorProps) {
+export default function ImageCategorySelector({
+  defaultCategory = 'avatars',
+  selectedImageId,
+  categories = ['actions', 'avatars', 'generic', 'items', 'npcs', 'photos', 'professions', 'races', 'user-data'],
+  onSelect,
+}: ImageCategorySelectorProps) {
   const auth = useAuth();
   const [category, setCategory] = useState<ImageCategory>(defaultCategory);
   const [images, setImages] = useState<MediaImage[]>([]);
@@ -67,7 +73,7 @@ export default function ImageCategorySelector({ defaultCategory = 'avatars', sel
       <FormControl fullWidth size="small">
         <InputLabel id="select-image-category-label">Category</InputLabel>
         <Select labelId="select-image-category-label" value={category} label="Category" onChange={handleCategoryChange}>
-          {IMAGE_CATEGORIES.map((imageCategory) => (
+          {categories.map((imageCategory) => (
             <MenuItem key={imageCategory} value={imageCategory}>
               {imageCategory}
             </MenuItem>
@@ -112,9 +118,7 @@ export default function ImageCategorySelector({ defaultCategory = 'avatars', sel
         </ImageList>
       )}
 
-      {totalPages > 1 && (
-        <Pagination count={totalPages} page={page + 1} onChange={(_, value) => setPage(value - 1)} sx={{ alignSelf: 'center' }} />
-      )}
+      {totalPages > 1 && <Pagination count={totalPages} page={page + 1} onChange={(_, value) => setPage(value - 1)} sx={{ alignSelf: 'center' }} />}
     </Stack>
   );
 }
