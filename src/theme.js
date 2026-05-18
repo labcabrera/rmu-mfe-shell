@@ -103,86 +103,86 @@ const createAppTheme = (mode = 'dark') => {
       warning: { main: colors.warning },
       info: { main: colors.info },
     },
-    shape: { borderRadius: 10 },
-    typography: {
-      fontFamily: 'sans-serif',
-      fontSize: 16,
-    },
-    components: {
-      MuiCssBaseline: {
-        styleOverrides: {
-          body: { scrollbarColor: `${baseColors.scrollbarThumb} ${baseColors.scrollbarTrack}` },
-          '*::-webkit-scrollbar-thumb': { backgroundColor: baseColors.scrollbarThumb },
-        },
-      },
-      MuiButton: {
-        defaultProps: { size: 'small', variant: 'contained' },
-        styleOverrides: {
-          outlined: {
-            color: palette.primary.main,
-            backgroundColor: alpha(palette.primary.main, 0.06),
-            border: `1px solid ${alpha(palette.primary.main, 0.18)}`,
-            '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
-          },
-        },
-      },
-      MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
-      MuiSelect: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
-      MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
-      MuiToggleButton: {
-        defaultProps: { size: 'small' },
-        styleOverrides: {
-          root: {
-            borderRadius: 8,
-            color: palette.primary.main,
-            backgroundColor: alpha(palette.primary.main, 0.06),
-            '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
-            '&.Mui-selected': {
-              color: palette.primary.contrastText,
-              backgroundColor: palette.primary.main,
-            },
-            '&.Mui-selected:hover': {
-              backgroundColor: palette.primary.dark,
-            },
-          },
-        },
-      },
-      MuiDialog: {
-        styleOverrides: {
-          paper: {
-            backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
-            overflow: 'hidden',
-          },
-        },
-      },
-      MuiDialogTitle: {
-        styleOverrides: {
-          root: {
-            background:
-              mode === 'dark'
-                ? `linear-gradient(180deg, ${baseColors.dark.dialogBackgroundTop} 0%, ${baseColors.dark.dialogBackground} 100%)`
-                : palette.background.paper,
-          },
-        },
-      },
-      MuiDialogActions: {
-        styleOverrides: {
-          root: {
-            background:
-              mode === 'dark'
-                ? `linear-gradient(180deg, ${baseColors.dark.dialogBackground} 0%, ${baseColors.dark.dialogBackgroundTop} 100%)`
-                : palette.background.paper,
-          },
-        },
-      },
-      MuiDialogContent: {
-        styleOverrides: {
-          root: {
-            backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
-          },
-        },
-      },
-    },
+    // shape: { borderRadius: 10 },
+    // typography: {
+    //   fontFamily: 'sans-serif',
+    //   fontSize: 16,
+    // },
+    // components: {
+    //   MuiCssBaseline: {
+    //     styleOverrides: {
+    //       body: { scrollbarColor: `${baseColors.scrollbarThumb} ${baseColors.scrollbarTrack}` },
+    //       '*::-webkit-scrollbar-thumb': { backgroundColor: baseColors.scrollbarThumb },
+    //     },
+    //   },
+    //   MuiButton: {
+    //     defaultProps: { size: 'small', variant: 'contained' },
+    //     styleOverrides: {
+    //       outlined: {
+    //         color: palette.primary.main,
+    //         backgroundColor: alpha(palette.primary.main, 0.06),
+    //         border: `1px solid ${alpha(palette.primary.main, 0.18)}`,
+    //         '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
+    //       },
+    //     },
+    //   },
+    //   MuiTextField: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
+    //   MuiSelect: { defaultProps: { size: 'small', margin: 'dense', variant: 'outlined' } },
+    //   MuiChip: { styleOverrides: { root: { borderRadius: 8 } } },
+    //   MuiToggleButton: {
+    //     defaultProps: { size: 'small' },
+    //     styleOverrides: {
+    //       root: {
+    //         borderRadius: 8,
+    //         color: palette.primary.main,
+    //         backgroundColor: alpha(palette.primary.main, 0.06),
+    //         '&:hover': { backgroundColor: alpha(palette.primary.main, 0.12) },
+    //         '&.Mui-selected': {
+    //           color: palette.primary.contrastText,
+    //           backgroundColor: palette.primary.main,
+    //         },
+    //         '&.Mui-selected:hover': {
+    //           backgroundColor: palette.primary.dark,
+    //         },
+    //       },
+    //     },
+    //   },
+    //   MuiDialog: {
+    //     styleOverrides: {
+    //       paper: {
+    //         backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
+    //         overflow: 'hidden',
+    //       },
+    //     },
+    //   },
+    //   MuiDialogTitle: {
+    //     styleOverrides: {
+    //       root: {
+    //         background:
+    //           mode === 'dark'
+    //             ? `linear-gradient(180deg, ${baseColors.dark.dialogBackgroundTop} 0%, ${baseColors.dark.dialogBackground} 100%)`
+    //             : palette.background.paper,
+    //       },
+    //     },
+    //   },
+    //   MuiDialogActions: {
+    //     styleOverrides: {
+    //       root: {
+    //         background:
+    //           mode === 'dark'
+    //             ? `linear-gradient(180deg, ${baseColors.dark.dialogBackground} 0%, ${baseColors.dark.dialogBackgroundTop} 100%)`
+    //             : palette.background.paper,
+    //       },
+    //     },
+    //   },
+    //   MuiDialogContent: {
+    //     styleOverrides: {
+    //       root: {
+    //         backgroundColor: mode === 'dark' ? baseColors.dark.dialogBackground : palette.background.paper,
+    //       },
+    //     },
+    //   },
+    // },
   });
 };
 
