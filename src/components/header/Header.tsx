@@ -38,7 +38,7 @@ const pages = [
     href: '/tactical',
     links: [
       { label: 'tactical-module', href: '/tactical' },
-      { label: 'tactical-games', href: '/tactical/tactical-games' },
+      { label: 'tactical-games', href: '/tactical/games' },
     ],
   },
   { label: 'npcs', href: '/npcs', links: [{ label: 'npcs', href: '/npcs' }] },
