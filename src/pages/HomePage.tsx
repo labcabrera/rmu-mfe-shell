@@ -15,35 +15,30 @@ const MODULES = [
     title: 'core',
     desc: 'shell.home.module-core-desc',
     img: `${imageBaseUrl}images/generic/core.png`,
-    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/core',
   },
   {
     title: 'strategic',
     desc: 'shell.home.module-strategic-desc',
     img: `${imageBaseUrl}images/generic/strategic.png`,
-    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/strategic',
   },
   {
     title: 'tactical',
     desc: 'shell.home.module-tactical-desc',
     img: `${imageBaseUrl}images/generic/tactical.png`,
-    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/tactical',
   },
   {
     title: 'npcs',
     desc: 'shell.home.module-npcs-desc',
     img: `${imageBaseUrl}images/generic/npcs.png`,
-    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/npcs',
   },
   {
     title: 'spells',
     desc: 'shell.home.module-spells-desc',
     img: `${imageBaseUrl}images/generic/spells.png`,
-    backgroundImage: `${imageBaseUrl}images/backgrounds/bg-07.png`,
     href: '/spells',
   },
 ];
@@ -155,10 +150,12 @@ export const Home = () => {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ py: 10 }}>
-        <Alert severity="warning" sx={{ mb: 1 }}>
-          This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
-          <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises (ICE)</Link>. Please support official publications if you enjoy Rolemaster.
+      <Container maxWidth="xl" sx={{ py: 10 }}>
+        <Alert severity="info" sx={{ mb: 1 }}>
+          <Typography variant="h6">
+            This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
+            <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises</Link>. Please support official publications if you enjoy Rolemaster.
+          </Typography>
         </Alert>
 
         <Grid container spacing={3}>
@@ -178,10 +175,6 @@ export const Home = () => {
                   gap: 3,
                   alignItems: 'center',
                   p: { xs: 2, md: 4 },
-                  backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.06), rgba(0,0,0,0.02)), url(${f.backgroundImage})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
                   transform: 'scale(1)',
                   transformOrigin: 'center center',
                   width: '100%',
@@ -193,7 +186,7 @@ export const Home = () => {
               >
                 <CardContent sx={{ p: 0, flex: 1 }}>
                   <Typography variant="h5">{t(f.title)}</Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
                     {t(f.desc)}
                   </Typography>
                 </CardContent>

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
-import { imageBaseUrl } from '../../services/config';
 import HeaderNavButtons from './HeaderNavButtons';
 import LanguageSelector from './LanguageSelector';
 import MobileMenu from './MobileMenu';
@@ -28,16 +27,18 @@ const pages = [
     label: 'strategic',
     href: '/strategic',
     links: [
-      { label: 'strategic', href: '/strategic' },
-      { label: 'strategic-games', href: '/strategic' },
+      { label: 'strategic-module', href: '/strategic' },
+      { label: 'strategic-games', href: '/strategic/games' },
+      { label: 'factions', href: '/strategic/factions' },
+      { label: 'characters', href: '/strategic/characters' },
     ],
   },
   {
     label: 'tactical',
     href: '/tactical',
     links: [
-      { label: 'tactical', href: '/tactical' },
-      { label: 'tactical-games', href: '/tactical' },
+      { label: 'tactical-module', href: '/tactical' },
+      { label: 'tactical-games', href: '/tactical/games' },
     ],
   },
   { label: 'npcs', href: '/npcs', links: [{ label: 'npcs', href: '/npcs' }] },
@@ -46,6 +47,7 @@ const pages = [
     label: 'spells',
     href: '/spells',
     links: [
+      { label: 'spell-module', href: '/spells' },
       { label: 'spell-lists', href: '/spells/spell-lists' },
       { label: 'spells', href: '/spells/spells' },
     ],
@@ -93,7 +95,7 @@ const Header = () => {
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 }, flexShrink: 0, ml: { xs: 'auto', md: 0 } }}>
               <LanguageSelector />
-              <UserMenu avatarUrl={`${imageBaseUrl}images/generic/races.png`} />
+              <UserMenu />
             </Box>
           </Box>
         </Toolbar>
