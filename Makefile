@@ -6,10 +6,14 @@ SHARED_LIB_DIR  ?= ../rmu-react-shared-lib
 SHARED_LIB_NAME ?= @labcabrera-rmu/rmu-react-shared-lib
 
 .DEFAULT_GOAL := help
-.PHONY: help build link-shared-lib unlink-shared-lib create-release
+.PHONY: help start build link-shared-lib unlink-shared-lib create-release
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
+
+start: ## Start the dev server with live reload (needs .env, copy it from .env.example)
+	@test -f .env || test -f .env.development || { echo "Missing .env. Copy .env.example to .env and adjust the URLs." >&2; exit 1; }
+	npm run start:live
 
 build: ## Build the production bundle into dist/
 	npm run build
