@@ -11,8 +11,8 @@ export default function ContactPage(): JSX.Element {
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error' | 'mailto'>('idle');
 
-  const apiUrl = process.env.REACT_APP_CONTACT_API || '';
-  const contactEmail = process.env.REACT_APP_CONTACT_EMAIL || 'lab.cabrera@gmail.com';
+  const apiUrl = process.env.RMU_SHELL_CONTACT_URI || '';
+  const contactEmail = process.env.RMU_SHELL_CONTACT_EMAIL || 'lab.cabrera@gmail.com';
 
   const validateEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 

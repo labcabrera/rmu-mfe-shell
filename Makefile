@@ -8,7 +8,7 @@ IMAGE           ?= labcabrera/rmu-mfe-shell
 IMAGE_TAG       ?= local
 
 .DEFAULT_GOAL := help
-.PHONY: help start build docker-build link-shared-lib unlink-shared-lib create-release
+.PHONY: help start build docker-build docker-push link-shared-lib unlink-shared-lib create-release
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -22,6 +22,9 @@ build: ## Build the production bundle into dist/
 
 docker-build: ## Build the static nginx image $(IMAGE):$(IMAGE_TAG)
 	docker build -t $(IMAGE):$(IMAGE_TAG) .
+
+docker-push: docker-build ## Build and push $(IMAGE):$(IMAGE_TAG) (for example IMAGE_TAG=1.2.0)
+	docker push $(IMAGE):$(IMAGE_TAG)
 
 link-shared-lib: ## Build the local rmu-react-shared-lib checkout (SHARED_LIB_DIR) and link it into node_modules
 	@test -f "$(SHARED_LIB_DIR)/package.json" || { echo "Missing $(SHARED_LIB_DIR). Set SHARED_LIB_DIR to your rmu-react-shared-lib checkout." >&2; exit 1; }
