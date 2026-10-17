@@ -23,7 +23,8 @@ export function resolveAssetUrl(path: string | null | undefined): string | undef
 export function resolveAssetUrl(path: string | null | undefined): string | undefined {
   if (!path) return undefined;
   if (NOT_ASSET_PATH.test(path)) return path;
-  return `${assetsBaseUrl}${path.replace(/^\.\//, '')}`;
+  const separator = assetsBaseUrl.endsWith('/') ? '' : '/';
+  return `${assetsBaseUrl}${separator}${path.replace(/^\.\//, '')}`;
 }
 export const oidcUrl = getRequiredEnv('RMU_IAM_URI', process.env.RMU_IAM_URI);
 export const oidcRealm = getRequiredEnv('RMU_IAM_REALM', process.env.RMU_IAM_REALM);

@@ -287,8 +287,8 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
         value={apiUser?.imageUrl || DEFAULT_IMAGE}
         open={imageDialogOpen}
         onClose={() => setImageDialogOpen(false)}
-        onSelect={(image) => updateImage(image.url)}
-        onUpload={(image) => updateImage(image.url)}
+        onSelect={(image) => updateImage(image.storageKey || image.url)}
+        onUpload={(image) => updateImage(image.storageKey || image.url)}
       />
     </Container>
   );
