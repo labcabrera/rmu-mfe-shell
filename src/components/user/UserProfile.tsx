@@ -29,7 +29,7 @@ import {
 } from '@mui/material';
 import type { ThemeMode } from '../../App';
 import type { MeasurementSystem } from '../../api/user-api-client';
-import { imageBaseUrl } from '../../services/config';
+import { imageBaseUrl, resolveAssetUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
 import ImageSelectorDialog from '../images/ImageSelectorDialog';
 import ActivationCodeDialog from './ActivationCodeDialog';
@@ -101,7 +101,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
             <IconButton aria-label="change profile image" onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
-              <Avatar sx={{ width: 80, height: 80 }} src={apiUser?.imageUrl || DEFAULT_IMAGE}>
+              <Avatar sx={{ width: 80, height: 80 }} src={resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE)}>
                 {avatarInitials}
               </Avatar>
             </IconButton>

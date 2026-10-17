@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { IMAGE_CATEGORIES, mediaApiClient } from '../../api/media-api-client';
 import type { ImageCategory, MediaImage } from '../../api/media-api-client';
+import { resolveAssetUrl } from '../../services/config';
 
 export type ImageUploadEditorProps = {
   value?: string;
@@ -138,7 +139,7 @@ export default function ImageUploadEditor({
               color={[0, 0, 0, 0.45]}
             />
           ) : value ? (
-            <Box component="img" src={value} alt={altText || 'Selected image'} sx={{ width, height, objectFit: 'cover' }} />
+            <Box component="img" src={resolveAssetUrl(value)} alt={altText || 'Selected image'} sx={{ width, height, objectFit: 'cover' }} />
           ) : (
             <Typography color="text.secondary">No image selected</Typography>
           )}
