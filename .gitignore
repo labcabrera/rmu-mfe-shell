@@ -2,7 +2,6 @@
 .agents/
 .codex/
 .github/
-.vscode/
 
 # Logs
 logs

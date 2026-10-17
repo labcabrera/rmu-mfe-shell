@@ -4,6 +4,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
+import RemoteUnavailable from './components/remote/RemoteUnavailable';
 import UserProfile from './components/user/UserProfile';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
@@ -17,12 +18,21 @@ import TechnicalInfoPage from './pages/TechnicalInfoPage';
 import ProtectedRoute from './services/auth/ProtectedRoute';
 import createAppTheme from './theme';
 
-const RemoteCoreApp = React.lazy(() => import('core/CoreApp'));
-const RemoteStrategicApp = React.lazy(() => import('strategic/StrategicApp'));
-const RemoteTacticalApp = React.lazy(() => import('tactical/TacticalApp'));
-const RemoteNpcsApp = React.lazy(() => import('npcs/NpcsApp'));
-const RemoteItemsApp = React.lazy(() => import('items/ItemsApp'));
-const RemoteSpellsApp = React.lazy(() => import('spells/SpellsApp'));
+// A remote that fails to load only breaks its own route (see runtimeRemote in webpack.config.ts).
+const lazyRemote = (name: string, load: () => Promise<{ default: React.ComponentType }>) =>
+  React.lazy(() =>
+    load().catch((error) => {
+      console.error(`[shell] Remote ${name} could not be loaded`, error);
+      return { default: () => <RemoteUnavailable name={name} /> };
+    })
+  );
+
+const RemoteCoreApp = lazyRemote('core', () => import('core/CoreApp'));
+const RemoteStrategicApp = lazyRemote('strategic', () => import('strategic/StrategicApp'));
+const RemoteTacticalApp = lazyRemote('tactical', () => import('tactical/TacticalApp'));
+const RemoteNpcsApp = lazyRemote('npcs', () => import('npcs/NpcsApp'));
+const RemoteItemsApp = lazyRemote('items', () => import('items/ItemsApp'));
+const RemoteSpellsApp = lazyRemote('spells', () => import('spells/SpellsApp'));
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 

@@ -1,6 +1,6 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import dotenv from 'dotenv';
-import Dotenv from 'dotenv-webpack';
+import fs from 'fs';
 import HtmlWebPackPlugin from 'html-webpack-plugin';
 import { createRequire } from 'module';
 import path from 'path';
@@ -12,8 +12,56 @@ const require_ = createRequire(import.meta.url);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ModuleFederationPlugin = require_('webpack/lib/container/ModuleFederationPlugin');
+const { DefinePlugin } = require_('webpack');
 
 const deps = require_('./package.json').dependencies;
+
+// Runtime configuration. The keys listed in public/env-config.template.js are not baked into the
+// bundle: every `process.env.<KEY>` is rewritten to read window.__RMU_CONFIG__, which env-config.js
+// sets before the bundle runs. The remotes read the same object, so it also carries their keys.
+// The Docker image renders the template with envsubst; the dev server serves the same keys from .env.
+const envConfigTemplate = fs.readFileSync(path.resolve(__dirname, 'public/env-config.template.js'), 'utf8');
+const runtimeConfigKeys = Array.from(envConfigTemplate.matchAll(/\$\{([A-Z0-9_]+)\}/g), (match) => match[1]);
+const runtimeConfigDefines = Object.fromEntries(
+  runtimeConfigKeys.map((key) => [`process.env.${key}`, `(window.__RMU_CONFIG__ || {})[${JSON.stringify(key)}]`])
+);
+const renderEnvConfig = (): string =>
+  `window.__RMU_CONFIG__ = ${JSON.stringify(Object.fromEntries(runtimeConfigKeys.map((key) => [key, process.env[key] ?? ''])))};\n`;
+
+// A remote is located at runtime from RMU_MFE_<NAME>_PUBLIC_PATH (trailing slash, for example
+// /mfe/core/). If it cannot be loaded, the import rejects and App.tsx renders a fallback for that
+// route only.
+const runtimeRemote = (name: string): string => {
+  const key = `RMU_MFE_${name.toUpperCase()}_PUBLIC_PATH`;
+  return `promise new Promise((resolve, reject) => {
+    const base = (window.__RMU_CONFIG__ || {})[${JSON.stringify(key)}];
+    if (!base) {
+      reject(new Error(${JSON.stringify(`${key} is not configured`)}));
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = base + ${JSON.stringify(`${name}-app.js`)};
+    script.onload = () => {
+      const container = window[${JSON.stringify(name)}];
+      if (!container) {
+        reject(new Error('Remote ${name} did not register its container (' + script.src + ')'));
+        return;
+      }
+      resolve({
+        get: (request) => container.get(request),
+        init: (scope) => {
+          try {
+            return container.init(scope);
+          } catch (e) {
+            // Already initialized.
+          }
+        },
+      });
+    };
+    script.onerror = () => reject(new Error('Remote ${name} is not available at ' + script.src));
+    document.head.appendChild(script);
+  })`;
+};
 
 export default function (_: any, argv: any): Configuration & { devServer?: DevServerConfiguration } {
   const mode: string | undefined = argv && argv.mode;
@@ -22,25 +70,13 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
   const defaultEnvFile = path.resolve(__dirname, '.env');
   dotenv.config({ path: [envFile, defaultEnvFile], quiet: true });
 
-  const publicPath = process.env.RMU_MFE_SHELL_PUBLIC_PATH;
   const port = process.env.PORT ? Number(process.env.PORT) : 8080;
-  let wsHostnameResolved: string | undefined;
-  let wsProtocol: string | undefined;
-  let wsPathname: string | undefined;
-  if (process.env.RMU_MFE_SHELL_PUBLIC_PATH) {
-    try {
-      const parsed = new URL(process.env.RMU_MFE_SHELL_PUBLIC_PATH);
-      wsHostnameResolved = parsed.hostname;
-      wsProtocol = parsed.protocol === 'https:' ? 'wss' : parsed.protocol === 'http:' ? 'ws' : parsed.protocol.replace(':', '');
-      if (parsed.pathname && parsed.pathname !== '/') wsPathname = parsed.pathname;
-    } catch (e) {
-      wsHostnameResolved = process.env.RMU_MFE_SHELL_PUBLIC_PATH;
-    }
-  }
 
   return {
     output: {
-      publicPath: publicPath,
+      // The shell is always served at the root of its origin (the gateway, or the dev server).
+      publicPath: '/',
+      devtoolNamespace: 'shell',
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
@@ -51,13 +87,15 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       port: port,
       historyApiFallback: true,
       watchFiles: [path.resolve(__dirname, 'src')],
+      // The page is usually served by the gateway (http://localhost), so HMR connects straight to the dev server.
       client: {
-        webSocketURL: {
-          hostname: wsHostnameResolved,
-          port: port,
-          protocol: wsProtocol,
-          pathname: wsPathname,
-        },
+        webSocketURL: `ws://localhost:${port}/ws`,
+      },
+      setupMiddlewares: (middlewares, devServer) => {
+        devServer.app?.get('/env-config.js', (_req, res) => {
+          res.type('application/javascript').send(renderEnvConfig());
+        });
+        return middlewares;
       },
     },
     module: {
@@ -94,7 +132,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
       ],
     },
     plugins: [
-      new Dotenv({ path: envFile, defaults: defaultEnvFile, systemvars: true, silent: true }),
+      new DefinePlugin(runtimeConfigDefines),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -107,12 +145,12 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
         name: 'shell',
         filename: 'shell.js',
         remotes: {
-          core: `core@${process.env.RMU_MFE_CORE_PUBLIC_PATH}core-app.js`,
-          strategic: `strategic@${process.env.RMU_MFE_STRATEGIC_PUBLIC_PATH}strategic-app.js`,
-          tactical: `tactical@${process.env.RMU_MFE_TACTICAL_PUBLIC_PATH}tactical-app.js`,
-          npcs: `npcs@${process.env.RMU_MFE_NPCS_PUBLIC_PATH}npcs-app.js`,
-          items: `items@${process.env.RMU_MFE_ITEMS_PUBLIC_PATH}items-app.js`,
-          spells: `spells@${process.env.RMU_MFE_SPELLS_PUBLIC_PATH}spells-app.js`,
+          core: runtimeRemote('core'),
+          strategic: runtimeRemote('strategic'),
+          tactical: runtimeRemote('tactical'),
+          npcs: runtimeRemote('npcs'),
+          items: runtimeRemote('items'),
+          spells: runtimeRemote('spells'),
         },
         exposes: {
           './i18n': './src/i18n/i18n',

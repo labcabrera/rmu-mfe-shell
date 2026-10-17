@@ -1,22 +1,17 @@
-FROM node:24
-WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
+# syntax=docker/dockerfile:1
+#
+# Static image: production bundle served by nginx, configured at runtime (docker/40-env-config.sh).
+#   docker build -t labcabrera/rmu-mfe-shell:local .   (`make docker-build`)
+
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
 COPY . .
-EXPOSE 8080
-CMD ["npm", "start"]
+RUN npm run build
 
-# FROM node:24 AS builder
-# WORKDIR /app
-# COPY package*.json ./
-# RUN npm install
-# COPY . .
-# RUN npm run build
-
-# FROM nginx:alpine
-# COPY --from=builder /app/dist /usr/share/nginx/html
-# COPY docker-entrypoint.sh /docker-entrypoint.sh
-# RUN chmod +x /docker-entrypoint.sh
-
-# ENTRYPOINT ["/docker-entrypoint.sh"]
-# CMD ["nginx", "-g", "daemon off;"]
+FROM nginx:1.27-alpine
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --chmod=755 docker/40-env-config.sh /docker-entrypoint.d/40-env-config.sh
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
