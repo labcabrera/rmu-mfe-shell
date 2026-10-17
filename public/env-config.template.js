@@ -1,0 +1,29 @@
+// Runtime configuration, read through window.__RMU_CONFIG__ (see webpack.config.ts).
+// The Docker image renders this file into env-config.js with envsubst (docker/40-env-config.sh);
+// the webpack dev server serves the same keys from .env. Only public values belong here.
+// The remotes mounted by the shell read this same object, so it also carries the URLs they use.
+window.__RMU_CONFIG__ = {
+  KC_URL: '${KC_URL}',
+  KC_REALM: '${KC_REALM}',
+  KC_CLIENT_ID: '${KC_CLIENT_ID}',
+  RMU_MFE_ASSETS: '${RMU_MFE_ASSETS}',
+  RMU_MFE_I18N_BASE_URL: '${RMU_MFE_I18N_BASE_URL}',
+  RMU_MFE_CORE_PUBLIC_PATH: '${RMU_MFE_CORE_PUBLIC_PATH}',
+  RMU_MFE_STRATEGIC_PUBLIC_PATH: '${RMU_MFE_STRATEGIC_PUBLIC_PATH}',
+  RMU_MFE_TACTICAL_PUBLIC_PATH: '${RMU_MFE_TACTICAL_PUBLIC_PATH}',
+  RMU_MFE_NPCS_PUBLIC_PATH: '${RMU_MFE_NPCS_PUBLIC_PATH}',
+  RMU_MFE_ITEMS_PUBLIC_PATH: '${RMU_MFE_ITEMS_PUBLIC_PATH}',
+  RMU_MFE_SPELLS_PUBLIC_PATH: '${RMU_MFE_SPELLS_PUBLIC_PATH}',
+  RMU_API_CORE_URL: '${RMU_API_CORE_URL}',
+  RMU_API_STRATEGIC_URL: '${RMU_API_STRATEGIC_URL}',
+  RMU_API_TACTICAL_URL: '${RMU_API_TACTICAL_URL}',
+  RMU_API_ITEMS_URL: '${RMU_API_ITEMS_URL}',
+  RMU_API_ATTACK_TABLES_URL: '${RMU_API_ATTACK_TABLES_URL}',
+  RMU_API_NPC_NAMES_URL: '${RMU_API_NPC_NAMES_URL}',
+  RMU_API_NPCS_URL: '${RMU_API_NPCS_URL}',
+  RMU_API_SPELLS_URL: '${RMU_API_SPELLS_URL}',
+  RMU_API_USERS_URL: '${RMU_API_USERS_URL}',
+  RMU_API_MEDIA_URL: '${RMU_API_MEDIA_URL}',
+  REACT_APP_CONTACT_API: '${REACT_APP_CONTACT_API}',
+  REACT_APP_CONTACT_EMAIL: '${REACT_APP_CONTACT_EMAIL}',
+};

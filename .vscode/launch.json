@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug shell (gateway)",
+      "detail": "Stop the container first: `make mfe-dev s=shell` in rmu-platform",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost/",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "start:live",
+      "sourceMapPathOverrides": {
+        "webpack://shell/./*": "${workspaceFolder}/*"
+      }
+    }
+  ]
+}
