@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { imageBaseUrl } from '../../services/config';
+import { imageBaseUrl, resolveAssetUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
 
 const DEFAULT_IMAGE = `${imageBaseUrl}images/generic/races.png`;
@@ -19,7 +19,7 @@ const UserMenu: FC = () => {
   const login = () => oidc.signinRedirect({ state: { returnTo: `${location.pathname}${location.search}${location.hash}` } });
   const logout = () => oidc?.signoutRedirect?.();
   const userName = apiUser?.name || oidc.user?.profile.preferred_username || 'Undefined';
-  const avatarUrl = apiUser?.imageUrl || DEFAULT_IMAGE;
+  const avatarUrl = resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE);
   const avatarInitials = userName
     .split(/\s+/)
     .map((part) => part[0])
@@ -52,14 +52,7 @@ const UserMenu: FC = () => {
   if (!isAuthenticated) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: { xs: 1, md: 0 } }}>
-        <Button
-          variant="outlined"
-          color="inherit"
-          component={RouterLink}
-          to="/register"
-          size="small"
-          sx={headerButtonSx}
-        >
+        <Button variant="outlined" color="inherit" component={RouterLink} to="/register" size="small" sx={headerButtonSx}>
           {t('register')}
         </Button>
         <Button color="inherit" variant="outlined" size="small" onClick={handleLoginClick} sx={headerButtonSx}>
@@ -74,11 +67,7 @@ const UserMenu: FC = () => {
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open menu">
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-            <Avatar
-              alt={userName}
-              src={avatarUrl}
-              sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
-            >
+            <Avatar alt={userName} src={avatarUrl} sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}>
               {avatarInitials}
             </Avatar>
           </IconButton>
