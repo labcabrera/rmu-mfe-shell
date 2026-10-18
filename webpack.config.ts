@@ -126,10 +126,10 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           use: ['file-loader'],
         },
         {
-          test: /\.ttf$/,
+          test: /\.(ttf|woff2?)$/,
           type: 'asset/resource',
           generator: {
-            filename: 'assets/fonts/[name][ext]',
+            filename: 'assets/fonts/[name].[contenthash:8][ext]',
           },
         },
       ],

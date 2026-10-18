@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import AddIcon from '@mui/icons-material/Add';
-import ComputerIcon from '@mui/icons-material/Computer';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import SecurityIcon from '@mui/icons-material/Security';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
@@ -23,15 +20,13 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { ImageSelectorDialog, resolveAssetUrl } from '@labcabrera-rmu/rmu-react-shared-lib';
-import type { ThemeMode } from '../../App';
 import type { MeasurementSystem } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
+import ThemeSettingsPanel from '../../theme/ThemeSettingsPanel';
 import ActivationCodeDialog from './ActivationCodeDialog';
 import FriendPanel from './FriendPanel';
 
@@ -46,7 +41,7 @@ const getStoredMeasurementSystem = (): MeasurementSystem => {
   }
 };
 
-export default function UserProfile({ themeMode, onThemeModeChange }: { themeMode: ThemeMode; onThemeModeChange: (mode: ThemeMode) => void }) {
+export default function UserProfile() {
   const { user } = useAuth();
   const auth = useAuth();
   const { t } = useTranslation();
@@ -69,10 +64,6 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
 
   const updateImage = (imageUrl: string) => {
     updateApiUser({ imageUrl }).catch((err) => console.error(err));
-  };
-
-  const handleThemeModeChange = (_: React.MouseEvent<HTMLElement>, value: ThemeMode | null) => {
-    if (value) onThemeModeChange(value);
   };
 
   const handleUnitChange = (event: SelectChangeEvent<MeasurementSystem>) => {
@@ -163,23 +154,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
                 </Box>
 
                 <Box>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                    {t('theme')}
-                  </Typography>
-                  <ToggleButtonGroup color="primary" exclusive value={themeMode} onChange={handleThemeModeChange} size="small">
-                    <ToggleButton value="light">
-                      <LightModeIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      {t('light')}
-                    </ToggleButton>
-                    <ToggleButton value="dark">
-                      <DarkModeIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      {t('dark')}
-                    </ToggleButton>
-                    <ToggleButton value="system">
-                      <ComputerIcon fontSize="small" sx={{ mr: 0.5 }} />
-                      {t('system')}
-                    </ToggleButton>
-                  </ToggleButtonGroup>
+                  <ThemeSettingsPanel />
                 </Box>
 
                 <Box>

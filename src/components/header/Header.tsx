@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import FilterVintageIcon from '@mui/icons-material/FilterVintage';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, GlobalStyles, IconButton, Toolbar, Typography } from '@mui/material';
 import LanguageSelector from './LanguageSelector';
+import ThemeSelector from './ThemeSelector';
 import UserMenu from './UserMenu';
 
 /** Brand name: not translated. */
@@ -27,6 +28,15 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
 
   return (
     <AppBar position="sticky" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      {/* Sticky elements of the remotes (detail page headers) stick right under the app bar. */}
+      <GlobalStyles
+        styles={(theme) => ({
+          ':root': {
+            '--rmu-app-bar-height': '56px',
+            [theme.breakpoints.up('sm')]: { '--rmu-app-bar-height': '64px' },
+          },
+        })}
+      />
       <Toolbar sx={{ minHeight: { xs: 56, sm: 64 }, px: { xs: 1, sm: 2 }, gap: { xs: 1, md: 2 } }}>
         <IconButton color="inherit" aria-label={t('menu')} onClick={onMenuClick} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
           <MenuIcon />
@@ -44,6 +54,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, md: 2 }, flexShrink: 0 }}>
+          <ThemeSelector />
           <LanguageSelector />
           <UserMenu />
         </Box>
