@@ -6,6 +6,8 @@ import '@fontsource-variable/inter';
 import '@fontsource/cinzel/600.css';
 import '@fontsource/cormorant-garamond/600.css';
 import '@fontsource/cormorant-garamond/700.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/600.css';
 import App from './App';
 import { i18n, initI18n } from './i18n/i18n';
 import AuthProvider from './services/auth/AuthProvider';
