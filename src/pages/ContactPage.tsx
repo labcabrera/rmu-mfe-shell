@@ -1,4 +1,5 @@
 import React, { JSX, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Container, TextField, Alert } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -6,6 +7,7 @@ import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
 
 export default function ContactPage(): JSX.Element {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -65,10 +67,10 @@ export default function ContactPage(): JSX.Element {
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Contact
+            {t('footer-contact')}
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            If you’d like to get in touch with me or have any questions or suggestions about the app, please use the form below.
+            {t('contact-intro')}
           </Typography>
         </Container>
       </Box>
@@ -77,12 +79,12 @@ export default function ContactPage(): JSX.Element {
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid size={12}>
-              <TextField label="Name" fullWidth value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+              <TextField label={t('name')} fullWidth value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </Grid>
 
             <Grid size={12}>
               <TextField
-                label="Email"
+                label={t('email')}
                 fullWidth
                 required
                 value={email}
@@ -93,29 +95,29 @@ export default function ContactPage(): JSX.Element {
             </Grid>
 
             <Grid size={12}>
-              <TextField label="Message" fullWidth multiline minRows={5} value={message} onChange={(e) => setMessage(e.target.value)} />
+              <TextField label={t('message')} fullWidth multiline minRows={5} value={message} onChange={(e) => setMessage(e.target.value)} />
             </Grid>
 
             <Grid size={12}>
               <Button type="submit" variant="contained" color="primary">
-                Send
+                {t('send')}
               </Button>
               {apiUrl ? (
                 <Typography variant="caption" sx={{ ml: 2 }}>
-                  Sending to configured API
+                  {t('contact-sending-to-api')}
                 </Typography>
               ) : (
                 <Typography variant="caption" sx={{ ml: 2 }}>
-                  Will open your mail client (mailto: {contactEmail})
+                  {t('contact-mailto-hint', { email: contactEmail })}
                 </Typography>
               )}
             </Grid>
 
             <Grid size={12}>
-              {status === 'success' && <Alert severity="success">Message sent.</Alert>}
-              {status === 'error' && <Alert severity="error">Failed to send. Check your email or try again later.</Alert>}
-              {status === 'sending' && <Alert severity="info">Sending…</Alert>}
-              {status === 'mailto' && <Alert severity="info">Opened mail client.</Alert>}
+              {status === 'success' && <Alert severity="success">{t('contact-message-sent')}</Alert>}
+              {status === 'error' && <Alert severity="error">{t('contact-send-failed')}</Alert>}
+              {status === 'sending' && <Alert severity="info">{t('contact-sending')}</Alert>}
+              {status === 'mailto' && <Alert severity="info">{t('contact-mail-client-opened')}</Alert>}
             </Grid>
           </Grid>
         </Box>

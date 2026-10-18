@@ -1,31 +1,18 @@
 import js from '@eslint/js';
-import pluginTs from '@typescript-eslint/eslint-plugin';
-import parserTs from '@typescript-eslint/parser';
-import pluginReact from 'eslint-plugin-react';
-import { defineConfig } from 'eslint/config';
+import i18next from 'eslint-plugin-i18next';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-export default defineConfig([
+// Shared by the shared lib, the shell and every MFE: keep the copies identical.
+export default [
+  { ignores: ['dist/**', 'node_modules/**', 'storybook-static/**', 'coverage/**'] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,mjs,cjs,jsx}'],
-    plugins: { js },
-    extends: ['js/recommended'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        process: 'readonly',
-      },
-    },
-    rules: {
-      'react/prop-types': 'off',
-    },
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      parser: parserTs,
       parserOptions: {
-        project: './tsconfig.json',
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: {
@@ -34,14 +21,38 @@ export default defineConfig([
       },
       globals: {
         ...globals.browser,
-        process: 'readonly',
+        ...globals.node,
       },
     },
     plugins: {
-      '@typescript-eslint': pluginTs,
+      'react-hooks': reactHooks,
+      i18next,
     },
-    extends: [pluginTs.configs['flat/recommended']],
-    rules: {},
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      '@typescript-eslint/no-explicit-any': 'warn',
+
+      'no-unused-vars': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      eqeqeq: ['error', 'always'],
+
+      // Every visible string goes through i18n: JSX text and the attributes users see or hear.
+      'i18next/no-literal-string': [
+        'error',
+        {
+          mode: 'jsx-only',
+          'jsx-attributes': {
+            include: ['label', 'title', 'placeholder', 'aria-label', 'helperText', 'alt', 'subtitle', 'text'],
+          },
+        },
+      ],
+    },
   },
-  pluginReact.configs.flat.recommended,
-]);
+  {
+    // Stories and tests hold sample data, not UI text.
+    files: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', 'src/test/**', '.storybook/**'],
+    rules: { 'i18next/no-literal-string': 'off' },
+  },
+];

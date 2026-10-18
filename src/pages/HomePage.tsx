@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, Container, useTheme, useMediaQuery, Link, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -133,6 +133,7 @@ export const Home = () => {
         }}
       >
         <Container maxWidth="xl">
+          {/* eslint-disable-next-line i18next/no-literal-string -- product name, not translated */}
           <Typography variant="h2" sx={{ fontWeight: 600 }} gutterBottom>
             Rolemaster Unified Companion
           </Typography>
@@ -153,8 +154,7 @@ export const Home = () => {
       <Container maxWidth="xl" sx={{ py: 10 }}>
         <Alert severity="info" sx={{ mb: 1 }}>
           <Typography variant="h6">
-            This application is an independent project developed by fans of Rolemaster Unified. It is not affiliated with, endorsed by, or licensed by{' '}
-            <Link href="https://ironcrown.co.uk/">Iron Crown Enterprises</Link>. Please support official publications if you enjoy Rolemaster.
+            <Trans i18nKey="home-disclaimer" components={{ link: <Link href="https://ironcrown.co.uk/" /> }} />
           </Typography>
         </Alert>
 

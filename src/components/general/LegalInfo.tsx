@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import { Box, Container, Grid, Typography, Link, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 const LegalInfoList: FC<{ items: any[] }> = ({ items }) => {
   return (

@@ -43,7 +43,7 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>
         {t('enter-activation-code')}
-        <IconButton aria-label="close" onClick={handleClose} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
+        <IconButton aria-label={t('close')} onClick={handleClose} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
           <CloseIcon />
         </IconButton>
       </DialogTitle>

@@ -14,9 +14,10 @@ export async function initI18n(locale?: string) {
       debug: process.env.NODE_ENV !== 'production',
       lng: locale,
       fallbackLng: 'en',
-      ns: ['common', 'items'],
+      // `items` and `traits` hold item and trait names: keys missing from `common` are looked up there.
+      ns: ['common', 'items', 'traits'],
       defaultNS: 'common',
-      fallbackNS: 'items',
+      fallbackNS: ['items', 'traits'],
       backend: {
         loadPath: `${base}locales/{{ns}}_{{lng}}.json`,
         crossDomain: true,

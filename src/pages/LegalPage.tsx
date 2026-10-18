@@ -1,4 +1,5 @@
 import React, { JSX } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Container, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
@@ -6,39 +7,17 @@ import LegalInfoList from '../components/general/LegalInfo';
 import { imageBaseUrl } from '../services/config';
 
 const items = [
-  {
-    title: 'No affiliation',
-    description: 'This project is not affiliated with, endorsed, or approved by Iron Crown Enterprises.',
-  },
-  {
-    title: 'Copyright',
-    description: 'Rolemaster is a registered trademark and property of its respective owners.',
-  },
-  {
-    title: 'Purpose',
-    description: 'This project is developed for recreational purposes by the community.',
-  },
-  {
-    title: 'Privacy',
-    description:
-      'No personal data is collected, and no third-party cookies are used. Only strictly necessary technical cookies are employed for the proper functioning of the application.',
-  },
-  {
-    title: 'Monetization',
-    description:
-      'This application is not intended to be monetized in any way. No revenue is generated through advertising, subscriptions, or any other form of commercial activity.',
-  },
-  {
-    title: 'License',
-    description: 'This project is open-source software distributed under the GPL-3.0 license.',
-  },
-  {
-    title: 'Liability',
-    description: 'Use of this tool is at the user’s own risk.',
-  },
+  { title: 'legal-affiliation-title', description: 'legal-affiliation-description' },
+  { title: 'legal-copyright-title', description: 'legal-copyright-description' },
+  { title: 'legal-purpose-title', description: 'legal-purpose-description' },
+  { title: 'legal-privacy-title', description: 'legal-privacy-description' },
+  { title: 'legal-monetization-title', description: 'legal-monetization-description' },
+  { title: 'legal-license-title', description: 'legal-license-description' },
+  { title: 'legal-liability-title', description: 'legal-liability-description' },
 ];
 
 export default function LegalPage(): JSX.Element {
+  const { t } = useTranslation();
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -54,21 +33,21 @@ export default function LegalPage(): JSX.Element {
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Legal
+            {t('footer-legal')}
           </Typography>
         </Container>
       </Box>
       <Container maxWidth="lg" sx={{ py: 6, fontSize: '1.3rem', lineHeight: 1.6 }}>
         <Paper elevation={0} sx={{ p: 4, borderRadius: 3 }}>
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
-            Legal Information
+            {t('legal-information-title')}
           </Typography>
           <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
-            Please review the following legal terms regarding the use of this application.
+            {t('legal-intro')}
           </Typography>
-          <LegalInfoList items={items} />
+          <LegalInfoList items={items.map((item) => ({ title: t(item.title), description: t(item.description) }))} />
           <Typography variant="h6" color="text.secondary" sx={{ mt: 3 }}>
-            If you have any legal concerns or questions about content, please contact the project maintainers via the repository.
+            {t('legal-concerns-contact')}
           </Typography>
         </Paper>
       </Container>

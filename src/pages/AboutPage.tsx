@@ -1,113 +1,100 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Container, Link } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
+import type { TFunction } from 'i18next';
 import { imageBaseUrl } from '../services/config';
 
-const sections = [
+const paragraphSx = { lineHeight: 1.9, color: 'text.secondary' };
+
+const buildSections = (t: TFunction) => [
   {
-    title: 'This application',
+    title: t('about-app-title'),
     text: (
       <>
-        <>
-          <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
-            In 2021, I started developing an app for playing{' '}
-            <Link href="https://ironcrown.co.uk/rolemaster-fantasy-role-playing/" target="_blank">
-              RMSS
-            </Link>{' '}
-            for my own use, as a tool to streamline games. When the app was already quite far along, one afternoon whilst looking at my phone I
-            discovered that a new version of Rolemaster was about to be released.
-          </Typography>
-          <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-            So I thought: it’s a bit of a cheek that, after two decades without any new content, they’ve had to release a version right now, just when
-            I’d almost got all the features I wanted!!!
-          </Typography>
-          <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-            Then, during the 2025 holidays, I said to myself, Right, let’s start again, this time by creating a helper tool for the new system.
-          </Typography>
-        </>
+        <Typography variant="body1" sx={paragraphSx}>
+          <Trans
+            i18nKey="about-app-text-1"
+            components={{ link: <Link href="https://ironcrown.co.uk/rolemaster-fantasy-role-playing/" target="_blank" /> }}
+          />
+        </Typography>
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-app-text-2')}
+        </Typography>
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-app-text-3')}
+        </Typography>
       </>
     ),
     image: `${imageBaseUrl}images/photos/photo-combat-01.jpg`,
-    imageText: "With all this programming, I haven't had time to paint lately!",
+    imageText: t('about-app-image-text'),
   },
   {
-    title: 'Before',
+    title: t('about-before-title'),
     text: (
       <>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', fontSize: '1.2rem' }}>
-          When I was very young, I started using spreadsheets to speed up games and create characters, because whilst doing it with pen and paper has
-          its charm, it ends up being very time-consuming.
+        <Typography variant="body1" sx={{ ...paragraphSx, fontSize: '1.2rem' }}>
+          {t('about-before-text-1')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', fontSize: '1.5rem', mt: 2 }}>
-          So, without any knowledge of programming, I began automating certain tasks, mainly the damage tables, so I wouldn’t have to keep looking up
-          the row and column for the Arms Law of the time And those were my first steps in programming, a profession I’ve been working in for 20
-          years.
+        <Typography variant="body1" sx={{ ...paragraphSx, fontSize: '1.5rem', mt: 2 }}>
+          {t('about-before-text-2')}
         </Typography>
       </>
     ),
     image: `${imageBaseUrl}images/photos/photo-chin-01.png`,
-    imageText: "I'm Chin, the Other assistant",
+    imageText: t('about-before-image-text'),
   },
   {
-    title: 'Now',
+    title: t('about-now-title'),
     text: (
       <>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
-          Now, after many years without playing and having passed my forties, I wanted to recapture those afternoons spent rolling open-ended dices
-          and feel once more what it’s like when a level-one goblin has to roll the dice on the critical hit table.
+        <Typography variant="body1" sx={paragraphSx}>
+          {t('about-now-text-1')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          Many of the adventures I prepared back then, with extensive maps and plenty of storytelling, ended with the main character sadly bleeding to
-          death in the mud of a meadow after an encounter on the encounter table with a wild boar and her piglets.
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-now-text-2')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          That was one of the things I liked most about Rolemaster, its system suited less epic scenarios far better than other 80s role-playing
-          games.
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-now-text-3')}
         </Typography>
       </>
     ),
     image: `${imageBaseUrl}images/photos/photo-preparing-game-01.png`,
-    imageText: 'Preparing the board',
+    imageText: t('about-now-image-text'),
   },
   {
-    title: 'Motivation',
+    title: t('about-motivation-title'),
     text: (
       <>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
-          Although I used to play narrative campaigns as a child, the main focus of these was the combat, where you’d end up using miniatures as if it
-          were a small-scale wargame. I’ve always enjoyed these games and have played quite a few of them, mainly 40k.
+        <Typography variant="body1" sx={paragraphSx}>
+          {t('about-motivation-text-1')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          I liked gang management games in the style of Necromunda, where you had a small group of characters and simply faced off against another
-          gang.
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-motivation-text-2')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          And I thought, this style of play, set in Middle-earth – which is by far the setting I’ve always liked best – using Rolemaster rules could
-          work quite well.
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-motivation-text-3')}
         </Typography>
       </>
     ),
     image: `${imageBaseUrl}images/photos/photo-board-01.jpeg`,
-    imageText: 'Amon Sûl surrounded by buildings? What happened?',
+    imageText: t('about-motivation-image-text'),
   },
   {
-    title: 'Testing it on the board',
+    title: t('about-testing-title'),
     text: (
       <>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary' }}>
-          After a few months of development, I finally enlisted my brother to test whether the project was actually feasible, or whether running a
-          game with so many characters and rules would prove too complicated.
+        <Typography variant="body1" sx={paragraphSx}>
+          {t('about-testing-text-1')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          The idea was to use a tablet next to the table to work out movements, attacks, manoeuvres… whilst rolling the dice and taking measurements,
-          checking the lines of sight on the table to see what cover an archer’s target would have…
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-testing-text-2')}
         </Typography>
-        <Typography variant="body1" sx={{ lineHeight: 1.9, color: 'text.secondary', mt: 2 }}>
-          And after several games, I’m happy with the result and I think it’s possible to combine the world of miniature skirmishes with the depth of
-          rules that Rolemaster brings
+        <Typography variant="body1" sx={{ ...paragraphSx, mt: 2 }}>
+          {t('about-testing-text-3')}
         </Typography>
       </>
     ),
@@ -118,6 +105,8 @@ const sections = [
 
 export default function AboutPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const sections = buildSections(t);
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -133,18 +122,16 @@ export default function AboutPage() {
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            About Me
+            {t('footer-about-me')}
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            I’m someone who discovered Rolemaster and MERP in the early 90s and, after many years without playing, a bit of a midlife crisis has
-            brought me back to this beloved game.
+            {t('about-intro-1')}
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            Now, 25 years on from those games I used to play with my brother, we’ve got together again to move around Lord of the Rings miniatures,
-            eat pizza and roll the dice.
+            {t('about-intro-2')}
           </Typography>
           <Button variant="contained" color="secondary" onClick={() => navigate('/contact')} sx={{ mb: 2 }}>
-            Contact me
+            {t('about-contact-me')}
           </Button>
         </Container>
       </Box>

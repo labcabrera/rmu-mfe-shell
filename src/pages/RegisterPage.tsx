@@ -1,10 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -20,17 +22,16 @@ export default function RegisterPage() {
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Register
+            {t('register-title')}
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }} color="error">
-            Not available
+            {t('register-not-available')}
           </Typography>
           <Typography variant="body1" color="primary" sx={{ maxWidth: 600, mb: 3 }}>
-            As this application does not hold the rights to ICE or the Rolemaster Unified licences, registration is not permitted. You must have a
-            valid user account that has been created beforehand in order to use this tool.
+            {t('register-text-1')}
           </Typography>
           <Typography variant="body1" color="primary" sx={{ maxWidth: 600, mb: 3 }}>
-            We apologise for the inconvenience and will endeavour to reach a partnership agreement with ICE regarding the use of the tool.
+            {t('register-text-2')}
           </Typography>
         </Container>
       </Box>

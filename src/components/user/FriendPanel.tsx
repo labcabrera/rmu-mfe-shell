@@ -328,7 +328,7 @@ export default function FriendPanel() {
       <Dialog open={sendDialogOpen} onClose={handleCloseSendDialog} fullWidth maxWidth="sm">
         <DialogTitle>
           {t('send-friend-request')}
-          <IconButton aria-label="close" onClick={handleCloseSendDialog} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
+          <IconButton aria-label={t('close')} onClick={handleCloseSendDialog} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
             <CloseIcon />
           </IconButton>
         </DialogTitle>

@@ -27,11 +27,11 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
+import { ImageSelectorDialog, resolveAssetUrl } from '@labcabrera-rmu/rmu-react-shared-lib';
 import type { ThemeMode } from '../../App';
 import type { MeasurementSystem } from '../../api/user-api-client';
-import { imageBaseUrl, resolveAssetUrl } from '../../services/config';
+import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
-import ImageSelectorDialog from '../images/ImageSelectorDialog';
 import ActivationCodeDialog from './ActivationCodeDialog';
 import FriendPanel from './FriendPanel';
 
@@ -84,7 +84,9 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
   useEffect(() => {
     try {
       localStorage.setItem('unit', unit);
-    } catch {}
+    } catch {
+      // Storage unavailable (private mode, blocked site data): the unit is just not remembered locally.
+    }
   }, [unit]);
 
   useEffect(() => {
@@ -100,7 +102,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           {apiUserError && <Alert severity="warning">{apiUserError}</Alert>}
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
-            <IconButton aria-label="change profile image" onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
+            <IconButton aria-label={t('change-profile-image')} onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
               <Avatar sx={{ width: 80, height: 80 }} src={resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE)}>
                 {avatarInitials}
               </Avatar>
@@ -202,7 +204,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           <Divider />
 
           <Stack spacing={1}>
-            <Typography variant="h6">Profile details</Typography>
+            <Typography variant="h6">{t('profile-details')}</Typography>
             <Stack spacing={1}>
               <Typography variant="body2">
                 <Box component="span" sx={{ color: 'text.secondary' }}>
@@ -228,7 +230,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
             maxWidth: '100%',
           }}
         >
-          <Typography>API User</Typography>
+          <Typography>{t('profile-api-user')}</Typography>
           <Typography
             component="pre"
             sx={{
@@ -254,7 +256,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           >
             {auth.user?.access_token}
           </Typography>
-          <Typography>Auth</Typography>
+          <Typography>{t('profile-auth')}</Typography>
           <Typography
             component="pre"
             sx={{
@@ -267,7 +269,7 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
           >
             {JSON.stringify(auth, null, 2)}
           </Typography>
-          <Typography>Groups</Typography>
+          <Typography>{t('profile-groups')}</Typography>
           <Typography
             component="pre"
             sx={{
@@ -287,8 +289,8 @@ export default function UserProfile({ themeMode, onThemeModeChange }: { themeMod
         value={apiUser?.imageUrl || DEFAULT_IMAGE}
         open={imageDialogOpen}
         onClose={() => setImageDialogOpen(false)}
-        onSelect={(image) => updateImage(image.storageKey || image.url)}
-        onUpload={(image) => updateImage(image.storageKey || image.url)}
+        onSelect={(path) => updateImage(path)}
+        onUpload={(path) => updateImage(path)}
       />
     </Container>
   );

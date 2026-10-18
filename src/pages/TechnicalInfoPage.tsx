@@ -1,10 +1,12 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Container, Link, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
 
 export default function TechnicalInfoPage() {
+  const { t } = useTranslation();
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
@@ -20,10 +22,10 @@ export default function TechnicalInfoPage() {
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Technical Information
+            {t('technical-title')}
           </Typography>
           <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            This section explains the technical structure of the project for running it locally
+            {t('technical-intro')}
           </Typography>
         </Container>
       </Box>
@@ -31,68 +33,58 @@ export default function TechnicalInfoPage() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Paper sx={{ padding: 2 }}>
           <Typography variant="h3" sx={{ mb: 2 }}>
-            General project information
+            {t('technical-general-title')}
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            This guide assumes you have a basic understanding of Docker, Git, Node.js and TypeScript. If you don’t, setting up the application may
-            prove a little tricky
+            {t('technical-prerequisites')}
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            The application is built using a microservices and micro-frontend (MFE) architecture. APIs are built using{' '}
-            <Link href="https://nestjs.com/" target="_blank">
-              NestJS
-            </Link>{' '}
-            following a CQRS pattern. The front-end uses{' '}
-            <Link href="https://es.react.dev/" target="_blank">
-              React
-            </Link>{' '}
-            and <Link href="https://mui.com/material-ui/getting-started/">MUI</Link> for its UI components.
+            <Trans
+              i18nKey="technical-architecture"
+              components={{
+                nestjs: <Link href="https://nestjs.com/" target="_blank" />,
+                react: <Link href="https://es.react.dev/" target="_blank" />,
+                mui: <Link href="https://mui.com/material-ui/getting-started/" />,
+              }}
+            />
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            The application uses the following external tools, all of which are open-source:
+            {t('technical-external-tools')}
           </Typography>
           <ul>
             <li>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://www.mongodb.com/" target="_blank">
-                  MongoDB
-                </Link>
-                : a NoSQL database for storing data.
+                <Trans i18nKey="technical-tool-mongodb" components={{ link: <Link href="https://www.mongodb.com/" target="_blank" /> }} />
               </Typography>
             </li>
             <li>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://kafka.apache.org/" target="_blank">
-                  Apache Kafka
-                </Link>
-                : used for asynchronous communication between modules.
+                <Trans i18nKey="technical-tool-kafka" components={{ link: <Link href="https://kafka.apache.org/" target="_blank" /> }} />
               </Typography>
             </li>
             <li>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://www.keycloak.org/">Keycloak</Link>: IdP for authentication.
+                <Trans i18nKey="technical-tool-keycloak" components={{ link: <Link href="https://www.keycloak.org/" /> }} />
               </Typography>
             </li>
           </ul>
           <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            Cloning the repositories
+            {t('technical-cloning-title')}
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            Within the{' '}
-            <Link href="https://github.com/labcabrera/rmu-platform" target="_blank">
-              GitHub project
-            </Link>
-            , we can see the set of repositories that make up the tool.
+            <Trans
+              i18nKey="technical-cloning-text-1"
+              components={{ link: <Link href="https://github.com/labcabrera/rmu-platform" target="_blank" /> }}
+            />
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            As it is developed in a modular way, we won’t need to clone all the repositories—for example, if we aren’t going to use the spells or NPC
-            modules.
+            {t('technical-cloning-text-2')}
           </Typography>
           <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            Running the images
+            {t('technical-running-title')}
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }} color="error">
-            Work in progress
+            {t('technical-work-in-progress')}
           </Typography>
           <Typography variant="h6" sx={{ mb: 2 }}></Typography>
         </Paper>
