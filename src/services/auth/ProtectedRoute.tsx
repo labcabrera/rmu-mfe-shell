@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context';
 import { useLocation } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
 import { Box, Button, CircularProgress, Paper, Stack, Typography } from '@mui/material';
+import { useAuthPending } from './session-restore';
 
 type ProtectedRouteProps = {
   children: React.ReactElement;
@@ -13,10 +14,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
+  const pending = useAuthPending();
 
   const returnTo = `${location.pathname}${location.search}${location.hash}`;
 
-  if (auth.isLoading || auth.activeNavigator) {
+  if (pending) {
     return (
       <Box sx={{ display: 'grid', minHeight: 320, placeItems: 'center' }}>
         <CircularProgress aria-label={t('loading-authentication-state')} />

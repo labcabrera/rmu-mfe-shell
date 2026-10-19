@@ -12,6 +12,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   Chip,
@@ -33,8 +34,11 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import type { Friendship } from '../../api/user-api-client';
+import type { Friendship, UserSummary } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
+
+const USER_SEARCH_MIN_LENGTH = 2;
+const USER_SEARCH_DELAY_MS = 300;
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
   return (
@@ -61,6 +65,8 @@ export default function FriendPanel() {
   const [sendMessage, setSendMessage] = useState('');
   const [sendError, setSendError] = useState<string>();
   const [sending, setSending] = useState(false);
+  const [userOptions, setUserOptions] = useState<UserSummary[]>([]);
+  const [searchingUsers, setSearchingUsers] = useState(false);
 
   const [actionError, setActionError] = useState<string>();
 
@@ -94,6 +100,36 @@ export default function FriendPanel() {
   useEffect(() => {
     if (auth.isAuthenticated) loadData();
   }, [auth.isAuthenticated]);
+
+  // Friend search: suggests users by name (GET /users/search) while typing in the request dialog.
+  useEffect(() => {
+    const name = addresseeName.trim();
+    if (!sendDialogOpen || name.length < USER_SEARCH_MIN_LENGTH) {
+      setUserOptions([]);
+      setSearchingUsers(false);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setSearchingUsers(true);
+      userApiClient
+        .searchUsers(name, auth)
+        .then((page) => {
+          if (!cancelled) setUserOptions(page.content.filter((u) => u.id !== auth.user?.profile.sub));
+        })
+        .catch((err) => {
+          if (!cancelled) setUserOptions([]);
+          console.warn('[FriendPanel] User search failed', err);
+        })
+        .finally(() => {
+          if (!cancelled) setSearchingUsers(false);
+        });
+    }, USER_SEARCH_DELAY_MS);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [addresseeName, sendDialogOpen, auth]);
 
   const openConfirm = (action: ConfirmAction, friendship: Friendship) => {
     setConfirmDialog({ open: true, action, friendship });
@@ -334,7 +370,17 @@ export default function FriendPanel() {
         </DialogTitle>
         <DialogContent dividers>
           <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField label={t('username')} value={addresseeName} onChange={(e) => setAddresseeName(e.target.value)} fullWidth required />
+            <Autocomplete
+              freeSolo
+              options={userOptions}
+              filterOptions={(options) => options}
+              getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
+              loading={searchingUsers}
+              loadingText={t('loading')}
+              inputValue={addresseeName}
+              onInputChange={(_, value) => setAddresseeName(value)}
+              renderInput={(params) => <TextField {...params} label={t('username')} fullWidth required />}
+            />
             <TextField label={t('message')} value={sendMessage} onChange={(e) => setSendMessage(e.target.value)} fullWidth multiline rows={3} />
             {sendError && <Alert severity="error">{sendError}</Alert>}
           </Stack>

@@ -43,12 +43,11 @@ const getStoredMeasurementSystem = (): MeasurementSystem => {
 
 export default function UserProfile() {
   const { user } = useAuth();
-  const auth = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activationCodeDialogOpen, setActivationCodeDialogOpen] = useState<boolean>(false);
   const [imageDialogOpen, setImageDialogOpen] = useState<boolean>(false);
   const { apiUser, error: apiUserError, updateApiUser } = useApiUser();
-  const groups: string[] = apiUser?.features || (auth.user?.profile.groups as string[]) || [];
+  const groups: string[] = apiUser?.features || (user?.profile.groups as string[]) || [];
 
   const username = user?.profile.preferred_username || user?.profile.name || 'Unknown';
   const email = user?.profile.email || 'Not defined email';
@@ -59,6 +58,9 @@ export default function UserProfile() {
     .join('')
     .slice(0, 2)
     .toUpperCase();
+
+  const identityProvider = apiUser?.identityProvider;
+  const lastLoginAt = apiUser?.lastLoginAt ? new Date(apiUser.lastLoginAt) : undefined;
 
   const [unit, setUnit] = useState<MeasurementSystem>(getStoredMeasurementSystem);
 
@@ -193,71 +195,25 @@ export default function UserProfile() {
                 </Box>{' '}
                 {email}
               </Typography>
+              {identityProvider && (
+                <Typography variant="body2">
+                  <Box component="span" sx={{ color: 'text.secondary' }}>
+                    {t('identity-provider')}
+                  </Box>{' '}
+                  {t(`identity-provider-${identityProvider}`, { defaultValue: identityProvider })}
+                </Typography>
+              )}
+              {lastLoginAt && !Number.isNaN(lastLoginAt.getTime()) && (
+                <Typography variant="body2">
+                  <Box component="span" sx={{ color: 'text.secondary' }}>
+                    {t('last-login')}
+                  </Box>{' '}
+                  {lastLoginAt.toLocaleString(i18n.language)}
+                </Typography>
+              )}
             </Stack>
           </Stack>
         </Stack>
-
-        <Box
-          sx={{
-            p: 2,
-            borderRadius: 1,
-            overflowX: 'auto',
-            maxWidth: '100%',
-          }}
-        >
-          <Typography>{t('profile-api-user')}</Typography>
-          <Typography
-            component="pre"
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              m: 0,
-            }}
-          >
-            {JSON.stringify(apiUser, null, 2)}
-          </Typography>
-          <Typography>JWT</Typography>
-          <Typography
-            component="pre"
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              m: 0,
-            }}
-          >
-            {auth.user?.access_token}
-          </Typography>
-          <Typography>{t('profile-auth')}</Typography>
-          <Typography
-            component="pre"
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              m: 0,
-            }}
-          >
-            {JSON.stringify(auth, null, 2)}
-          </Typography>
-          <Typography>{t('profile-groups')}</Typography>
-          <Typography
-            component="pre"
-            sx={{
-              fontFamily: 'monospace',
-              fontSize: 12,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-all',
-              m: 0,
-            }}
-          >
-            {JSON.stringify(auth.user?.profile.groups, null, 2)}
-          </Typography>
-        </Box>
       </Paper>
       <ActivationCodeDialog open={activationCodeDialogOpen} onClose={() => setActivationCodeDialogOpen(false)} />
       <ImageSelectorDialog

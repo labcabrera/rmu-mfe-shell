@@ -6,9 +6,12 @@ export type Page<T> = {
   pagination: Pagination;
 };
 
+// Same shape as rmu-api-users' Page: { content, pagination: { page, size, totalElements, totalPages } }.
 export type Pagination = {
   page: number;
-  pageSize: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 };
 
 export type MeasurementSystem = 'metric' | 'imperial';
@@ -16,6 +19,8 @@ export type MeasurementSystem = 'metric' | 'imperial';
 export type UserSettings = {
   measurementSystem: MeasurementSystem;
 };
+
+export type IdentityProvider = 'local' | 'google';
 
 export type ApiUser = {
   id: string;
@@ -26,8 +31,17 @@ export type ApiUser = {
   features?: string[];
   settings?: UserSettings;
   imageUrl?: string | null;
+  identityProvider?: IdentityProvider | string;
+  lastLoginAt?: string | null;
   createdAt?: Date;
   updatedAt?: Date | null;
+};
+
+/** Public projection returned by GET /users/search, used for friend search. */
+export type UserSummary = {
+  id: string;
+  name: string;
+  imageUrl?: string | null;
 };
 
 export type UpdateCurrentUserInput = {
@@ -65,6 +79,8 @@ export class ApiError extends Error {
   }
 }
 
+const friendshipsUrl = (rsql: string) => `${userApiBaseUrl}/friendships?q=${encodeURIComponent(rsql)}`;
+
 export const userApiClient = {
   async fetchUser(auth: AuthContextProps): Promise<ApiUser> {
     const response = await fetch(`${userApiBaseUrl}/users/me`, {
@@ -97,7 +113,7 @@ export const userApiClient = {
   async fetchFriends(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
     const rsql = `(requesterId==${userId},addresseeId==${userId});status==accepted`;
-    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
+    const response = await fetch(friendshipsUrl(rsql), {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${auth.user?.access_token}`,
@@ -114,7 +130,7 @@ export const userApiClient = {
     const userId = auth.user?.profile.sub;
     const rsql = `addresseeId==${userId};status==pending`;
     //TODO page and size
-    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
+    const response = await fetch(friendshipsUrl(rsql), {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${auth.user?.access_token}`,
@@ -130,7 +146,7 @@ export const userApiClient = {
   async fecthInvitationsSent(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
     const rsql = `requesterId==${userId};status==pending`;
-    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
+    const response = await fetch(friendshipsUrl(rsql), {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${auth.user?.access_token}`,
@@ -141,6 +157,19 @@ export const userApiClient = {
     }
     const err = await response.json();
     throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
+  },
+
+  async searchUsers(name: string, auth: AuthContextProps, size = 10): Promise<Page<UserSummary>> {
+    const params = new URLSearchParams({ name, size: String(size) });
+    const response = await fetch(`${userApiBaseUrl}/users/search?${params.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${auth.user?.access_token}`,
+      },
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    throw new ApiError(`Failed to search users: ${response.statusText}`, response.status);
   },
 
   async fetchActivateCode(code: string, auth: AuthContextProps): Promise<ActivationCode> {
@@ -207,7 +236,7 @@ export const userApiClient = {
   async fetchBlockedUsers(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
     const rsql = `requesterId==${userId};status==blocked`;
-    const response = await fetch(`${userApiBaseUrl}/friendships?q=${rsql}`, {
+    const response = await fetch(friendshipsUrl(rsql), {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${auth.user?.access_token}`,
