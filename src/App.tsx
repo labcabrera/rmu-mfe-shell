@@ -39,6 +39,8 @@ const RemoteNpcsApp = lazyRemote('npcs', () => import('npcs/NpcsApp'));
 const RemoteItemsApp = lazyRemote('items', () => import('items/ItemsApp'));
 const RemoteSpellsApp = lazyRemote('spells', () => import('spells/SpellsApp'));
 
+// Every remote route needs a user: all their APIs (core, strategic, tactical, items, spells, npcs)
+// guard their controllers with JwtAuthGuard. The home and static pages stay public.
 const App = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
@@ -73,49 +75,61 @@ const App = () => {
                   <Route
                     path="/core/*"
                     element={
-                      <RemoteBoundary name="core">
-                        <RemoteCoreApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="core">
+                          <RemoteCoreApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route
                     path="/strategic/*"
                     element={
-                      <RemoteBoundary name="strategic">
-                        <RemoteStrategicApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="strategic">
+                          <RemoteStrategicApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route
                     path="/tactical/*"
                     element={
-                      <RemoteBoundary name="tactical">
-                        <RemoteTacticalApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="tactical">
+                          <RemoteTacticalApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route
                     path="/npcs/*"
                     element={
-                      <RemoteBoundary name="npcs">
-                        <RemoteNpcsApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="npcs">
+                          <RemoteNpcsApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route
                     path="/items/*"
                     element={
-                      <RemoteBoundary name="items">
-                        <RemoteItemsApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="items">
+                          <RemoteItemsApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route
                     path="/spells/*"
                     element={
-                      <RemoteBoundary name="spells">
-                        <RemoteSpellsApp />
-                      </RemoteBoundary>
+                      <ProtectedRoute>
+                        <RemoteBoundary name="spells">
+                          <RemoteSpellsApp />
+                        </RemoteBoundary>
+                      </ProtectedRoute>
                     }
                   />
                   <Route

@@ -2,8 +2,9 @@ import React, { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, Skeleton, Tooltip, Typography } from '@mui/material';
 import { resolveAssetUrl } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { useAuthPending } from '../../services/auth/session-restore';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
 
@@ -17,8 +18,11 @@ const UserMenu: FC = () => {
   const oidc = useAuth();
   const { apiUser } = useApiUser();
   const isAuthenticated = !!oidc?.isAuthenticated;
+  const authPending = useAuthPending();
   const login = () => oidc.signinRedirect({ state: { returnTo: `${location.pathname}${location.search}${location.hash}` } });
-  const logout = () => oidc?.signoutRedirect?.();
+  // oidc-client-ts also adds the stored id_token as id_token_hint; post_logout_redirect_uri comes
+  // from the AuthProvider settings. Keycloak ends its session, which revokes "Remember me".
+  const logout = () => oidc.signoutRedirect({ id_token_hint: oidc.user?.id_token });
   const userName = apiUser?.name || oidc.user?.profile.preferred_username || 'Undefined';
   const avatarUrl = resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE);
   const avatarInitials = userName
@@ -49,6 +53,14 @@ const UserMenu: FC = () => {
       backgroundColor: 'rgba(255, 255, 255, 0.08)',
     },
   };
+
+  if (!isAuthenticated && authPending) {
+    return (
+      <Box role="status" aria-label={t('loading-authentication-state')} sx={{ display: 'flex', alignItems: 'center', pr: { xs: 1, md: 0 } }}>
+        <Skeleton variant="circular" sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }} />
+      </Box>
+    );
+  }
 
   if (!isAuthenticated) {
     return (

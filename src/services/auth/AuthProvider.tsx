@@ -3,19 +3,16 @@ import { AuthProvider as OidcProvider, hasAuthParams, useAuth } from 'react-oidc
 import type { AuthProviderProps } from 'react-oidc-context';
 import { useNavigate } from 'react-router-dom';
 import { oidcUrl, oidcRealm, oidcClientId } from '../config';
+import { SessionRestoreContext } from './session-restore';
 
 type Props = {
   children: React.ReactNode;
 };
 
-let silentSignInAttempted = false;
+// Module scope, so React StrictMode's double effect run in development shares one attempt.
+let silentSignIn: Promise<void> | undefined;
 
-const silentLoginErrors = new Set([
-  'login_required',
-  'interaction_required',
-  'consent_required',
-  'account_selection_required',
-]);
+const silentLoginErrors = new Set(['login_required', 'interaction_required', 'consent_required', 'account_selection_required']);
 
 const isExpectedSilentLoginError = (error: unknown): boolean => {
   if (!error || typeof error !== 'object') return false;
@@ -33,21 +30,31 @@ const getPostLoginPath = (state: unknown): string => {
   return returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/';
 };
 
-const SilentSignIn: React.FC = () => {
-  const { activeNavigator, isAuthenticated, isLoading, signinSilent } = useAuth();
+/**
+ * Runs one silent sign-in on startup when there is no user in sessionStorage (new tab, browser
+ * restart). It uses the refresh token when there is one, or prompt=none against the Keycloak
+ * session cookie ("Remember me"), so a live session enters without credentials.
+ */
+const SilentSignIn: React.FC<{ onDone: () => void }> = ({ onDone }) => {
+  const { isAuthenticated, isLoading, signinSilent } = useAuth();
 
   React.useEffect(() => {
-    if (silentSignInAttempted || isLoading || isAuthenticated || activeNavigator || hasAuthParams()) {
+    if (isLoading) return;
+    if (isAuthenticated || hasAuthParams()) {
+      onDone();
       return;
     }
-
-    silentSignInAttempted = true;
-    void signinSilent().catch((error) => {
-      if (!isExpectedSilentLoginError(error)) {
-        console.warn('[AuthProvider] Silent sign-in failed', error);
-      }
-    });
-  }, [activeNavigator, isAuthenticated, isLoading, signinSilent]);
+    if (!silentSignIn) {
+      silentSignIn = signinSilent()
+        .then(() => undefined)
+        .catch((error) => {
+          if (!isExpectedSilentLoginError(error)) {
+            console.warn('[AuthProvider] Silent sign-in failed', error);
+          }
+        });
+    }
+    void silentSignIn.finally(onDone);
+  }, [isAuthenticated, isLoading, onDone, signinSilent]);
 
   return null;
 };
@@ -56,6 +63,8 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   const oidcAuthority = `${oidcUrl.replace(/\/$/, '')}/realms/${oidcRealm}`;
   const appOrigin = window.location.origin;
+  const [restoring, setRestoring] = React.useState(true);
+  const restored = React.useCallback(() => setRestoring(false), []);
 
   const config: AuthProviderProps = {
     authority: oidcAuthority,
@@ -74,8 +83,10 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   return (
     <OidcProvider {...config}>
-      <SilentSignIn />
-      {children}
+      <SessionRestoreContext.Provider value={restoring}>
+        <SilentSignIn onDone={restored} />
+        {children}
+      </SessionRestoreContext.Provider>
     </OidcProvider>
   );
 };
