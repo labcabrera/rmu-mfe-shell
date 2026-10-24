@@ -64,3 +64,10 @@ export const activeSection = (pathname: string): NavSection | undefined =>
 
 /** Whether `href` is the current page or one of its children (view/edit pages of a list). */
 export const isActiveLink = (pathname: string, href: string): boolean => pathname === href || pathname.startsWith(`${href}/`);
+
+// Immersive pages need the whole width (the combat board): the side navigation starts as an icon rail there,
+// whatever the screen and the stored preference, and the site footer is not shown (spec 017).
+const IMMERSIVE_ROUTES = [/^\/tactical\/combat\//];
+
+/** Whether `pathname` is an immersive page. */
+export const isImmersiveRoute = (pathname: string): boolean => IMMERSIVE_ROUTES.some((route) => route.test(pathname));
