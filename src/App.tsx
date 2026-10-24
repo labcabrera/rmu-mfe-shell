@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { LoadingState, NotFound } from '@labcabrera-rmu/rmu-react-shared-lib';
@@ -7,6 +7,7 @@ import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import MobileNav, { BOTTOM_NAV_HEIGHT } from './components/navigation/MobileNav';
 import SideNav from './components/navigation/SideNav';
+import { isImmersiveRoute } from './components/navigation/sections';
 import RemoteBoundary from './components/remote/RemoteBoundary';
 import RemoteUnavailable from './components/remote/RemoteUnavailable';
 import UserProfile from './components/user/UserProfile';
@@ -43,6 +44,7 @@ const RemoteSpellsApp = lazyRemote('spells', () => import('spells/SpellsApp'));
 // guard their controllers with JwtAuthGuard. The home and static pages stay public.
 const App = () => {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const { pathname } = useLocation();
 
   return (
     <ThemeSettingsProvider>
@@ -151,7 +153,8 @@ const App = () => {
                 </Routes>
               </Suspense>
             </Box>
-            <Footer />
+            {/* Immersive pages (the combat board) need the whole height: no site footer under them. */}
+            {!isImmersiveRoute(pathname) && <Footer />}
           </Box>
         </Box>
         <MobileNav drawerOpen={drawerOpen} onDrawerChange={setDrawerOpen} />
