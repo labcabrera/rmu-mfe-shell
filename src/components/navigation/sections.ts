@@ -25,6 +25,7 @@ export const sections: NavSection[] = [
       { label: 'traits', href: '/core/traits' },
       { label: 'effect-types', href: '/core/effect-types' },
       { label: 'catalogs', href: '/core/catalogs' },
+      { label: 'fighting-styles', href: '/core/fighting-styles' },
       { label: 'maneuvers', href: '/core/maneuvers' },
       { label: 'resistance-rolls', href: '/core/resistance-rolls' },
     ],
