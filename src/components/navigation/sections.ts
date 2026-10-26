@@ -28,6 +28,7 @@ export const sections: NavSection[] = [
       { label: 'fighting-styles', href: '/core/fighting-styles' },
       { label: 'maneuvers', href: '/core/maneuvers' },
       { label: 'resistance-rolls', href: '/core/resistance-rolls' },
+      { label: 'attack-tables', href: '/core/attack-tables' },
     ],
   },
   {
