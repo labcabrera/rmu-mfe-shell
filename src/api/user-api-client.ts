@@ -65,6 +65,8 @@ export type Friendship = {
   addresseeId: string;
   addresseeName: string;
   status: FriendshipStatus;
+  /** Participant that blocked the friendship (spec 044): only that user can unblock it. Null unless blocked. */
+  blockedBy?: string | null;
   message: string;
   createdAt: Date;
   updatedAt: Date;
@@ -235,7 +237,8 @@ export const userApiClient = {
 
   async fetchBlockedUsers(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
-    const rsql = `requesterId==${userId};status==blocked`;
+    // Only the blocks this user made: the blocked participant neither sees nor undoes them (spec 044, decision 9).
+    const rsql = `blockedBy==${userId};status==blocked`;
     const response = await fetch(friendshipsUrl(rsql), {
       method: 'GET',
       headers: {
