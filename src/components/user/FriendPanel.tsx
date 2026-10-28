@@ -320,12 +320,14 @@ export default function FriendPanel() {
                     key={f.id}
                     divider
                     secondaryAction={
-                      <IconButton color="primary" onClick={() => handleUnblock(f.id)} title={t('unblock-user')}>
-                        <LockOpenIcon />
-                      </IconButton>
+                      f.blockedBy === auth.user?.profile.sub ? (
+                        <IconButton color="primary" onClick={() => handleUnblock(f.id)} title={t('unblock-user')}>
+                          <LockOpenIcon />
+                        </IconButton>
+                      ) : undefined
                     }
                   >
-                    <ListItemText primary={f.addresseeName} />
+                    <ListItemText primary={f.addresseeId === auth.user?.profile.sub ? f.requesterName : f.addresseeName} />
                   </ListItem>
                 ))}
               </List>
