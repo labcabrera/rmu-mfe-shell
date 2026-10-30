@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { AuthContextProps } from 'react-oidc-context';
 import { fetchCharacters, fetchStrategicGames, fetchTacticalGames } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { userApiClient } from '../../api/user-api-client';
 
 type Counter = (rsql: string, auth: AuthContextProps) => Promise<number>;
 
@@ -11,13 +10,11 @@ const total =
   async (rsql, auth) =>
     (await fetcher(rsql, 0, 1, auth)).pagination.totalElements;
 
-/** How many entities of each kind match a filter: one request of one element each, read from the page total. */
+/** How many entities of each kind match a filter (the dashboard reads GET /v1/stats instead): one request of one element each, read from the page total. */
 export const COUNTERS = {
-  users: total((rsql, page, size, auth) => userApiClient.fetchUsers(rsql, page, size, auth)),
   campaigns: total(fetchStrategicGames),
   tactical: total(fetchTacticalGames),
   characters: total(fetchCharacters),
-  codes: total((rsql, page, size, auth) => userApiClient.fetchActivationCodes(rsql, page, size, auth)),
 };
 
 export type CountQuery = { key: string; counter: keyof typeof COUNTERS; rsql: string };

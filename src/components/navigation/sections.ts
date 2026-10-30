@@ -71,6 +71,7 @@ export const adminSection: NavSection = {
     { label: 'admin-games', href: '/admin/games' },
     { label: 'admin-characters', href: '/admin/characters' },
     { label: 'admin-activation-codes', href: '/admin/activation-codes' },
+    { label: 'admin-tools', href: '/admin/tools' },
   ],
 };
 

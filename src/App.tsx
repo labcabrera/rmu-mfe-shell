@@ -26,6 +26,7 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminGamesPage from './pages/admin/AdminGamesPage';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminRoute from './pages/admin/AdminRoute';
+import AdminToolsPage from './pages/admin/AdminToolsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import ProtectedRoute from './services/auth/ProtectedRoute';
 import { ThemeSettingsProvider } from './theme/ThemeSettingsProvider';
@@ -94,6 +95,7 @@ const App = () => {
                     <Route path="games" element={<AdminGamesPage />} />
                     <Route path="characters" element={<AdminCharactersPage />} />
                     <Route path="activation-codes" element={<AdminActivationCodesPage />} />
+                    <Route path="tools" element={<AdminToolsPage />} />
                   </Route>
                   <Route
                     path="/core/*"
