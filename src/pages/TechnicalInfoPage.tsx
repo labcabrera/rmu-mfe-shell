@@ -1,94 +1,58 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Container, Link, Paper } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
-import { imageBaseUrl } from '../services/config';
+import { Box, Link, Typography } from '@mui/material';
+import InfoPage, { InfoSection } from './info/InfoPage';
+
+const external = (href: string) => <Link href={href} target="_blank" rel="noopener noreferrer" />;
+
+const TOOLS: { key: string; href: string }[] = [
+  { key: 'technical-tool-mongodb', href: 'https://www.mongodb.com/' },
+  { key: 'technical-tool-kafka', href: 'https://kafka.apache.org/' },
+  { key: 'technical-tool-keycloak', href: 'https://www.keycloak.org/' },
+  { key: 'technical-tool-caddy', href: 'https://caddyserver.com/' },
+  { key: 'technical-tool-otel', href: 'https://opentelemetry.io/' },
+];
+const SECTIONS = ['technical-general', 'technical-tools', 'technical-cloning', 'technical-running'];
+const PLATFORM_URL = 'https://github.com/labcabrera/rmu-platform';
 
 export default function TechnicalInfoPage() {
   const { t } = useTranslation();
   return (
-    <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
-      <Box
-        sx={{
-          minHeight: '25vh',
-          display: 'flex',
-          alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'white',
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            {t('technical-title')}
-          </Typography>
-          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            {t('technical-intro')}
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            {t('technical-general-title')}
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            {t('technical-prerequisites')}
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            <Trans
-              i18nKey="technical-architecture"
-              components={{
-                nestjs: <Link href="https://nestjs.com/" target="_blank" />,
-                react: <Link href="https://es.react.dev/" target="_blank" />,
-                mui: <Link href="https://mui.com/material-ui/getting-started/" />,
-              }}
-            />
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            {t('technical-external-tools')}
-          </Typography>
-          <ul>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Trans i18nKey="technical-tool-mongodb" components={{ link: <Link href="https://www.mongodb.com/" target="_blank" /> }} />
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Trans i18nKey="technical-tool-kafka" components={{ link: <Link href="https://kafka.apache.org/" target="_blank" /> }} />
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Trans i18nKey="technical-tool-keycloak" components={{ link: <Link href="https://www.keycloak.org/" /> }} />
-              </Typography>
-            </li>
-          </ul>
-          <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            {t('technical-cloning-title')}
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            <Trans
-              i18nKey="technical-cloning-text-1"
-              components={{ link: <Link href="https://github.com/labcabrera/rmu-platform" target="_blank" /> }}
-            />
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            {t('technical-cloning-text-2')}
-          </Typography>
-          <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            {t('technical-running-title')}
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }} color="error">
-            {t('technical-work-in-progress')}
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}></Typography>
-        </Paper>
-      </Container>
-    </Box>
+    <InfoPage title={t('technical-title')} subtitle={t('technical-intro')} image={1} index={SECTIONS.map((id) => ({ id, title: t(`${id}-title`) }))}>
+      <InfoSection id="technical-general" number={1} title={t('technical-general-title')}>
+        <Typography variant="body1">{t('technical-prerequisites')}</Typography>
+        <Typography variant="body1">
+          <Trans
+            i18nKey="technical-architecture"
+            components={{
+              nestjs: external('https://nestjs.com/'),
+              react: external('https://react.dev/'),
+              mui: external('https://mui.com/material-ui/getting-started/'),
+            }}
+          />
+        </Typography>
+      </InfoSection>
+      <InfoSection id="technical-tools" number={2} title={t('technical-tools-title')}>
+        <Typography variant="body1">{t('technical-external-tools')}</Typography>
+        <Box component="ul" sx={{ m: 0, pl: 3, '& li': { mb: 1 } }}>
+          {TOOLS.map((tool) => (
+            <Typography key={tool.key} component="li" variant="body1">
+              <Trans i18nKey={tool.key} components={{ link: external(tool.href) }} />
+            </Typography>
+          ))}
+        </Box>
+      </InfoSection>
+      <InfoSection id="technical-cloning" number={3} title={t('technical-cloning-title')}>
+        <Typography variant="body1">
+          <Trans i18nKey="technical-cloning-text-1" components={{ link: external(PLATFORM_URL) }} />
+        </Typography>
+        <Typography variant="body1">{t('technical-cloning-text-2')}</Typography>
+      </InfoSection>
+      <InfoSection id="technical-running" number={4} title={t('technical-running-title')}>
+        <Typography variant="body1">
+          <Trans i18nKey="technical-running-text" components={{ link: external(PLATFORM_URL), code: <code /> }} />
+        </Typography>
+      </InfoSection>
+    </InfoPage>
   );
 }

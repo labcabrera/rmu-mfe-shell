@@ -7,29 +7,29 @@ type FooterLink = { label: string; href: string; external?: boolean };
 
 const sections: { title: string; links: FooterLink[] }[] = [
   {
+    title: 'footer-project',
+    links: [
+      { label: 'footer-about-me', href: '/about' },
+      { label: 'footer-get-started', href: '/docs' },
+      { label: 'footer-technical', href: '/technical-info' },
+      { label: 'Github', href: 'https://github.com/labcabrera/rmu-platform', external: true },
+    ],
+  },
+  {
+    title: 'footer-legal-group',
+    links: [
+      { label: 'footer-legal', href: '/legal' },
+      { label: 'footer-privacy-policy', href: '/privacy-policy' },
+      { label: 'footer-contact', href: '/contact' },
+    ],
+  },
+  {
     title: 'footer-official-ice',
     links: [
       { label: 'ICE', href: 'https://ironcrown.co.uk/', external: true },
       { label: 'DriveThruRPG', href: 'https://www.drivethrurpg.com/en/browse?keyword=rolemaster', external: true },
       { label: 'ICE Discord', href: 'https://discord.com/invite/7fYkMHZ', external: true },
       { label: 'ICE Catalog', href: 'https://ironcrown.co.uk/catalog/', external: true },
-    ],
-  },
-  {
-    title: 'footer-about',
-    links: [
-      { label: 'footer-legal', href: '/legal' },
-      { label: 'footer-privacy-policy', href: '/privacy-policy' },
-    ],
-  },
-  {
-    title: 'footer-support',
-    links: [
-      { label: 'footer-about-me', href: '/about' },
-      { label: 'footer-contact', href: '/contact' },
-      { label: 'footer-get-started', href: '/docs' },
-      { label: 'Github', href: 'https://github.com/labcabrera/rmu-platform', external: true },
-      { label: 'footer-technical', href: '/technical-info' },
     ],
   },
 ];
@@ -78,7 +78,7 @@ export default function Footer() {
         ) : (
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Typography variant="h6" sx={{ color: 'text.primary', mb: 1 }}>
+              <Typography variant="h6" sx={{ color: 'text.primary', mb: 1, fontFamily: (theme) => theme.fonts.display }}>
                 {t('footer-on-development')}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
