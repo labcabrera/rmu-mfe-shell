@@ -9,6 +9,7 @@ export const ADMIN_PAGES = [
   { label: 'admin-users', href: '/admin/users' },
   { label: 'admin-games', href: '/admin/games' },
   { label: 'admin-characters', href: '/admin/characters' },
+  { label: 'admin-activation-codes', href: '/admin/activation-codes' },
 ];
 
 /** Frame of the administration: its title and a tab per page. */

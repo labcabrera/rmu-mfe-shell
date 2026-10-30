@@ -17,6 +17,7 @@ export const COUNTERS = {
   campaigns: total(fetchStrategicGames),
   tactical: total(fetchTacticalGames),
   characters: total(fetchCharacters),
+  codes: total((rsql, page, size, auth) => userApiClient.fetchActivationCodes(rsql, page, size, auth)),
 };
 
 export type CountQuery = { key: string; counter: keyof typeof COUNTERS; rsql: string };

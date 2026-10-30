@@ -19,6 +19,7 @@ function AdminTable<T extends { id: string }>({
   loading,
   onPage,
   href,
+  onRowClick,
 }: {
   columns: AdminColumn<T>[];
   rows: T[];
@@ -27,6 +28,7 @@ function AdminTable<T extends { id: string }>({
   loading: boolean;
   onPage: (page: number) => void;
   href?: (row: T) => string;
+  onRowClick?: (row: T) => void;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -46,7 +48,12 @@ function AdminTable<T extends { id: string }>({
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id} hover onClick={href ? () => navigate(href(row)) : undefined} sx={{ cursor: href ? 'pointer' : undefined }}>
+              <TableRow
+                key={row.id}
+                hover
+                onClick={href ? () => navigate(href(row)) : onRowClick && (() => onRowClick(row))}
+                sx={{ cursor: href || onRowClick ? 'pointer' : undefined }}
+              >
                 {columns.map((column) => (
                   <TableCell key={column.key}>{column.render(row)}</TableCell>
                 ))}

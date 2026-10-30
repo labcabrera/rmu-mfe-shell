@@ -54,7 +54,25 @@ export type ActivationCode = {
   id: string;
   code: string;
   features: string[];
+  owner?: string;
+  createdAt?: string;
+  expiresAt?: string | null;
+  activatedAt?: string | null;
+  activatedBy?: string | null;
+  note?: string | null;
+  version?: number;
 };
+
+export const ACTIVATION_FEATURES = ['core-law', 'spell-law', 'treasure-law', 'creature-law-i'] as const;
+
+/** Realm groups an administrator can grant (the API's MANAGED_GROUPS). */
+export const MANAGED_GROUPS = ['rmu-user', 'rmu-admin', 'rmu-core-law', 'rmu-spell-law', 'rmu-treasure-law', 'rmu-creature-law-i'] as const;
+
+/** First line of the CSV of new codes. */
+export const ACTIVATION_CODES_CSV_HEADER = 'code;features;expiresAt;note';
+
+export type CreateActivationCodesInput = { features: string[]; count: number; expiresAt?: string; note?: string };
+export type UpdateActivationCodeInput = { expiresAt?: string; note?: string | null; activatedAt?: null; version?: number };
 
 export type FriendshipStatus = 'pending' | 'accepted' | 'rejected' | 'blocked';
 
@@ -83,8 +101,55 @@ export class ApiError extends Error {
 
 const friendshipsUrl = (rsql: string) => `${userApiBaseUrl}/friendships?q=${encodeURIComponent(rsql)}`;
 
+/** A call of the administration: JSON in and out, and the API's message in the error. */
+async function adminRequest<T>(auth: AuthContextProps, method: string, path: string, body?: unknown): Promise<T> {
+  const response = await fetch(`${userApiBaseUrl}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${auth.user?.access_token}`,
+      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (response.status === 204) return undefined as T;
+  const data = await response.json().catch(() => ({}));
+  if (response.ok) return data as T;
+  throw new ApiError((data as { message?: string }).message || response.statusText, response.status);
+}
+
 export const userApiClient = {
   /** Every user, as an admin sees them (GET /users is admin only). */
+  /** One user by id (admin only). */
+  async fetchUserById(id: string, auth: AuthContextProps): Promise<ApiUser> {
+    return adminRequest(auth, 'GET', `/users/${encodeURIComponent(id)}`);
+  },
+
+  /** Sets the managed realm groups of a user (admin only). */
+  async updateUserGroups(id: string, groups: string[], auth: AuthContextProps): Promise<ApiUser> {
+    return adminRequest(auth, 'PUT', `/users/${encodeURIComponent(id)}/groups`, { groups });
+  },
+
+  /** Enables or disables an account (admin only). */
+  async setUserEnabled(id: string, enabled: boolean, auth: AuthContextProps): Promise<ApiUser> {
+    return adminRequest(auth, 'PATCH', `/users/${encodeURIComponent(id)}`, { enabled });
+  },
+
+  async fetchActivationCodes(rsql: string, page: number, size: number, auth: AuthContextProps): Promise<Page<ActivationCode>> {
+    return adminRequest(auth, 'GET', `/activation-codes?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`);
+  },
+
+  async createActivationCodes(input: CreateActivationCodesInput, auth: AuthContextProps): Promise<ActivationCode[]> {
+    return adminRequest(auth, 'POST', '/activation-codes', input);
+  },
+
+  async updateActivationCode(id: string, input: UpdateActivationCodeInput, auth: AuthContextProps): Promise<ActivationCode> {
+    return adminRequest(auth, 'PATCH', `/activation-codes/${encodeURIComponent(id)}`, input);
+  },
+
+  async deleteActivationCode(id: string, auth: AuthContextProps): Promise<void> {
+    return adminRequest(auth, 'DELETE', `/activation-codes/${encodeURIComponent(id)}`);
+  },
+
   async fetchUsers(rsql: string, page: number, size: number, auth: AuthContextProps): Promise<Page<ApiUser>> {
     const response = await fetch(`${userApiBaseUrl}/users?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`, {
       headers: { Authorization: `Bearer ${auth.user?.access_token}` },

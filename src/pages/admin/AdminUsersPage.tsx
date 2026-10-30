@@ -4,6 +4,7 @@ import { Avatar, Chip, Stack, Typography } from '@mui/material';
 import { ApiUser, userApiClient } from '../../api/user-api-client';
 import AdminFilters from './AdminFilters';
 import AdminTable, { AdminColumn } from './AdminTable';
+import UserAdminDrawer from './UserAdminDrawer';
 import { containsRsql, rsqlOf, useAdminPage, useDebounced } from './useAdminPage';
 
 const fetchUsers = (rsql: string, page: number, size: number, auth: Parameters<typeof userApiClient.fetchUsers>[3]) =>
@@ -13,8 +14,9 @@ const fetchUsers = (rsql: string, page: number, size: number, auth: Parameters<t
 const AdminUsersPage: FC = () => {
   const { t, i18n } = useTranslation();
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<ApiUser>();
   const query = useDebounced(search);
-  const { rows, total, page, setPage, loading } = useAdminPage<ApiUser>(fetchUsers, rsqlOf(containsRsql(query, 'name', 'email')));
+  const { rows, setRows, total, page, setPage, loading } = useAdminPage<ApiUser>(fetchUsers, rsqlOf(containsRsql(query, 'name', 'email')));
   const date = (value?: string | Date | null) =>
     value ? new Date(value).toLocaleString(i18n.language, { dateStyle: 'medium', timeStyle: 'short' }) : '—';
 
@@ -64,7 +66,15 @@ const AdminUsersPage: FC = () => {
   return (
     <>
       <AdminFilters search={search} onSearch={setSearch} />
-      <AdminTable columns={columns} rows={rows} total={total} page={page} loading={loading} onPage={setPage} />
+      <AdminTable columns={columns} rows={rows} total={total} page={page} loading={loading} onPage={setPage} onRowClick={setSelected} />
+      <UserAdminDrawer
+        user={selected}
+        onClose={() => setSelected(undefined)}
+        onChanged={(updated) => {
+          setSelected(updated);
+          setRows((current) => current.map((row) => (row.id === updated.id ? updated : row)));
+        }}
+      />
     </>
   );
 };

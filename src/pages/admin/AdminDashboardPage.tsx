@@ -2,6 +2,7 @@ import React, { ElementType, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';
+import KeyIcon from '@mui/icons-material/Key';
 import PersonIcon from '@mui/icons-material/Person';
 import PublicIcon from '@mui/icons-material/Public';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
@@ -25,6 +26,9 @@ const QUERIES: CountQuery[] = [
   { key: 'characters-created', counter: 'characters', rsql: 'status==created' },
   { key: 'characters-partially_created', counter: 'characters', rsql: 'status==partially_created' },
   { key: 'characters-dead', counter: 'characters', rsql: 'status==dead' },
+  { key: 'codes', counter: 'codes', rsql: '' },
+  { key: 'codes-free', counter: 'codes', rsql: 'activatedAt==null' },
+  { key: 'codes-used', counter: 'codes', rsql: 'activatedAt!=null' },
 ];
 
 /** First page of the administration: how many users, campaigns, games and characters there are, by state. */
@@ -57,6 +61,16 @@ const AdminDashboardPage: FC = () => {
         label: t(`admin-character-status-${status}`),
       })),
     },
+    {
+      title: 'admin-activation-codes',
+      icon: KeyIcon,
+      href: '/admin/activation-codes',
+      total: 'codes',
+      breakdown: [
+        { key: 'codes-free', label: t('admin-code-free') },
+        { key: 'codes-used', label: t('admin-code-used') },
+      ],
+    },
   ];
 
   return (
@@ -64,7 +78,7 @@ const AdminDashboardPage: FC = () => {
       {tiles.map((tile, index) => {
         const Icon = tile.icon;
         return (
-          <Grid key={tile.title} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={tile.title} size={{ xs: 12, sm: 6, lg: 4, xl: 'grow' }}>
             <Card variant="outlined" sx={[{ height: '100%' }, enterSx(index)]}>
               <CardActionArea
                 component={RouterLink}

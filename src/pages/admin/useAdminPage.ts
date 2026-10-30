@@ -17,6 +17,7 @@ export function useAdminPage<T>(fetcher: Fetcher<T>, rsql: string) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [reloads, setReloads] = useState(0);
 
   useEffect(() => setPage(0), [rsql]);
 
@@ -36,9 +37,9 @@ export function useAdminPage<T>(fetcher: Fetcher<T>, rsql: string) {
       active = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rsql, page]);
+  }, [rsql, page, reloads]);
 
-  return { rows, total, page, setPage, loading, error };
+  return { rows, setRows, total, page, setPage, loading, error, reload: () => setReloads((n) => n + 1) };
 }
 
 /** RSQL of the filters that have a value, joined with `;` (and). */

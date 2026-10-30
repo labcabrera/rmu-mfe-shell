@@ -20,6 +20,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RegisterPage from './pages/RegisterPage';
 import SigninCallbackPage from './pages/SigninCallbackPage';
 import TechnicalInfoPage from './pages/TechnicalInfoPage';
+import AdminActivationCodesPage from './pages/admin/AdminActivationCodesPage';
 import AdminCharactersPage from './pages/admin/AdminCharactersPage';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminGamesPage from './pages/admin/AdminGamesPage';
@@ -92,6 +93,7 @@ const App = () => {
                     <Route path="users" element={<AdminUsersPage />} />
                     <Route path="games" element={<AdminGamesPage />} />
                     <Route path="characters" element={<AdminCharactersPage />} />
+                    <Route path="activation-codes" element={<AdminActivationCodesPage />} />
                   </Route>
                   <Route
                     path="/core/*"
