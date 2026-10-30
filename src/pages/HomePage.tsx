@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Button, Container, useTheme, useMediaQuery, Link, Stack } from '@mui/material';
+import { Button, Container, useTheme, useMediaQuery, Link, Stack, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -62,8 +62,39 @@ const LandingVariant = ({ variant }: { variant: Variant }) => {
 export const Home = () => {
   const [params] = useSearchParams();
   const variant = params.get('landing');
-  if (variant && variant in VARIANTS) return <LandingVariant variant={variant as Variant} />;
-  return <CurrentHome />;
+  return (
+    <>
+      {variant && variant in VARIANTS ? <LandingVariant variant={variant as Variant} /> : <CurrentHome />}
+      <PrototypeSwitcher value={variant && variant in VARIANTS ? variant : ''} />
+    </>
+  );
+};
+
+/** A floating switch between the current landing and the prototypes, only while they are compared. */
+const PrototypeSwitcher = ({ value }: { value: string }) => {
+  const { t } = useTranslation();
+  const [, setParams] = useSearchParams();
+  return (
+    <Paper elevation={8} sx={{ position: 'fixed', right: 16, bottom: { xs: 80, md: 16 }, zIndex: 'speedDial' }}>
+      <ToggleButtonGroup
+        exclusive
+        size="small"
+        value={value}
+        onChange={(_, next: string | null) => {
+          if (next === null) return;
+          setParams(next ? { landing: next } : {});
+          window.scrollTo(0, 0);
+        }}
+      >
+        <ToggleButton value="">{t('landing-prototype-current')}</ToggleButton>
+        {Object.keys(VARIANTS).map((key) => (
+          <ToggleButton key={key} value={key}>
+            {key.toUpperCase()}
+          </ToggleButton>
+        ))}
+      </ToggleButtonGroup>
+    </Paper>
+  );
 };
 
 const CurrentHome = () => {
