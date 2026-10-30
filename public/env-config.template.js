@@ -31,4 +31,9 @@ window.__RMU_CONFIG__ = {
   // Contact page (optional).
   RMU_SHELL_CONTACT_URI: '${RMU_SHELL_CONTACT_URI}',
   RMU_SHELL_CONTACT_EMAIL: '${RMU_SHELL_CONTACT_EMAIL}',
+  // Operation tools offered to administrators (optional; leave empty where they must not be exposed).
+  RMU_ADMIN_KEYCLOAK_URI: '${RMU_ADMIN_KEYCLOAK_URI}',
+  RMU_ADMIN_KAFKA_UI_URI: '${RMU_ADMIN_KAFKA_UI_URI}',
+  RMU_ADMIN_GRAFANA_URI: '${RMU_ADMIN_GRAFANA_URI}',
+  RMU_ADMIN_MONGO_EXPRESS_URI: '${RMU_ADMIN_MONGO_EXPRESS_URI}',
 };

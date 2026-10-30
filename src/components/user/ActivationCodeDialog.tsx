@@ -13,8 +13,10 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const currentFeatures = (auth.user?.profile.groups as string[]) || [];
-  const newFeatures = activationCode ? activationCode.features.filter((e) => !currentFeatures.includes(e)) : [];
-  const ownedFeatures = activationCode ? activationCode.features.filter((e) => currentFeatures.includes(e)) : [];
+  // A feature grants the realm group with the rmu- prefix (core-law → rmu-core-law).
+  const owns = (feature: string) => currentFeatures.includes(`rmu-${feature}`);
+  const newFeatures = activationCode ? activationCode.features.filter((e) => !owns(e)) : [];
+  const ownedFeatures = activationCode ? activationCode.features.filter(owns) : [];
 
   const handleCheck = () => {
     if (!code) return;
