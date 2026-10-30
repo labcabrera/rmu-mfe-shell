@@ -20,6 +20,12 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RegisterPage from './pages/RegisterPage';
 import SigninCallbackPage from './pages/SigninCallbackPage';
 import TechnicalInfoPage from './pages/TechnicalInfoPage';
+import AdminCharactersPage from './pages/admin/AdminCharactersPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminGamesPage from './pages/admin/AdminGamesPage';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminRoute from './pages/admin/AdminRoute';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 import ProtectedRoute from './services/auth/ProtectedRoute';
 import { ThemeSettingsProvider } from './theme/ThemeSettingsProvider';
 
@@ -74,6 +80,19 @@ const App = () => {
                   <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                   <Route path="/docs" element={<DocsPage />} />
                   <Route path="/signin-callback" element={<SigninCallbackPage />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <AdminRoute>
+                        <AdminLayout />
+                      </AdminRoute>
+                    }
+                  >
+                    <Route index element={<AdminDashboardPage />} />
+                    <Route path="users" element={<AdminUsersPage />} />
+                    <Route path="games" element={<AdminGamesPage />} />
+                    <Route path="characters" element={<AdminCharactersPage />} />
+                  </Route>
                   <Route
                     path="/core/*"
                     element={

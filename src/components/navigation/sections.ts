@@ -1,4 +1,5 @@
 import { ElementType } from 'react';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BackpackIcon from '@mui/icons-material/Backpack';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -60,9 +61,21 @@ export const sections: NavSection[] = [
   },
 ];
 
+/** The administration (spec 053): listed after the rest, only for the `rmu-admin` group. */
+export const adminSection: NavSection = {
+  label: 'administration',
+  href: '/admin',
+  icon: AdminPanelSettingsIcon,
+  links: [
+    { label: 'admin-users', href: '/admin/users' },
+    { label: 'admin-games', href: '/admin/games' },
+    { label: 'admin-characters', href: '/admin/characters' },
+  ],
+};
+
 /** Section that contains `pathname`, if any. */
 export const activeSection = (pathname: string): NavSection | undefined =>
-  sections.find((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
+  [...sections, adminSection].find((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
 
 /** Whether `href` is the current page or one of its children (view/edit pages of a list). */
 export const isActiveLink = (pathname: string, href: string): boolean => pathname === href || pathname.startsWith(`${href}/`);

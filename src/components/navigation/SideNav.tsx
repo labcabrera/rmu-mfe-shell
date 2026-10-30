@@ -21,8 +21,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { useIsAdmin } from '@labcabrera-rmu/rmu-react-shared-lib';
 import NavList from './NavList';
-import { activeSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections } from './sections';
+import { activeSection, adminSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections } from './sections';
 
 export const RAIL_WIDTH = 248;
 export const MINI_RAIL_WIDTH = 72;
@@ -82,6 +83,7 @@ const RailList = () => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const current = activeSection(pathname);
+  const admin = useIsAdmin();
   const [flyout, setFlyout] = useState<{ section: NavSection; anchor: HTMLElement }>();
   const closeTimer = useRef<number | undefined>(undefined);
 
@@ -101,7 +103,7 @@ const RailList = () => {
   return (
     <>
       <List component="nav" aria-label={t('menu')}>
-        {[HOME_ITEM, ...sections].map((section) => {
+        {[HOME_ITEM, ...sections, ...(admin ? [adminSection] : [])].map((section) => {
           const Icon = section.icon;
           const selected = section.href === '/' ? pathname === '/' : current?.href === section.href;
           const button = (

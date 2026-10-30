@@ -4,14 +4,16 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import { Collapse, IconButton, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { activeParentSx, activeSection, isActiveLink, navItemSx, sections } from './sections';
+import { Collapse, Divider, IconButton, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { useIsAdmin } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { activeParentSx, activeSection, adminSection, isActiveLink, navItemSx, sections } from './sections';
 
 /** Full navigation list: sections with their pages, the current one expanded. Used by the rail and the drawer. */
 const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const current = activeSection(pathname);
+  const admin = useIsAdmin();
   const [expanded, setExpanded] = useState<string | undefined>(current?.label);
 
   useEffect(() => {
@@ -26,12 +28,13 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
         </ListItemIcon>
         <ListItemText primary={t('home')} />
       </ListItemButton>
-      {sections.map((section) => {
+      {(admin ? [...sections, adminSection] : sections).map((section) => {
         const Icon = section.icon;
         const open = expanded === section.label;
         const selected = pathname === section.href;
         return (
           <React.Fragment key={section.label}>
+            {section === adminSection && <Divider sx={{ my: 1 }} />}
             <ListItemButton
               component={RouterLink}
               to={section.href}

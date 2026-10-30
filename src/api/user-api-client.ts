@@ -84,6 +84,15 @@ export class ApiError extends Error {
 const friendshipsUrl = (rsql: string) => `${userApiBaseUrl}/friendships?q=${encodeURIComponent(rsql)}`;
 
 export const userApiClient = {
+  /** Every user, as an admin sees them (GET /users is admin only). */
+  async fetchUsers(rsql: string, page: number, size: number, auth: AuthContextProps): Promise<Page<ApiUser>> {
+    const response = await fetch(`${userApiBaseUrl}/users?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`, {
+      headers: { Authorization: `Bearer ${auth.user?.access_token}` },
+    });
+    if (response.ok) return await response.json();
+    throw new ApiError(`Failed to fetch users: ${response.statusText}`, response.status);
+  },
+
   async fetchUser(auth: AuthContextProps): Promise<ApiUser> {
     const response = await fetch(`${userApiBaseUrl}/users/me`, {
       headers: {
