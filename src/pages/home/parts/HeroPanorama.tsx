@@ -23,7 +23,7 @@ const HeroPanorama: FC<{
     return () => window.clearInterval(timer);
   }, [rotateMs]);
 
-  // Only the current image and the next one are loaded: they weigh ~2.5 MB each
+  // Only the current image and the next one are loaded, not the whole series
   const loaded = rotateMs ? [current, (current + 1) % HERO_IMAGES.length] : [current];
 
   return (

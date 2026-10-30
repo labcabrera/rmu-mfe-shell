@@ -24,11 +24,11 @@ export const LANDING_MODULES: LandingModule[] = sections.map((section) => ({
 
 /** The same misty landscape with a different action each: the hero changes the figure, not the place. */
 export const HERO_IMAGES = [
-  'action-melee-all.png',
-  'action-maneuver-all.png',
-  'action-initiative-all.png',
-  'action-ranged-full.png',
-  'action-movement-screen.png',
+  'action-melee-all.webp',
+  'action-maneuver-all.webp',
+  'action-initiative-all.webp',
+  'action-ranged-full.webp',
+  'action-movement-screen.webp',
 ].map((file) => `${imageBaseUrl}images/actions/${file}`);
 
 const VISITS_KEY = 'rmuLandingVisits';

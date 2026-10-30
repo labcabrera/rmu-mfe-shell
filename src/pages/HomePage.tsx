@@ -1,260 +1,111 @@
-import React, { useEffect, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
-import { Button, Container, useTheme, useMediaQuery, Link, Stack, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { imageBaseUrl } from '../services/config';
-import LandingA from './home/LandingA';
-import LandingB from './home/LandingB';
-import LandingC from './home/LandingC';
-import { useLandingData } from './home/useLandingData';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, Button, Container, Grid, Link, Stack, Typography } from '@mui/material';
+import { heroImageOfVisit, LANDING_MODULES } from './home/modules';
+import HeroPanorama from './home/parts/HeroPanorama';
+import { DisclaimerNote, HeroActions, LandingTitle, Ornament } from './home/parts/LandingParts';
+import Reveal from './home/parts/Reveal';
 
-const MODULES = [
-  {
-    title: 'core',
-    desc: 'shell.home.module-core-desc',
-    img: `${imageBaseUrl}images/generic/core.png`,
-    href: '/core',
-  },
-  {
-    title: 'strategic',
-    desc: 'shell.home.module-strategic-desc',
-    img: `${imageBaseUrl}images/generic/strategic.png`,
-    href: '/strategic',
-  },
-  {
-    title: 'tactical',
-    desc: 'shell.home.module-tactical-desc',
-    img: `${imageBaseUrl}images/generic/tactical.png`,
-    href: '/tactical',
-  },
-  {
-    title: 'npcs',
-    desc: 'shell.home.module-npcs-desc',
-    img: `${imageBaseUrl}images/generic/npcs.png`,
-    href: '/npcs',
-  },
-  {
-    title: 'spells',
-    desc: 'shell.home.module-spells-desc',
-    img: `${imageBaseUrl}images/generic/spells.png`,
-    href: '/spells',
-  },
-];
+const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
 
-const VARIANTS = { a: LandingA, b: LandingB, c: LandingC };
-type Variant = keyof typeof VARIANTS;
-
-/** A landing prototype, with the user's data it shows. */
-const LandingVariant = ({ variant }: { variant: Variant }) => {
-  const data = useLandingData();
-  const Landing = VARIANTS[variant];
-  return <Landing data={data} />;
-};
-
-/** While the new landing is chosen, `?landing=a|b|c` shows a prototype; without it, the current one. */
+/**
+ * The landing, "the illustrated codex": a tall hero whose figures cross-fade, then each module as a chapter with a big
+ * illustration, alternating sides, and a chapter index that stays at hand on wide screens.
+ */
 export const Home = () => {
-  const [params] = useSearchParams();
-  const variant = params.get('landing');
-  return (
-    <>
-      {variant && variant in VARIANTS ? <LandingVariant variant={variant as Variant} /> : <CurrentHome />}
-      <PrototypeSwitcher value={variant && variant in VARIANTS ? variant : ''} />
-    </>
-  );
-};
-
-/** A floating switch between the current landing and the prototypes, only while they are compared. */
-const PrototypeSwitcher = ({ value }: { value: string }) => {
   const { t } = useTranslation();
-  const [, setParams] = useSearchParams();
-  return (
-    <Paper elevation={8} sx={{ position: 'fixed', right: 16, bottom: { xs: 80, md: 16 }, zIndex: 'speedDial' }}>
-      <ToggleButtonGroup
-        exclusive
-        size="small"
-        value={value}
-        onChange={(_, next: string | null) => {
-          if (next === null) return;
-          setParams(next ? { landing: next } : {});
-          window.scrollTo(0, 0);
-        }}
-      >
-        <ToggleButton value="">{t('landing-prototype-current')}</ToggleButton>
-        {Object.keys(VARIANTS).map((key) => (
-          <ToggleButton key={key} value={key}>
-            {key.toUpperCase()}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-    </Paper>
-  );
-};
-
-const CurrentHome = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [scrolled, setScrolled] = useState(false);
-  const theme = useTheme();
-  const { t } = useTranslation();
-  const isSmall = useMediaQuery(theme.breakpoints.down('lg'));
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    const cards = Array.from(document.querySelectorAll('.feature-card')) as HTMLElement[];
-    if (!cards || cards.length === 0) return;
-    if (isSmall) {
-      cards.forEach((el) => {
-        el.style.transform = 'none';
-        el.style.transition = '';
-        el.style.zIndex = '1';
-        el.style.boxShadow = '';
-      });
-      return;
-    }
-
-    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
-    const obs = new IntersectionObserver(
-      () => {
-        // On any intersection change, compute which card is closest to viewport center
-        const viewportCenterY = window.innerHeight / 2;
-        cards.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const elemCenterY = rect.top + rect.height / 2;
-          const distance = Math.abs(elemCenterY - viewportCenterY);
-          // maxDistance roughly half viewport plus element height to normalize
-          const maxDistance = window.innerHeight / 2 + rect.height / 2;
-          const normalized = Math.max(0, 1 - distance / maxDistance); // 1 => center, 0 => far
-          // sharpen so center gains much more weight than neighbors
-          const weight = Math.pow(normalized, 2.2);
-          const multiplier = isSmall ? 0.12 : 0.28;
-          const scale = 1 + weight * multiplier; // smaller multiplier on mobile
-          el.style.transform = `scale(${scale})`;
-          el.style.transition = 'transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms cubic-bezier(.2,.9,.2,1)';
-          el.style.zIndex = weight > 0.35 ? '2' : '1';
-          el.style.boxShadow = weight > 0.35 ? '0 18px 40px rgba(2,6,23,0.16)' : '';
-        });
-      },
-      { threshold: thresholds }
-    );
-
-    cards.forEach((c) => obs.observe(c));
-    // initial compute to set styles immediately
-    const tick = () => {
-      const viewportCenterY = window.innerHeight / 2;
-      cards.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const elemCenterY = rect.top + rect.height / 2;
-        const distance = Math.abs(elemCenterY - viewportCenterY);
-        const maxDistance = window.innerHeight / 2 + rect.height / 2;
-        const normalized = Math.max(0, 1 - distance / maxDistance);
-        const weight = Math.pow(normalized, 2.2);
-        const multiplier = isSmall ? 0.12 : 0.28;
-        const scale = 1 + weight * multiplier;
-        el.style.transform = `scale(${scale})`;
-        el.style.transition = 'transform 260ms cubic-bezier(.2,.9,.2,1), box-shadow 260ms cubic-bezier(.2,.9,.2,1)';
-        el.style.zIndex = weight > 0.35 ? '2' : '1';
-        el.style.boxShadow = weight > 0.35 ? '0 18px 40px rgba(2,6,23,0.16)' : '';
-      });
-    };
-    tick();
-
-    return () => obs.disconnect();
-  }, [isSmall]);
+  const [image] = useState(heroImageOfVisit);
 
   return (
-    <Box sx={{ width: '100%', bgcolor: (t) => t.palette.background.default, minHeight: '100vh' }}>
-      <Box
-        sx={{
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'white',
-        }}
-      >
-        <Container maxWidth="xl">
-          {/* eslint-disable-next-line i18next/no-literal-string -- product name, not translated */}
-          <Typography variant="h2" sx={{ fontWeight: 600 }} gutterBottom>
-            Rolemaster Unified Companion
+    <Box sx={{ bgcolor: 'background.default' }}>
+      <HeroPanorama start={image} rotateMs={8000} minHeight={{ xs: 'calc(100svh - 120px)', md: 'calc(100vh - 64px)' }}>
+        <Stack sx={{ maxWidth: 720 }}>
+          <Typography variant="overline" sx={{ opacity: 0.8, letterSpacing: { xs: 1.5, md: 3 }, lineHeight: 1.6 }}>
+            {t('landing-codex-overline')}
           </Typography>
-          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
+          <LandingTitle />
+          <Ornament />
+          <Typography variant="h6" component="p" sx={{ fontWeight: 400, mb: 3, opacity: 0.92 }}>
             {t('shell.home.subtitle')}
           </Typography>
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" color="secondary" href="/docs">
-              {t('shell.home.get-started')}
-            </Button>
-            <Button variant="contained" color="secondary" href="/strategic/games/create">
-              {t('shell.home.start-campaign')}
-            </Button>
-          </Stack>
-        </Container>
-      </Box>
+          <HeroActions />
+          <Box sx={{ mt: 4 }}>
+            <DisclaimerNote />
+          </Box>
+        </Stack>
+      </HeroPanorama>
 
-      <Container maxWidth="xl" sx={{ py: 10 }}>
-        <Alert severity="info" sx={{ mb: 1 }}>
-          <Typography variant="h6">
-            <Trans i18nKey="home-disclaimer" components={{ link: <Link href="https://ironcrown.co.uk/" /> }} />
-          </Typography>
-        </Alert>
-
-        <Grid container spacing={3}>
-          {MODULES.map((f) => (
-            <Grid size={12} key={f.title} sx={{ mt: { xs: 3, md: 5 }, overflow: { xs: 'hidden', md: 'visible' } }}>
-              <Card
-                className="feature-card"
-                onClick={() => window.location.assign(f.href)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') window.location.assign(f.href);
-                }}
-                role="button"
-                tabIndex={0}
-                sx={{
-                  display: 'flex',
-                  flexDirection: { xs: 'column', md: 'row' },
-                  gap: 3,
-                  alignItems: 'center',
-                  p: { xs: 2, md: 4 },
-                  transform: 'scale(1)',
-                  transformOrigin: 'center center',
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  minHeight: { xs: 'auto', md: 220 },
-                  transition: 'transform 260ms ease-out, box-shadow 260ms ease-out',
-                  cursor: 'pointer',
-                }}
-              >
-                <CardContent sx={{ p: 0, flex: 1 }}>
-                  <Typography variant="h5">{t(f.title)}</Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-                    {t(f.desc)}
-                  </Typography>
-                </CardContent>
-                <Box sx={{ ml: { xs: 0, md: 'auto' }, mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 240 } }}>
-                  <CardMedia
-                    component="img"
-                    image={f.img}
-                    alt={f.title}
-                    sx={{ width: '100%', height: { xs: 200, md: 160 }, objectFit: 'cover', borderRadius: 1 }}
-                  />
-                </Box>
-              </Card>
-            </Grid>
-          ))}
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 8 } }}>
+        <Grid container spacing={{ xs: 2, lg: 6 }}>
+          <Grid size={{ xs: 12, lg: 3 }} sx={{ display: { xs: 'none', lg: 'block' } }}>
+            <Stack component="nav" aria-label={t('landing-modules')} spacing={1} sx={{ position: 'sticky', top: 96 }}>
+              <Typography variant="overline" color="text.secondary">
+                {t('landing-modules')}
+              </Typography>
+              {LANDING_MODULES.map((module, index) => (
+                <Link
+                  key={module.id}
+                  href={`#chapter-${module.id}`}
+                  underline="hover"
+                  color="text.primary"
+                  sx={{ fontFamily: (theme) => theme.fonts.display, fontSize: '1.05rem' }}
+                >
+                  {`${NUMERALS[index]}. ${t(module.id)}`}
+                </Link>
+              ))}
+            </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, lg: 9 }}>
+            <Stack spacing={{ xs: 5, md: 9 }}>
+              {LANDING_MODULES.map((module, index) => (
+                <Reveal key={module.id}>
+                  <Grid
+                    id={`chapter-${module.id}`}
+                    container
+                    spacing={{ xs: 2, md: 5 }}
+                    direction={{ xs: 'row', md: index % 2 === 0 ? 'row' : 'row-reverse' }}
+                    sx={{ alignItems: 'center', scrollMarginTop: 96 }}
+                  >
+                    <Grid size={{ xs: 12, md: 5 }}>
+                      <Box
+                        component="img"
+                        src={module.img}
+                        alt=""
+                        loading="lazy"
+                        sx={{
+                          width: '100%',
+                          aspectRatio: { xs: '16 / 9', md: '4 / 3' },
+                          objectFit: 'cover',
+                          borderRadius: 2,
+                          boxShadow: 6,
+                        }}
+                      />
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 7 }}>
+                      <Typography sx={{ fontFamily: (theme) => theme.fonts.display, color: 'primary.main', fontSize: '1.25rem' }}>
+                        {t('landing-chapter', { numeral: NUMERALS[index] })}
+                      </Typography>
+                      <Typography
+                        variant="h3"
+                        component="h2"
+                        sx={{ fontFamily: (theme) => theme.fonts.display, fontSize: { xs: '2rem', md: '2.75rem' } }}
+                      >
+                        {t(module.id)}
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary" sx={{ mt: 1.5, mb: 2.5, maxWidth: 620 }}>
+                        {t(module.desc)}
+                      </Typography>
+                      <Button component={RouterLink} to={module.href} endIcon={<ArrowForwardIcon />} variant="outlined">
+                        {t('landing-open-module', { module: t(module.id) })}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Reveal>
+              ))}
+            </Stack>
+          </Grid>
         </Grid>
       </Container>
     </Box>
