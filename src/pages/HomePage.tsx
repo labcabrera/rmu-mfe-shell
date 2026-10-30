@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { Button, Container, useTheme, useMediaQuery, Link, Stack } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -9,6 +10,10 @@ import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { imageBaseUrl } from '../services/config';
+import LandingA from './home/LandingA';
+import LandingB from './home/LandingB';
+import LandingC from './home/LandingC';
+import { useLandingData } from './home/useLandingData';
 
 const MODULES = [
   {
@@ -43,7 +48,25 @@ const MODULES = [
   },
 ];
 
+const VARIANTS = { a: LandingA, b: LandingB, c: LandingC };
+type Variant = keyof typeof VARIANTS;
+
+/** A landing prototype, with the user's data it shows. */
+const LandingVariant = ({ variant }: { variant: Variant }) => {
+  const data = useLandingData();
+  const Landing = VARIANTS[variant];
+  return <Landing data={data} />;
+};
+
+/** While the new landing is chosen, `?landing=a|b|c` shows a prototype; without it, the current one. */
 export const Home = () => {
+  const [params] = useSearchParams();
+  const variant = params.get('landing');
+  if (variant && variant in VARIANTS) return <LandingVariant variant={variant as Variant} />;
+  return <CurrentHome />;
+};
+
+const CurrentHome = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [scrolled, setScrolled] = useState(false);
   const theme = useTheme();
