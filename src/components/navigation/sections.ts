@@ -73,3 +73,9 @@ const IMMERSIVE_ROUTES = [/^\/tactical\/combat\//];
 
 /** Whether `pathname` is an immersive page. */
 export const isImmersiveRoute = (pathname: string): boolean => IMMERSIVE_ROUTES.some((route) => route.test(pathname));
+
+/** A navigation entry as a pill inset from the edges of the menu, so the selected one never touches the header. */
+export const navItemSx = { mx: 1, my: 0.25, borderRadius: 1 } as const;
+
+/** The section of the current page when one of its pages is selected: accent text, no fill (that is the page's). */
+export const activeParentSx = { color: 'primary.main', '& .MuiListItemIcon-root': { color: 'primary.main' } } as const;

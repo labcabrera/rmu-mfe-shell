@@ -5,7 +5,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { Collapse, IconButton, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { activeSection, isActiveLink, sections } from './sections';
+import { activeParentSx, activeSection, isActiveLink, navItemSx, sections } from './sections';
 
 /** Full navigation list: sections with their pages, the current one expanded. Used by the rail and the drawer. */
 const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
@@ -20,7 +20,7 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
 
   return (
     <List component="nav" aria-label={t('menu')} sx={{ py: 1 }}>
-      <ListItemButton component={RouterLink} to="/" selected={pathname === '/'} onClick={onNavigate}>
+      <ListItemButton component={RouterLink} to="/" selected={pathname === '/'} onClick={onNavigate} sx={navItemSx}>
         <ListItemIcon>
           <HomeOutlinedIcon />
         </ListItemIcon>
@@ -29,12 +29,14 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
       {sections.map((section) => {
         const Icon = section.icon;
         const open = expanded === section.label;
+        const selected = pathname === section.href;
         return (
           <React.Fragment key={section.label}>
             <ListItemButton
               component={RouterLink}
               to={section.href}
-              selected={pathname === section.href}
+              selected={selected}
+              sx={[navItemSx, !selected && current?.label === section.label && activeParentSx]}
               onClick={() => {
                 setExpanded(section.label);
                 onNavigate?.();
@@ -69,7 +71,7 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
                       to={link.href}
                       selected={isActiveLink(pathname, link.href)}
                       onClick={onNavigate}
-                      sx={{ pl: 9 }}
+                      sx={[navItemSx, { pl: 8 }]}
                     >
                       <ListItemText primary={t(link.label)} slotProps={{ primary: { variant: 'body2' } }} />
                     </ListItemButton>

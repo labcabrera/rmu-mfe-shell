@@ -22,7 +22,7 @@ import {
   useTheme,
 } from '@mui/material';
 import NavList from './NavList';
-import { activeSection, isActiveLink, isImmersiveRoute, NavSection, sections } from './sections';
+import { activeSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections } from './sections';
 
 export const RAIL_WIDTH = 248;
 export const MINI_RAIL_WIDTH = 72;
@@ -115,7 +115,7 @@ const RailList = () => {
               onMouseLeave={scheduleClose}
               onFocus={(event: React.FocusEvent<HTMLElement>) => show(section, event.currentTarget)}
               onKeyDown={(event: React.KeyboardEvent) => event.key === 'Escape' && setFlyout(undefined)}
-              sx={{ justifyContent: 'center', minHeight: 56 }}
+              sx={[navItemSx, { justifyContent: 'center', minHeight: 52 }]}
             >
               <ListItemIcon sx={{ minWidth: 0 }}>
                 <Icon />
@@ -155,6 +155,7 @@ const RailList = () => {
                   onFocus={cancelClose}
                   onBlur={scheduleClose}
                   onKeyDown={(event: React.KeyboardEvent) => event.key === 'Escape' && setFlyout(undefined)}
+                  sx={navItemSx}
                 >
                   <ListItemText primary={t(link.label)} />
                 </ListItemButton>
