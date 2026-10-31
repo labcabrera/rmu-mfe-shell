@@ -9,6 +9,8 @@ window.__RMU_CONFIG__ = {
   RMU_IAM_CLIENT_ID: '${RMU_IAM_CLIENT_ID}',
   // Static assets and locales.
   RMU_MFE_ASSETS_URI: '${RMU_MFE_ASSETS_URI}',
+  // User uploads (stored as `uploads/...`), served by rmu-api-media's bucket. Defaults to /media/.
+  RMU_MFE_MEDIA_URI: '${RMU_MFE_MEDIA_URI}',
   RMU_MFE_I18N_URI: '${RMU_MFE_I18N_URI}',
   // Remote micro-frontends (trailing slash).
   RMU_MFE_CORE_PUBLIC_PATH: '${RMU_MFE_CORE_PUBLIC_PATH}',

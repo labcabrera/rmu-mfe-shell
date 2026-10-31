@@ -14,7 +14,7 @@ export default function RegisterPage() {
           minHeight: '40vh',
           display: 'flex',
           alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/actor-effects.png)`,
+          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/backgrounds/scene-02.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           color: 'white',
