@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, Skeleton, Tooltip, Typography } from '@mui/material';
-import { resolveAssetUrl } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { assetCandidates } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { useAuthPending } from '../../services/auth/session-restore';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
@@ -24,7 +24,8 @@ const UserMenu: FC = () => {
   // from the AuthProvider settings. Keycloak ends its session, which revokes "Remember me".
   const logout = () => oidc.signoutRedirect({ id_token_hint: oidc.user?.id_token });
   const userName = apiUser?.name || oidc.user?.profile.preferred_username || 'Undefined';
-  const avatarUrl = resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE);
+  // The 128 px thumbnail of a base image (spec 058): the original weighs up to 2.5 MB for a 45 px avatar.
+  const avatarUrl = assetCandidates([apiUser?.imageUrl || DEFAULT_IMAGE], 128)[0];
   const avatarInitials = userName
     .split(/\s+/)
     .map((part) => part[0])

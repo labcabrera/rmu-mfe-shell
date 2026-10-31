@@ -22,7 +22,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { ImageSelectorDialog, resolveAssetUrl } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { assetCandidates, ImageSelectorDialog } from '@labcabrera-rmu/rmu-react-shared-lib';
 import type { MeasurementSystem } from '../../api/user-api-client';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
@@ -97,7 +97,7 @@ export default function UserProfile() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
             <IconButton aria-label={t('change-profile-image')} onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
               {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
-              <Avatar sx={{ width: 80, height: 80 }} src={resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE)}>
+              <Avatar sx={{ width: 80, height: 80 }} src={assetCandidates([apiUser?.imageUrl || DEFAULT_IMAGE], 512)[0]}>
                 {avatarInitials}
               </Avatar>
             </IconButton>
