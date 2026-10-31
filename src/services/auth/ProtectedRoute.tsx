@@ -18,7 +18,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   const returnTo = `${location.pathname}${location.search}${location.hash}`;
 
-  if (pending) {
+  // A signed-in user keeps the page while a silent renew runs, so the remote is not unmounted.
+  if (pending && !auth.isAuthenticated) {
     return (
       <Box sx={{ display: 'grid', minHeight: 320, placeItems: 'center' }}>
         <CircularProgress aria-label={t('loading-authentication-state')} />
