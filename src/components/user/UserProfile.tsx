@@ -96,6 +96,7 @@ export default function UserProfile() {
 
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ alignItems: { xs: 'flex-start', sm: 'center' } }}>
             <IconButton aria-label={t('change-profile-image')} onClick={() => setImageDialogOpen(true)} sx={{ p: 0 }}>
+              {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
               <Avatar sx={{ width: 80, height: 80 }} src={resolveAssetUrl(apiUser?.imageUrl || DEFAULT_IMAGE)}>
                 {avatarInitials}
               </Avatar>

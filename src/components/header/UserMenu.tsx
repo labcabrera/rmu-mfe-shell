@@ -87,6 +87,7 @@ const UserMenu: FC = () => {
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title={t('open-menu')}>
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
+            {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
             <Avatar alt={userName} src={avatarUrl} sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}>
               {avatarInitials}
             </Avatar>
