@@ -26,6 +26,7 @@ const AdminUsersPage: FC = () => {
       label: t('name'),
       render: (user) => (
         <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+          {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
           <Avatar src={user.imageUrl ?? undefined} alt="" sx={{ width: 32, height: 32 }}>
             {user.name.charAt(0)}
           </Avatar>

@@ -98,6 +98,7 @@ const UserAdminDrawer: FC<{ user?: ApiUser; onClose: () => void; onChanged: (use
     >
       <Stack spacing={2.5} sx={{ p: 3 }}>
         <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+          {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
           <Avatar src={user.imageUrl ?? undefined} alt="" sx={{ width: 56, height: 56 }}>
             {user.name.charAt(0)}
           </Avatar>
