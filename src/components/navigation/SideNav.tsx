@@ -153,7 +153,7 @@ const RailList = () => {
                   key={link.href}
                   component={RouterLink}
                   to={link.href}
-                  selected={isActiveLink(pathname, link.href)}
+                  selected={isActiveLink(pathname, link.href, flyout.section.links)}
                   onFocus={cancelClose}
                   onBlur={scheduleClose}
                   onKeyDown={(event: React.KeyboardEvent) => event.key === 'Escape' && setFlyout(undefined)}

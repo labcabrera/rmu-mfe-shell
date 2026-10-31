@@ -48,7 +48,15 @@ export const sections: NavSection[] = [
     icon: SportsKabaddiIcon,
     links: [{ label: 'tactical-games', href: '/tactical/games' }],
   },
-  { label: 'npcs', href: '/npcs', icon: GroupsIcon, links: [] },
+  {
+    label: 'npcs',
+    href: '/npcs',
+    icon: GroupsIcon,
+    links: [
+      { label: 'npcs', href: '/npcs' },
+      { label: 'encounter-title', href: '/npcs/encounters' },
+    ],
+  },
   { label: 'items', href: '/items', icon: BackpackIcon, links: [] },
   {
     label: 'spells',
@@ -79,8 +87,14 @@ export const adminSection: NavSection = {
 export const activeSection = (pathname: string): NavSection | undefined =>
   [...sections, adminSection].find((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
 
-/** Whether `href` is the current page or one of its children (view/edit pages of a list). */
-export const isActiveLink = (pathname: string, href: string): boolean => pathname === href || pathname.startsWith(`${href}/`);
+const matches = (pathname: string, href: string): boolean => pathname === href || pathname.startsWith(`${href}/`);
+
+/**
+ * Whether `href` is the current page or one of its children (view/edit pages of a list). With the other `links` of its
+ * section, a link loses to a sibling that matches more of the path (`/npcs` against `/npcs/encounters`).
+ */
+export const isActiveLink = (pathname: string, href: string, links: NavLink[] = []): boolean =>
+  matches(pathname, href) && !links.some((link) => link.href.length > href.length && matches(pathname, link.href));
 
 // Immersive pages need the whole width (the combat board): the side navigation starts as an icon rail there,
 // whatever the screen and the stored preference, and the site footer is not shown (spec 017).

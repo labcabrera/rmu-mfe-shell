@@ -72,7 +72,7 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
                       key={link.href}
                       component={RouterLink}
                       to={link.href}
-                      selected={isActiveLink(pathname, link.href)}
+                      selected={isActiveLink(pathname, link.href, section.links)}
                       onClick={onNavigate}
                       sx={[navItemSx, { pl: 8 }]}
                     >
