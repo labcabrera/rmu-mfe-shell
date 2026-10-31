@@ -22,14 +22,10 @@ export const LANDING_MODULES: LandingModule[] = sections.map((section) => ({
   desc: DESCRIPTIONS[section.label],
 }));
 
-/** The same misty landscape with a different action each: the hero changes the figure, not the place. */
-export const HERO_IMAGES = [
-  'action-melee-all.webp',
-  'action-maneuver-all.webp',
-  'action-initiative-all.webp',
-  'action-ranged-full.webp',
-  'action-movement-screen.webp',
-].map((file) => `${imageBaseUrl}images/actions/${file}`);
+/** The four scenes of `images/backgrounds` (workspace spec 057): one per visit, in turn. */
+export const HERO_IMAGES = ['scene-01.png', 'scene-02.png', 'scene-03.png', 'scene-04.png'].map(
+  (file) => `${imageBaseUrl}images/backgrounds/${file}`
+);
 
 const VISITS_KEY = 'rmuLandingVisits';
 
