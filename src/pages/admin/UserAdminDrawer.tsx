@@ -17,7 +17,9 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
+import { SectionLabel } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { ApiUser, MANAGED_GROUPS, userApiClient } from '../../api/user-api-client';
+import PageTitle from '../../components/PageTitle';
 import { CountQuery, useAdminCounts } from './useAdminCounts';
 
 /** What the user owns: campaigns, characters and tactical games. */
@@ -34,9 +36,9 @@ const OwnedCounts: FC<{ userId: string }> = ({ userId }) => {
     <Stack direction="row" spacing={3}>
       {queries.map((query) => (
         <Box key={query.key}>
-          <Typography variant="h5" sx={{ fontFamily: (theme) => theme.fonts.display, fontWeight: 600 }}>
+          <PageTitle variant="h5" component="p">
             {loading ? '…' : (counts[query.key] ?? '—')}
-          </Typography>
+          </PageTitle>
           <Typography variant="caption" color="text.secondary">
             {t(label[query.key])}
           </Typography>
@@ -103,9 +105,9 @@ const UserAdminDrawer: FC<{ user?: ApiUser; onClose: () => void; onChanged: (use
             {user.name.charAt(0)}
           </Avatar>
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography variant="h6" sx={{ fontFamily: (theme) => theme.fonts.display }} noWrap>
+            <PageTitle variant="h6" component="h6" noWrap>
               {user.name}
-            </Typography>
+            </PageTitle>
             <Typography variant="body2" color="text.secondary" noWrap>
               {user.email}
             </Typography>
@@ -117,9 +119,7 @@ const UserAdminDrawer: FC<{ user?: ApiUser; onClose: () => void; onChanged: (use
         <OwnedCounts userId={user.id} />
         <Divider />
         <Box>
-          <Typography variant="overline" color="text.secondary">
-            {t('admin-groups')}
-          </Typography>
+          <SectionLabel>{t('admin-groups')}</SectionLabel>
           <FormGroup>
             {MANAGED_GROUPS.map((group) => (
               <FormControlLabel
