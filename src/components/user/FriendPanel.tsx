@@ -16,24 +16,18 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  Paper,
   Stack,
   Tab,
   Tabs,
   TextField,
   Tooltip,
-  Typography,
 } from '@mui/material';
+import { ConfirmDialog, EmptyState, LoadingState, RmuDialog, Section } from '@labcabrera-rmu/rmu-react-shared-lib';
 import type { Friendship, UserSummary } from '../../api/user-api-client';
 import { userApiClient } from '../../api/user-api-client';
 
@@ -151,6 +145,11 @@ export default function FriendPanel() {
     promise.then(() => loadData()).catch((err) => setActionError(err.message));
   };
 
+  const confirmName =
+    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
+      ? confirmDialog.friendship?.requesterName
+      : confirmDialog.friendship?.addresseeName;
+
   const handleRemoveFriend = (friendship: Friendship) => openConfirm('remove-friend', friendship);
 
   const handleBlock = (friendship: Friendship) => openConfirm('block-user', friendship);
@@ -203,14 +202,14 @@ export default function FriendPanel() {
   };
 
   return (
-    <Paper sx={{ p: { xs: 2, md: 3 } }}>
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">{t('friends')}</Typography>
+    <Section
+      title={t('friends')}
+      actions={
         <Button variant="contained" startIcon={<PersonAddIcon />} onClick={() => setSendDialogOpen(true)}>
           {t('add-friend')}
         </Button>
-      </Stack>
-
+      }
+    >
       {actionError && (
         <Alert severity="error" onClose={() => setActionError(undefined)} sx={{ mb: 2 }}>
           {actionError}
@@ -218,9 +217,7 @@ export default function FriendPanel() {
       )}
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState />
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
@@ -236,7 +233,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={0}>
             {friends.length === 0 ? (
-              <Typography color="text.secondary">{t('no-friends')}</Typography>
+              <EmptyState dense title={t('no-friends')} />
             ) : (
               <List disablePadding>
                 {friends.map((f) => (
@@ -267,7 +264,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={1}>
             {pendingReceived.length === 0 ? (
-              <Typography color="text.secondary">{t('no-pending-invitations')}</Typography>
+              <EmptyState dense title={t('no-pending-invitations')} />
             ) : (
               <List disablePadding>
                 {pendingReceived.map((f) => (
@@ -298,7 +295,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={2}>
             {pendingSent.length === 0 ? (
-              <Typography color="text.secondary">{t('no-sent-invitations')}</Typography>
+              <EmptyState dense title={t('no-sent-invitations')} />
             ) : (
               <List disablePadding>
                 {pendingSent.map((f) => (
@@ -312,7 +309,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={3}>
             {blocked.length === 0 ? (
-              <Typography color="text.secondary">{t('no-blocked-users')}</Typography>
+              <EmptyState dense title={t('no-blocked-users')} />
             ) : (
               <List disablePadding>
                 {blocked.map((f) => (
@@ -336,69 +333,47 @@ export default function FriendPanel() {
         </>
       )}
 
-      <Dialog open={confirmDialog.open} onClose={closeConfirm} maxWidth="xs" fullWidth>
-        <DialogTitle>{confirmDialog.action === 'remove-friend' ? t('remove-friend') : t('block-user')}</DialogTitle>
-        <DialogContent>
-          <Typography>
-            {confirmDialog.action === 'remove-friend'
-              ? t('confirm-remove-friend', {
-                  name:
-                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
-                      ? confirmDialog.friendship?.requesterName
-                      : confirmDialog.friendship?.addresseeName,
-                })
-              : t('confirm-block-user', {
-                  name:
-                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
-                      ? confirmDialog.friendship?.requesterName
-                      : confirmDialog.friendship?.addresseeName,
-                })}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirm}>{t('cancel')}</Button>
-          <Button variant="contained" color="error" onClick={handleConfirm}>
-            {t('confirm')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onClose={closeConfirm}
+        onConfirm={handleConfirm}
+        destructive
+        title={confirmDialog.action === 'remove-friend' ? t('remove-friend') : t('block-user')}
+        message={t(confirmDialog.action === 'remove-friend' ? 'confirm-remove-friend' : 'confirm-block-user', { name: confirmName })}
+      />
 
-      <Dialog open={sendDialogOpen} onClose={handleCloseSendDialog} fullWidth maxWidth="sm">
-        <DialogTitle>
-          {t('send-friend-request')}
-          <IconButton aria-label={t('close')} onClick={handleCloseSendDialog} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ mt: 1 }}>
-            <Autocomplete
-              freeSolo
-              options={userOptions}
-              filterOptions={(options) => options}
-              getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
-              loading={searchingUsers}
-              loadingText={t('loading')}
-              inputValue={addresseeName}
-              onInputChange={(_, value) => setAddresseeName(value)}
-              renderInput={(params) => <TextField {...params} label={t('username')} fullWidth required />}
-            />
-            <TextField label={t('message')} value={sendMessage} onChange={(e) => setSendMessage(e.target.value)} fullWidth multiline rows={3} />
-            {sendError && <Alert severity="error">{sendError}</Alert>}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSendDialog}>{t('cancel')}</Button>
+      <RmuDialog
+        open={sendDialogOpen}
+        onClose={handleCloseSendDialog}
+        title={t('send-friend-request')}
+        maxWidth="sm"
+        buttons={
           <Button
             variant="contained"
             onClick={handleSendRequest}
             disabled={!addresseeName.trim() || sending}
-            startIcon={sending ? <CircularProgress size={16} /> : <SendIcon />}
+            startIcon={sending ? <LoadingState variant="inline" /> : <SendIcon />}
           >
             {t('send')}
           </Button>
-        </DialogActions>
-      </Dialog>
-    </Paper>
+        }
+      >
+        <Stack spacing={2}>
+          <Autocomplete
+            freeSolo
+            options={userOptions}
+            filterOptions={(options) => options}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
+            loading={searchingUsers}
+            loadingText={t('loading')}
+            inputValue={addresseeName}
+            onInputChange={(_, value) => setAddresseeName(value)}
+            renderInput={(params) => <TextField {...params} label={t('username')} fullWidth required />}
+          />
+          <TextField label={t('message')} value={sendMessage} onChange={(e) => setSendMessage(e.target.value)} fullWidth multiline rows={3} />
+          {sendError && <Alert severity="error">{sendError}</Alert>}
+        </Stack>
+      </RmuDialog>
+    </Section>
   );
 }
