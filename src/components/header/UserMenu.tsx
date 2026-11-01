@@ -2,7 +2,7 @@ import React, { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, Skeleton, Tooltip, Typography } from '@mui/material';
+import { alpha, Avatar, Box, Button, IconButton, Menu, MenuItem, Skeleton, Tooltip, Typography, useTheme } from '@mui/material';
 import { assetCandidates } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { useAuthPending } from '../../services/auth/session-restore';
 import { imageBaseUrl } from '../../services/config';
@@ -15,6 +15,7 @@ const UserMenu: FC = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation();
+  const theme = useTheme();
   const oidc = useAuth();
   const { apiUser } = useApiUser();
   const isAuthenticated = !!oidc?.isAuthenticated;
@@ -51,7 +52,7 @@ const UserMenu: FC = () => {
     textTransform: 'none',
     '&:hover': {
       borderColor: 'currentColor',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      backgroundColor: alpha(theme.palette.common.white, 0.08),
     },
   };
 

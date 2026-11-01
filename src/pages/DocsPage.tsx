@@ -1,7 +1,9 @@
 import React, { JSX } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import { Avatar, Box, Card, CardActionArea, Grid, Link, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Grid, Link, Stack, Typography } from '@mui/material';
+import { hoverLiftSx, Panel } from '@labcabrera-rmu/rmu-react-shared-lib';
+import PageTitle from '../components/PageTitle';
 import { imageBaseUrl } from '../services/config';
 import { LANDING_MODULES } from './home/modules';
 import InfoPage, { InfoSection } from './info/InfoPage';
@@ -36,7 +38,7 @@ export default function DocsPage(): JSX.Element {
           src={`${imageBaseUrl}images/doc/ice-books.png`}
           alt={t('docs-ice-books-alt')}
           loading="lazy"
-          sx={{ width: { xs: '100%', sm: 360 }, borderRadius: 2, boxShadow: 4, alignSelf: 'center' }}
+          sx={{ width: { xs: '100%', sm: 360 }, borderRadius: (theme) => `${theme.radius.lg}px`, boxShadow: 4, alignSelf: 'center' }}
         />
         <Typography variant="body1">{t('docs-rulebooks-text')}</Typography>
       </InfoSection>
@@ -45,27 +47,25 @@ export default function DocsPage(): JSX.Element {
         <Grid container spacing={1.5}>
           {LANDING_MODULES.map((module) => (
             <Grid key={module.id} size={{ xs: 12, sm: 6 }}>
-              <Card variant="outlined" sx={{ height: '100%' }}>
-                <CardActionArea
-                  component={RouterLink}
-                  to={module.href}
-                  sx={{ height: '100%', p: 1.5, display: 'flex', alignItems: 'flex-start', gap: 1.5 }}
-                >
-                  <Avatar variant="rounded" src={module.img} alt="" sx={{ width: 56, height: 56 }} />
-                  <Box sx={{ minWidth: 0 }}>
-                    <Typography variant="subtitle1" sx={{ fontFamily: (theme) => theme.fonts.display, fontWeight: 600, color: 'text.primary' }}>
-                      {t(module.id)}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                    >
-                      {t(module.desc)}
-                    </Typography>
-                  </Box>
-                </CardActionArea>
-              </Card>
+              <Box component={RouterLink} to={module.href} sx={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}>
+                <Panel variant="outlined" sx={[{ height: '100%' }, hoverLiftSx]}>
+                  <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
+                    <Avatar variant="rounded" src={module.img} alt="" sx={{ width: 56, height: 56 }} />
+                    <Box sx={{ minWidth: 0 }}>
+                      <PageTitle variant="subtitle1" component="h3" sx={{ color: 'text.primary' }}>
+                        {t(module.id)}
+                      </PageTitle>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                      >
+                        {t(module.desc)}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Panel>
+              </Box>
             </Grid>
           ))}
         </Grid>

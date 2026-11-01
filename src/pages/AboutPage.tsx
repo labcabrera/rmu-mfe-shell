@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import { Box, Button, Grid, Link, Stack, Typography } from '@mui/material';
+import PageTitle from '../components/PageTitle';
 import { imageBaseUrl } from '../services/config';
 import Reveal from './home/parts/Reveal';
 import InfoPage from './info/InfoPage';
@@ -47,7 +48,7 @@ export default function AboutPage() {
                   src={`${imageBaseUrl}images/photos/${chapter.image}`}
                   alt=""
                   loading="lazy"
-                  sx={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: 2, boxShadow: 6 }}
+                  sx={{ width: '100%', aspectRatio: '4 / 3', objectFit: 'cover', borderRadius: (theme) => `${theme.radius.lg}px`, boxShadow: 6 }}
                 />
                 {chapter.caption && (
                   <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 1, fontStyle: 'italic' }}>
@@ -56,9 +57,9 @@ export default function AboutPage() {
                 )}
               </Grid>
               <Grid size={{ xs: 12, md: 7 }}>
-                <Typography variant="h4" component="h2" sx={{ fontFamily: (theme) => theme.fonts.display, fontWeight: 600, mb: 1.5 }}>
+                <PageTitle component="h2" sx={{ mb: 1.5 }}>
                   {t(`${chapter.key}-title`)}
-                </Typography>
+                </PageTitle>
                 <Stack spacing={1.5} sx={{ color: 'text.secondary' }}>
                   {Array.from({ length: chapter.paragraphs }, (_, paragraph) => (
                     <Typography key={paragraph} variant="body1">

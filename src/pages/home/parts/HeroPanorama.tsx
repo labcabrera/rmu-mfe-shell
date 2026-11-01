@@ -1,6 +1,9 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import { Box, Container } from '@mui/material';
+import { alpha, Box, Container } from '@mui/material';
 import { HERO_IMAGES } from '../modules';
+
+/** The near-black of the shade over the hero images. */
+const SHADE = '#080a0e';
 
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
@@ -59,8 +62,8 @@ const HeroPanorama: FC<{
           position: 'absolute',
           inset: 0,
           background: {
-            xs: 'linear-gradient(to top, rgba(8,10,14,0.92) 10%, rgba(8,10,14,0.45) 70%, rgba(8,10,14,0.25))',
-            md: 'linear-gradient(to right, rgba(8,10,14,0.88) 0%, rgba(8,10,14,0.55) 45%, rgba(8,10,14,0.05) 80%)',
+            xs: `linear-gradient(to top, ${alpha(SHADE, 0.92)} 10%, ${alpha(SHADE, 0.45)} 70%, ${alpha(SHADE, 0.25)})`,
+            md: `linear-gradient(to right, ${alpha(SHADE, 0.88)} 0%, ${alpha(SHADE, 0.55)} 45%, ${alpha(SHADE, 0.05)} 80%)`,
           },
         }}
       />

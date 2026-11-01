@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Container, Grid, Link, Stack, Typography } from '@mui/material';
+import { alpha, Box, Container, Grid, Link, Stack, Typography } from '@mui/material';
+import PageTitle from '../../components/PageTitle';
 import HeroPanorama from '../home/parts/HeroPanorama';
 import { Ornament } from '../home/parts/LandingParts';
 
@@ -37,18 +38,12 @@ const InfoPage: FC<{
     <Box sx={{ bgcolor: 'background.default' }}>
       <HeroPanorama start={image} minHeight={{ xs: 180, md: 240 }}>
         <Stack sx={{ maxWidth: 760 }}>
-          <Typography
+          <PageTitle
             variant="h3"
-            component="h1"
-            sx={{
-              fontFamily: (theme) => theme.fonts.display,
-              fontWeight: 600,
-              fontSize: { xs: '2rem', md: '3rem' },
-              textShadow: '0 2px 12px rgba(0,0,0,0.5)',
-            }}
+            sx={{ fontSize: { xs: '2rem', md: '3rem' }, textShadow: (theme) => `0 2px 12px ${alpha(theme.palette.common.black, 0.5)}` }}
           >
             {title}
-          </Typography>
+          </PageTitle>
           <Ornament />
           {subtitle && (
             <Typography variant="body1" component="div" sx={{ opacity: 0.92, fontSize: { md: '1.1rem' } }}>
@@ -85,9 +80,9 @@ const InfoPage: FC<{
 /** A section of an info page: a heading in the display font (numbered when `number` is given) and its text. */
 export const InfoSection: FC<{ id: string; title: string; number?: number; children: ReactNode }> = ({ id, title, number, children }) => (
   <Box component="section" id={id} sx={{ scrollMarginTop: 96, mb: { xs: 4, md: 5 } }}>
-    <Typography variant="h5" component="h2" sx={{ fontFamily: (theme) => theme.fonts.display, fontWeight: 600, mb: 1.5 }}>
+    <PageTitle variant="h5" component="h2" sx={{ mb: 1.5 }}>
       {number ? `${number}. ${title}` : title}
-    </Typography>
+    </PageTitle>
     <Stack spacing={1.5} sx={{ color: 'text.secondary', '& strong': { color: 'text.primary' } }}>
       {children}
     </Stack>

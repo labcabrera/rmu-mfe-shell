@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Container } from '@mui/material';
+import { alpha, Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import { imageBaseUrl } from '../services/config';
@@ -10,15 +10,15 @@ export default function RegisterPage() {
   return (
     <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
       <Box
-        sx={{
+        sx={(theme) => ({
           minHeight: '40vh',
           display: 'flex',
           alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/backgrounds/scene-02.png)`,
+          background: `linear-gradient(to right, ${alpha(theme.palette.common.black, 0.55)}, ${alpha(theme.palette.common.black, 0.2)}), url(${imageBaseUrl}images/backgrounds/scene-02.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           color: 'white',
-        }}
+        })}
       >
         <Container maxWidth="lg">
           <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>

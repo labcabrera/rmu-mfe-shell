@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { Link as RouterLink } from 'react-router-dom';
 import LoginIcon from '@mui/icons-material/Login';
-import { Box, Button, Link, Stack, Typography } from '@mui/material';
+import { alpha, Box, Button, Link, Stack, Typography } from '@mui/material';
 
 /** Product name, not translated. */
 const PRODUCT_NAME = 'Rolemaster Unified Companion';
@@ -17,7 +17,7 @@ export const LandingTitle: FC = () => (
       fontWeight: 600,
       lineHeight: 1.05,
       fontSize: { xs: '2.25rem', sm: '3rem', md: '4rem' },
-      textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+      textShadow: (theme) => `0 2px 12px ${alpha(theme.palette.common.black, 0.5)}`,
     }}
   >
     {PRODUCT_NAME}
@@ -48,7 +48,13 @@ export const HeroActions: FC = () => {
           {t('landing-sign-in')}
         </Button>
       )}
-      <Button variant="outlined" size="large" component={RouterLink} to="/docs" sx={{ color: 'common.white', borderColor: 'rgba(255,255,255,0.6)' }}>
+      <Button
+        variant="outlined"
+        size="large"
+        component={RouterLink}
+        to="/docs"
+        sx={(theme) => ({ color: 'common.white', borderColor: alpha(theme.palette.common.white, 0.6) })}
+      >
         {t('shell.home.get-started')}
       </Button>
     </Stack>
@@ -57,7 +63,11 @@ export const HeroActions: FC = () => {
 
 /** The non-affiliation note, small, on the dark hero. */
 export const DisclaimerNote: FC = () => (
-  <Typography variant="caption" component="p" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: 760, '& a': { color: 'inherit' } }}>
+  <Typography
+    variant="caption"
+    component="p"
+    sx={(theme) => ({ color: alpha(theme.palette.common.white, 0.7), maxWidth: 760, '& a': { color: 'inherit' } })}
+  >
     <Trans i18nKey="home-disclaimer" components={{ link: <Link href="https://ironcrown.co.uk/" /> }} />
   </Typography>
 );

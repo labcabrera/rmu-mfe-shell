@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';
 import SendIcon from '@mui/icons-material/Send';
-import { Alert, Box, Button, Card, Grid, Link, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Grid, Link, Stack, TextField, Typography } from '@mui/material';
+import { Panel } from '@labcabrera-rmu/rmu-react-shared-lib';
+import PageTitle from '../components/PageTitle';
 import InfoPage from './info/InfoPage';
 
 const ISSUES_URL = 'https://github.com/labcabrera/rmu-platform/issues';
@@ -57,7 +59,7 @@ export default function ContactPage(): JSX.Element {
     <InfoPage title={t('footer-contact')} subtitle={t('contact-intro')} image={3}>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 7 }}>
-          <Card variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
+          <Panel variant="outlined">
             <Box component="form" onSubmit={handleSubmit} noValidate>
               <Stack spacing={2}>
                 <TextField label={t('name')} fullWidth value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
@@ -87,13 +89,13 @@ export default function ContactPage(): JSX.Element {
                 {status === 'mailto' && <Alert severity="info">{t('contact-mail-client-opened')}</Alert>}
               </Stack>
             </Box>
-          </Card>
+          </Panel>
         </Grid>
         <Grid size={{ xs: 12, md: 5 }}>
-          <Card variant="outlined" sx={{ p: { xs: 2, sm: 3 } }}>
-            <Typography variant="h6" component="h2" sx={{ fontFamily: (theme) => theme.fonts.display, mb: 2 }}>
+          <Panel variant="outlined">
+            <PageTitle variant="h6" component="h2" sx={{ mb: 2 }}>
               {t('contact-other-channels')}
-            </Typography>
+            </PageTitle>
             <Stack spacing={2.5}>
               <Stack direction="row" spacing={1.5}>
                 <BugReportOutlinedIcon color="primary" />
@@ -118,7 +120,7 @@ export default function ContactPage(): JSX.Element {
                 </Box>
               </Stack>
             </Stack>
-          </Card>
+          </Panel>
         </Grid>
       </Grid>
     </InfoPage>
