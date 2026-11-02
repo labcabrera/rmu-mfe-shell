@@ -28,6 +28,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import AdminRoute from './pages/admin/AdminRoute';
 import AdminToolsPage from './pages/admin/AdminToolsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import FriendInvitePage from './pages/FriendInvitePage';
 import ProtectedRoute from './services/auth/ProtectedRoute';
 import { ThemeSettingsProvider } from './theme/ThemeSettingsProvider';
 
@@ -154,6 +155,14 @@ const App = () => {
                         <RemoteBoundary name="spells">
                           <RemoteSpellsApp />
                         </RemoteBoundary>
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/friends/invite/:token"
+                    element={
+                      <ProtectedRoute>
+                        <FriendInvitePage />
                       </ProtectedRoute>
                     }
                   />
