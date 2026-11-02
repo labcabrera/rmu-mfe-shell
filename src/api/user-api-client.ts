@@ -37,11 +37,14 @@ export type ApiUser = {
   updatedAt?: Date | null;
 };
 
-/** Public projection returned by GET /users/search, used for friend search. */
-export type UserSummary = {
+/** An invite link of rmu-api-users (spec 070): single use, 7 days. The token only comes in the creation answer. */
+export type FriendInvite = {
   id: string;
-  name: string;
-  imageUrl?: string | null;
+  inviterId: string;
+  inviterName: string;
+  createdAt: string;
+  expiresAt: string;
+  token?: string;
 };
 
 export type UpdateCurrentUserInput = {
@@ -93,7 +96,9 @@ export type Friendship = {
 export class ApiError extends Error {
   constructor(
     message: string,
-    readonly status: number
+    readonly status: number,
+    /** The stable `code` of the API error body, when it sent one. */
+    readonly code?: string
   ) {
     super(message);
   }
@@ -101,7 +106,7 @@ export class ApiError extends Error {
 
 const friendshipsUrl = (rsql: string) => `${userApiBaseUrl}/friendships?q=${encodeURIComponent(rsql)}`;
 
-/** A call of the administration: JSON in and out, and the API's message in the error. */
+/** A JSON call of rmu-api-users: JSON in and out, and the API's message and code in the error. */
 async function adminRequest<T>(auth: AuthContextProps, method: string, path: string, body?: unknown): Promise<T> {
   const response = await fetch(`${userApiBaseUrl}${path}`, {
     method,
@@ -114,7 +119,8 @@ async function adminRequest<T>(auth: AuthContextProps, method: string, path: str
   if (response.status === 204) return undefined as T;
   const data = await response.json().catch(() => ({}));
   if (response.ok) return data as T;
-  throw new ApiError((data as { message?: string }).message || response.statusText, response.status);
+  const error = data as { message?: string; code?: string };
+  throw new ApiError(error.message || response.statusText, response.status, error.code);
 }
 
 export const userApiClient = {
@@ -235,19 +241,6 @@ export const userApiClient = {
     throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
   },
 
-  async searchUsers(name: string, auth: AuthContextProps, size = 10): Promise<Page<UserSummary>> {
-    const params = new URLSearchParams({ name, size: String(size) });
-    const response = await fetch(`${userApiBaseUrl}/users/search?${params.toString()}`, {
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    throw new ApiError(`Failed to search users: ${response.statusText}`, response.status);
-  },
-
   async fetchActivateCode(code: string, auth: AuthContextProps): Promise<ActivationCode> {
     const response = await fetch(`${userApiBaseUrl}/activation-codes/check`, {
       method: 'POST',
@@ -290,8 +283,32 @@ export const userApiClient = {
     if (response.ok) {
       return await response.json();
     }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to send friend request: ${response.statusText}`, response.status);
+    const err = await response.json().catch(() => ({}));
+    throw new ApiError(err.message || `Failed to send friend request: ${response.statusText}`, response.status, err.code);
+  },
+
+  /** Creates an invite link: the answer is the only time its token is seen (spec 070). */
+  async createFriendInvite(auth: AuthContextProps): Promise<FriendInvite> {
+    return adminRequest(auth, 'POST', '/friend-invites');
+  },
+
+  /** The active invites of the user, newest first, without tokens. */
+  async fetchFriendInvites(auth: AuthContextProps): Promise<FriendInvite[]> {
+    return adminRequest(auth, 'GET', '/friend-invites');
+  },
+
+  async deleteFriendInvite(id: string, auth: AuthContextProps): Promise<void> {
+    return adminRequest(auth, 'DELETE', `/friend-invites/${encodeURIComponent(id)}`);
+  },
+
+  /** Who invites with a token. The token goes in the body, out of the access logs. */
+  async checkFriendInvite(token: string, auth: AuthContextProps): Promise<FriendInvite> {
+    return adminRequest(auth, 'POST', '/friend-invites/check', { token });
+  },
+
+  /** Accepts an invite: the inviter and the user become friends. */
+  async acceptFriendInvite(token: string, auth: AuthContextProps): Promise<Friendship> {
+    return adminRequest(auth, 'POST', '/friend-invites/accept', { token });
   },
 
   async updateFriendRequest(friendshipId: string, status: FriendshipStatus, auth: AuthContextProps): Promise<void> {
