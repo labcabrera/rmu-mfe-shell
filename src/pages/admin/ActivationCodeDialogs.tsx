@@ -3,22 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from '@mui/material';
+import { RmuDialog } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { ACTIVATION_CODES_CSV_HEADER, ACTIVATION_FEATURES, ActivationCode, userApiClient } from '../../api/user-api-client';
 
 /** End of the day of a `YYYY-MM-DD` date field, as the ISO date the API takes. */
@@ -65,84 +51,93 @@ export const CreateActivationCodesDialog: FC<{ open: boolean; onClose: () => voi
   };
 
   return (
-    <Dialog open={open} onClose={close} fullWidth maxWidth="sm">
-      <DialogTitle>{t('admin-create-codes')}</DialogTitle>
-      <DialogContent>
-        {created ? (
-          <Stack spacing={2}>
-            <Alert severity="success">{t('admin-codes-created', { count: created.length })}</Alert>
-            <Box
-              component="pre"
-              sx={{ m: 0, p: 2, borderRadius: 1, bgcolor: 'action.hover', fontFamily: 'monospace', maxHeight: 280, overflow: 'auto' }}
-            >
-              {text}
-            </Box>
-            <Stack direction="row" spacing={1}>
-              <Button startIcon={<ContentCopyIcon />} onClick={() => void navigator.clipboard?.writeText(text)}>
-                {t('admin-copy-all')}
-              </Button>
-              <Button startIcon={<DownloadIcon />} onClick={download}>
-                {t('admin-download-csv')}
-              </Button>
-            </Stack>
-          </Stack>
-        ) : (
-          <Stack spacing={2.5} sx={{ pt: 1 }}>
-            <Box>
-              <FormLabel>{t('admin-features')}</FormLabel>
-              <FormGroup row>
-                {ACTIVATION_FEATURES.map((feature) => (
-                  <FormControlLabel
-                    key={feature}
-                    label={feature}
-                    control={
-                      <Checkbox
-                        checked={features.includes(feature)}
-                        onChange={() =>
-                          setFeatures((current) => (current.includes(feature) ? current.filter((f) => f !== feature) : [...current, feature]))
-                        }
-                      />
-                    }
-                  />
-                ))}
-              </FormGroup>
-            </Box>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <TextField
-                type="number"
-                label={t('admin-count')}
-                value={count}
-                onChange={(event) => setCount(Math.max(1, Math.min(100, Number(event.target.value) || 1)))}
-                slotProps={{ htmlInput: { min: 1, max: 100 } }}
-              />
-              <TextField
-                type="date"
-                label={t('admin-expires')}
-                value={expires}
-                onChange={(event) => setExpires(event.target.value)}
-                slotProps={{ inputLabel: { shrink: true } }}
-              />
-            </Stack>
-            <TextField
-              label={t('admin-note')}
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              helperText={t('admin-note-help')}
-              slotProps={{ htmlInput: { maxLength: 200 } }}
-            />
-            {error && <Alert severity="error">{error}</Alert>}
-          </Stack>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={close}>{t(created ? 'close' : 'cancel')}</Button>
-        {!created && (
+    <RmuDialog
+      open={open}
+      onClose={close}
+      title={t('admin-create-codes')}
+      maxWidth="sm"
+      buttons={
+        !created && (
           <Button variant="contained" onClick={create} disabled={saving || features.length === 0}>
             {t('admin-create')}
           </Button>
-        )}
-      </DialogActions>
-    </Dialog>
+        )
+      }
+    >
+      {created ? (
+        <Stack spacing={2}>
+          <Alert severity="success">{t('admin-codes-created', { count: created.length })}</Alert>
+          <Box
+            component="pre"
+            sx={{
+              m: 0,
+              p: 2,
+              borderRadius: (theme) => `${theme.radius.sm}px`,
+              bgcolor: 'action.hover',
+              fontFamily: 'monospace',
+              maxHeight: 280,
+              overflow: 'auto',
+            }}
+          >
+            {text}
+          </Box>
+          <Stack direction="row" spacing={1}>
+            <Button startIcon={<ContentCopyIcon />} onClick={() => void navigator.clipboard?.writeText(text)}>
+              {t('admin-copy-all')}
+            </Button>
+            <Button startIcon={<DownloadIcon />} onClick={download}>
+              {t('admin-download-csv')}
+            </Button>
+          </Stack>
+        </Stack>
+      ) : (
+        <Stack spacing={2.5} sx={{ pt: 1 }}>
+          <Box>
+            <FormLabel>{t('admin-features')}</FormLabel>
+            <FormGroup row>
+              {ACTIVATION_FEATURES.map((feature) => (
+                <FormControlLabel
+                  key={feature}
+                  label={feature}
+                  control={
+                    <Checkbox
+                      checked={features.includes(feature)}
+                      onChange={() =>
+                        setFeatures((current) => (current.includes(feature) ? current.filter((f) => f !== feature) : [...current, feature]))
+                      }
+                    />
+                  }
+                />
+              ))}
+            </FormGroup>
+          </Box>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <TextField
+              type="number"
+              label={t('admin-count')}
+              value={count}
+              onChange={(event) => setCount(Math.max(1, Math.min(100, Number(event.target.value) || 1)))}
+              slotProps={{ htmlInput: { min: 1, max: 100 } }}
+            />
+            <TextField
+              type="date"
+              label={t('admin-expires')}
+              value={expires}
+              onChange={(event) => setExpires(event.target.value)}
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+          </Stack>
+          <TextField
+            label={t('admin-note')}
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            helperText={t('admin-note-help')}
+            slotProps={{ htmlInput: { maxLength: 200 } }}
+          />
+          {error && <Alert severity="error">{error}</Alert>}
+        </Stack>
+      )}
+    </RmuDialog>
   );
 };
 
@@ -163,36 +158,33 @@ export const EditActivationCodeDialog: FC<{ code?: ActivationCode; onClose: () =
       })
       .catch((err: Error) => setError(err.message));
   return (
-    <Dialog open onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>
-        <Typography component="span" sx={{ fontFamily: 'monospace', fontSize: 'inherit' }}>
-          {code.code}
-        </Typography>
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2.5} sx={{ pt: 1 }}>
-          <TextField
-            type="date"
-            label={t('admin-expires')}
-            value={expires}
-            onChange={(event) => setExpires(event.target.value)}
-            slotProps={{ inputLabel: { shrink: true } }}
-          />
-          <TextField
-            label={t('admin-note')}
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-            slotProps={{ htmlInput: { maxLength: 200 } }}
-          />
-          {error && <Alert severity="error">{error}</Alert>}
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>{t('cancel')}</Button>
+    <RmuDialog
+      open
+      onClose={onClose}
+      title={code.code}
+      maxWidth="sm"
+      buttons={
         <Button variant="contained" onClick={save}>
           {t('save')}
         </Button>
-      </DialogActions>
-    </Dialog>
+      }
+    >
+      <Stack spacing={2.5} sx={{ pt: 1 }}>
+        <TextField
+          type="date"
+          label={t('admin-expires')}
+          value={expires}
+          onChange={(event) => setExpires(event.target.value)}
+          slotProps={{ inputLabel: { shrink: true } }}
+        />
+        <TextField
+          label={t('admin-note')}
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+          slotProps={{ htmlInput: { maxLength: 200 } }}
+        />
+        {error && <Alert severity="error">{error}</Alert>}
+      </Stack>
+    </RmuDialog>
   );
 };

@@ -78,7 +78,7 @@ export const Home = () => {
                           width: '100%',
                           aspectRatio: { xs: '16 / 9', md: '4 / 3' },
                           objectFit: 'cover',
-                          borderRadius: 2,
+                          borderRadius: (theme) => `${theme.radius.lg}px`,
                           boxShadow: 6,
                         }}
                       />

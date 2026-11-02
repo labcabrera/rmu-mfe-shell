@@ -45,11 +45,11 @@ const ThemeSettingsPanel = () => {
                 }}
               >
                 <Box sx={{ bgcolor: swatch.background, p: 1, display: 'flex', gap: 0.75, alignItems: 'center' }}>
-                  <Box sx={{ flex: 1, height: 28, borderRadius: 1, bgcolor: swatch.paper }} />
+                  <Box sx={{ flex: 1, height: 28, borderRadius: `${theme.radius.sm}px`, bgcolor: swatch.paper }} />
                   <Box sx={{ width: 14, height: 14, borderRadius: '50%', bgcolor: swatch.primary }} />
                   <Box sx={{ width: 14, height: 14, borderRadius: '50%', bgcolor: swatch.secondary }} />
                 </Box>
-                <Typography variant="body2" sx={{ px: 1, py: 0.5, fontWeight: selected ? 700 : 500 }}>
+                <Typography variant="body2" sx={{ px: 1, py: 0.5, fontWeight: selected ? 600 : 400 }}>
                   {t(`theme-preset-${preset}`)}
                 </Typography>
               </ButtonBase>

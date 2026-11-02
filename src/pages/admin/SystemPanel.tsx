@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
-import { Card, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Chip, Grid, Stack, Typography } from '@mui/material';
+import { Panel } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { adminApiClient, ApiInfo, SYSTEM_APIS } from '../../api/admin-api-client';
 
 type ApiStatus = { healthy?: boolean; info?: ApiInfo };
@@ -32,11 +33,8 @@ const SystemPanel: FC = () => {
   }, []);
 
   return (
-    <Card variant="outlined" sx={{ p: 2 }}>
-      <Typography variant="overline" color="text.secondary">
-        {t('admin-system')}
-      </Typography>
-      <Grid container spacing={1.5} sx={{ mt: 0.5 }}>
+    <Panel variant="outlined" title={t('admin-system')}>
+      <Grid container spacing={1.5}>
         {SYSTEM_APIS.map(({ name }) => {
           const api = status[name];
           const checking = api === undefined;
@@ -62,7 +60,7 @@ const SystemPanel: FC = () => {
           );
         })}
       </Grid>
-    </Card>
+    </Panel>
   );
 };
 

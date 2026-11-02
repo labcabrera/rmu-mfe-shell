@@ -15,7 +15,7 @@ const MonthBars: FC<{ months: MonthCount[] }> = ({ months }) => {
             sx={{
               flex: 1,
               height: `${Math.max(8, (entry.count / max) * 100)}%`,
-              borderRadius: 0.5,
+              borderRadius: (theme) => `${theme.radius.pill}px`,
               bgcolor: entry.count ? 'primary.main' : 'action.disabledBackground',
               opacity: entry.count ? 0.75 : 1,
             }}

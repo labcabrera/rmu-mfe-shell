@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Container, Grid, Link, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import PageTitle from '../PageTitle';
 
 type FooterLink = { label: string; href: string; external?: boolean };
 
@@ -78,9 +79,9 @@ export default function Footer() {
         ) : (
           <Grid container spacing={4}>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Typography variant="h6" sx={{ color: 'text.primary', mb: 1, fontFamily: (theme) => theme.fonts.display }}>
+              <PageTitle variant="h6" component="h6" sx={{ color: 'text.primary', mb: 1 }}>
                 {t('footer-on-development')}
-              </Typography>
+              </PageTitle>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {t('footer-on-development-text')} {/* eslint-disable-next-line i18next/no-literal-string -- URL shown as link text */}
                 <Link href="https://github.com/labcabrera/rmu-platform/" target="_blank" rel="noopener noreferrer">

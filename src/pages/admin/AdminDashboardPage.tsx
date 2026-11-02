@@ -7,9 +7,10 @@ import KeyIcon from '@mui/icons-material/Key';
 import PersonIcon from '@mui/icons-material/Person';
 import PublicIcon from '@mui/icons-material/Public';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
-import { Box, Card, CardActionArea, Chip, Grid, Skeleton, Stack, Typography } from '@mui/material';
-import { enterSx } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { Box, Chip, Grid, Skeleton, Stack } from '@mui/material';
+import { ChipRow, enterSx, hoverLiftSx, Panel } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { CollectionStats, MonthCount } from '../../api/admin-api-client';
+import PageTitle from '../../components/PageTitle';
 import MonthBars from './MonthBars';
 import SystemPanel from './SystemPanel';
 import { useAdminStats } from './useAdminStats';
@@ -23,16 +24,14 @@ const byStatus = (stats: CollectionStats | undefined, statuses: string[], label:
 const megabytes = (bytes: number) => `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 
 /** A tile opens its page when it has one. */
-const TileArea: FC<{ href?: string; children: ReactNode }> = ({ href, children }) => {
-  const sx = { height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'stretch' } as const;
-  return href ? (
-    <CardActionArea component={RouterLink} to={href} sx={sx}>
+const TileLink: FC<{ href?: string; children: ReactNode }> = ({ href, children }) =>
+  href ? (
+    <Box component={RouterLink} to={href} sx={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}>
       {children}
-    </CardActionArea>
+    </Box>
   ) : (
-    <Box sx={sx}>{children}</Box>
+    <>{children}</>
   );
-};
 
 /**
  * First page of the administration: users, campaigns, games, characters, codes and images with their breakdown and the
@@ -106,27 +105,28 @@ const AdminDashboardPage: FC = () => {
           const Icon = tile.icon;
           return (
             <Grid key={tile.title} size={{ xs: 12, sm: 6, lg: 4 }}>
-              <Card variant="outlined" sx={[{ height: '100%' }, enterSx(index)]}>
-                <TileArea href={tile.href}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', color: 'text.secondary' }}>
-                    <Icon fontSize="small" color="primary" />
-                    <Typography variant="overline">{t(tile.title)}</Typography>
-                  </Stack>
+              <TileLink href={tile.href}>
+                <Panel
+                  variant="outlined"
+                  title={t(tile.title)}
+                  extra={<Icon fontSize="small" color="primary" />}
+                  sx={[{ height: '100%' }, enterSx(index), ...(tile.href ? [hoverLiftSx] : [])]}
+                >
                   {loading ? (
                     <Skeleton variant="text" width={80} sx={{ fontSize: '2.5rem' }} />
                   ) : (
-                    <Typography variant="h3" component="p" sx={{ fontFamily: (theme) => theme.fonts.display, fontWeight: 600 }}>
+                    <PageTitle variant="h3" component="p">
                       {tile.total ?? '—'}
-                    </Typography>
+                    </PageTitle>
                   )}
-                  <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.75, mt: 1 }}>
+                  <ChipRow sx={{ mt: 1 }}>
                     {tile.breakdown.map((entry) => (
                       <Chip key={entry.key} size="small" variant="outlined" label={`${entry.label}: ${loading ? '…' : (entry.value ?? '—')}`} />
                     ))}
-                  </Stack>
+                  </ChipRow>
                   {tile.months && <MonthBars months={tile.months} />}
-                </TileArea>
-              </Card>
+                </Panel>
+              </TileLink>
             </Grid>
           );
         })}

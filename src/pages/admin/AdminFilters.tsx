@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import SearchIcon from '@mui/icons-material/Search';
-import { InputAdornment, MenuItem, Stack, TextField } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
+import { FilterBar, SearchField } from '@labcabrera-rmu/rmu-react-shared-lib';
 
-/** Search box and an optional status select above an admin table. */
+/** Search box and an optional status select above an admin table. The pages debounce the search themselves. */
 const AdminFilters: FC<{
   search: string;
   onSearch: (value: string) => void;
@@ -11,32 +11,10 @@ const AdminFilters: FC<{
 }> = ({ search, onSearch, status }) => {
   const { t } = useTranslation();
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }}>
-      <TextField
-        size="small"
-        value={search}
-        onChange={(event) => onSearch(event.target.value)}
-        placeholder={t('admin-search')}
-        sx={{ minWidth: { sm: 280 } }}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
+    <FilterBar activeCount={status?.value ? 1 : 0}>
+      <SearchField value={search} onChange={onSearch} label={t('admin-search')} size="small" delay={0} />
       {status && (
-        <TextField
-          select
-          size="small"
-          label={t('status')}
-          value={status.value}
-          onChange={(event) => status.onChange(event.target.value)}
-          sx={{ minWidth: 200 }}
-        >
+        <TextField select fullWidth size="small" label={t('status')} value={status.value} onChange={(event) => status.onChange(event.target.value)}>
           <MenuItem value="">{t('all')}</MenuItem>
           {status.options.map((option) => (
             <MenuItem key={option.value} value={option.value}>
@@ -45,7 +23,7 @@ const AdminFilters: FC<{
           ))}
         </TextField>
       )}
-    </Stack>
+    </FilterBar>
   );
 };
 
