@@ -17,7 +17,10 @@ export async function initI18n(locale?: string) {
       // `items` and `traits` hold item and trait names: keys missing from `common` are looked up there.
       ns: ['common', 'items', 'traits'],
       defaultNS: 'common',
-      fallbackNS: ['items', 'traits'],
+      // Workspace spec 086: then in the namespace of each MFE, the keys only it uses. Each MFE loads its own when it
+      // mounts (MfeRoot `namespace`); a namespace not loaded yet is skipped. `tables` is not here: it is keyed by the
+      // English text of the attack tables and read through useTableText.
+      fallbackNS: ['items', 'traits', 'core', 'strategic', 'tactical', 'npcs', 'spells'],
       backend: {
         loadPath: `${base}locales/{{ns}}_{{lng}}.json`,
         crossDomain: true,
