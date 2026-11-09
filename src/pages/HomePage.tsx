@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -14,7 +14,7 @@ const NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI'];
  * The landing, "the illustrated codex": a tall hero whose figures cross-fade, then each module as a chapter with a big
  * illustration, alternating sides, and a chapter index that stays at hand on wide screens.
  */
-export const Home = () => {
+const Home = () => {
   const { t } = useTranslation();
   const [image] = useState(heroImageOfVisit);
 

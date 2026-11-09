@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
@@ -6,7 +6,7 @@ import { SectionNav } from '@labcabrera-rmu/rmu-react-shared-lib';
 import PageTitle from '../../components/PageTitle';
 
 /** Pages of the administration, in the order of the tabs. */
-export const ADMIN_PAGES = [
+const ADMIN_PAGES = [
   { label: 'admin-dashboard', href: '/admin' },
   { label: 'admin-users', href: '/admin/users' },
   { label: 'admin-games', href: '/admin/games' },

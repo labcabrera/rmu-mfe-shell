@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import { JSX } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import { Avatar, Box, Grid, Link, Stack, Typography } from '@mui/material';

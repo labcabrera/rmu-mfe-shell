@@ -25,8 +25,8 @@ import { useIsAdmin } from '@labcabrera-rmu/rmu-react-shared-lib';
 import NavList from './NavList';
 import { activeSection, adminSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections } from './sections';
 
-export const RAIL_WIDTH = 248;
-export const MINI_RAIL_WIDTH = 72;
+const RAIL_WIDTH = 248;
+const MINI_RAIL_WIDTH = 72;
 
 type NavMode = 'expanded' | 'rail';
 

@@ -1,4 +1,4 @@
-import React, { ElementType, FC, ReactNode } from 'react';
+import { ElementType, FC, ReactNode } from 'react';
 import { SxProps, Theme, Typography, TypographyProps } from '@mui/material';
 
 /**

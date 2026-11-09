@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Box, Link, Typography } from '@mui/material';
 import InfoPage, { InfoSection } from './info/InfoPage';

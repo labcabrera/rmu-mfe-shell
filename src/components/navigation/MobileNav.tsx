@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import { BottomNavigation, BottomNavigationAction, Box, Drawer, Paper, useMediaQuery, useTheme } from '@mui/material';
 import NavList from './NavList';
+import { useNavDrawer } from './nav-drawer';
 import { activeSection, sections } from './sections';
 
 export const BOTTOM_NAV_HEIGHT = 56;
@@ -16,7 +17,8 @@ const bottomSections = sections.filter((section) => ['core', 'strategic', 'tacti
  * Phone navigation: a bottom bar with the main destinations and a drawer with every section and page.
  * Sets --rmu-bottom-nav-height so fixed elements of the pages (FABs, save bars) stay above the bar.
  */
-const MobileNav = ({ drawerOpen, onDrawerChange }: { drawerOpen: boolean; onDrawerChange: (open: boolean) => void }) => {
+const MobileNav = () => {
+  const { open: drawerOpen, setOpen: onDrawerChange } = useNavDrawer();
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();

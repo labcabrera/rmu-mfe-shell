@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 // From the package root: Module Federation shares '@mui/material' as a singleton but not its deep paths, and
 // a ThemeProvider from another copy would not pass the theme's default props to the remotes' components.
 import { CssBaseline, ThemeProvider } from '@mui/material';

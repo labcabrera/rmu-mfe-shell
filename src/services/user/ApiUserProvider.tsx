@@ -1,7 +1,7 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from 'react-oidc-context';
 import type { ApiUser, UpdateCurrentUserInput } from '../../api/user-api-client';
-import { userApiClient } from '../../api/user-api-client';
+import { userApiClient, apiErrorText } from '../../api/user-api-client';
 
 type ApiUserContextValue = {
   apiUser?: ApiUser;
@@ -15,6 +15,10 @@ const ApiUserContext = createContext<ApiUserContextValue | undefined>(undefined)
 
 export function ApiUserProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
+  // Workspace spec 091, E8: the user is read when the user changes, not on every renewal of the token.
+  const authRef = useRef(auth);
+  authRef.current = auth;
+  const userId = auth.user?.profile.sub;
   const [apiUser, setApiUser] = useState<ApiUser>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
@@ -30,26 +34,25 @@ export function ApiUserProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setError(undefined);
     try {
-      const response = await userApiClient.fetchUser(auth);
+      const response = await userApiClient.fetchUser(authRef.current);
       setApiUser(response);
       return response;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to load user';
-      setError(message);
+      setError(apiErrorText(err));
       throw err;
     } finally {
       setLoading(false);
     }
-  }, [auth.isAuthenticated, auth.user?.access_token]);
+  }, [auth.isAuthenticated, userId]);
 
   const updateApiUser = useCallback(
     async (input: UpdateCurrentUserInput) => {
-      const response = await userApiClient.updateCurrentUser(input, auth);
+      const response = await userApiClient.updateCurrentUser(input, authRef.current);
       setApiUser(response);
       setError(undefined);
       return response;
     },
-    [auth.user?.access_token]
+    []
   );
 
   useEffect(() => {

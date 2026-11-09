@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import MailOutlineIcon from '@mui/icons-material/MailOutlined';

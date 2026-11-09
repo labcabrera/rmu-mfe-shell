@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MenuItem, TextField } from '@mui/material';
 import { FilterBar, SearchField } from '@labcabrera-rmu/rmu-react-shared-lib';

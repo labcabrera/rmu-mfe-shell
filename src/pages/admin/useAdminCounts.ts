@@ -11,7 +11,7 @@ const total =
     (await fetcher(rsql, 0, 1, auth)).pagination.totalElements;
 
 /** How many entities of each kind match a filter (the dashboard reads GET /v1/stats instead): one request of one element each, read from the page total. */
-export const COUNTERS = {
+const COUNTERS = {
   campaigns: total(fetchStrategicGames),
   tactical: total(fetchTacticalGames),
   characters: total(fetchCharacters),

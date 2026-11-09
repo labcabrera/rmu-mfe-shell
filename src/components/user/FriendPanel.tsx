@@ -29,7 +29,7 @@ import {
 } from '@mui/material';
 import { ConfirmDialog, EmptyState, LoadingState, RmuDialog, Section } from '@labcabrera-rmu/rmu-react-shared-lib';
 import type { Friendship } from '../../api/user-api-client';
-import { userApiClient } from '../../api/user-api-client';
+import { userApiClient, apiErrorText } from '../../api/user-api-client';
 import { friendErrorMessage } from './friend-errors';
 import FriendInviteDialog from './FriendInviteDialog';
 
@@ -85,7 +85,7 @@ export default function FriendPanel() {
         setPendingSent(sentPage.content);
         setBlocked(blockedPage.content);
       })
-      .catch((err) => setError(err.message))
+      .catch((err: unknown) => setError(apiErrorText(err)))
       .finally(() => setLoading(false));
   };
 
@@ -110,7 +110,7 @@ export default function FriendPanel() {
       action === 'remove-friend'
         ? userApiClient.removeFriend(friendship.id, auth)
         : userApiClient.updateFriendRequest(friendship.id, 'blocked', auth);
-    promise.then(() => loadData()).catch((err) => setActionError(err.message));
+    promise.then(() => loadData()).catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const confirmName =
@@ -127,7 +127,7 @@ export default function FriendPanel() {
     userApiClient
       .removeFriend(friendshipId, auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleAccept = (friendshipId: string) => {
@@ -135,7 +135,7 @@ export default function FriendPanel() {
     userApiClient
       .updateFriendRequest(friendshipId, 'accepted', auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleReject = (friendshipId: string) => {
@@ -143,7 +143,7 @@ export default function FriendPanel() {
     userApiClient
       .updateFriendRequest(friendshipId, 'rejected', auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleSendRequest = () => {

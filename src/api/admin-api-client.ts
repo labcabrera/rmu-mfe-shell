@@ -1,4 +1,5 @@
 import { AuthContextProps } from 'react-oidc-context';
+import { callApi } from '@labcabrera-rmu/rmu-react-shared-lib';
 
 /** One month of creations, `YYYY-MM` in UTC. */
 export type MonthCount = { month: string; count: number };
@@ -39,11 +40,7 @@ export const ADMIN_TOOLS = [
 
 const apiUri = (name: string) => SYSTEM_APIS.find((api) => api.name === name)?.uri;
 
-async function getJson<T>(url: string, auth?: AuthContextProps): Promise<T> {
-  const response = await fetch(url, { headers: auth ? { Authorization: `Bearer ${auth.user?.access_token}` } : {} });
-  if (!response.ok) throw new Error(`${url} answered ${response.status}`);
-  return (await response.json()) as T;
-}
+const getJson = <T>(url: string, auth: AuthContextProps): Promise<T> => callApi(auth, url) as Promise<T>;
 
 export const adminApiClient = {
   /** Statistics of strategic, tactical, users or media (administrators only). */

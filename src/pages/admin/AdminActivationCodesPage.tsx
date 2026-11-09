@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import AddIcon from '@mui/icons-material/Add';
@@ -6,7 +6,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Alert, Button, Chip, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import { ActivationCode, userApiClient } from '../../api/user-api-client';
+import { ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
 import { CreateActivationCodesDialog, EditActivationCodeDialog } from './ActivationCodeDialogs';
 import AdminTable, { AdminColumn } from './AdminTable';
 import { useAdminPage } from './useAdminPage';
@@ -30,7 +30,7 @@ const AdminActivationCodesPage: FC = () => {
   const date = (value?: string | null) => (value ? new Date(value).toLocaleDateString(i18n.language, { dateStyle: 'medium' }) : '—');
   const expired = (code: ActivationCode) => !code.activatedAt && !!code.expiresAt && new Date(code.expiresAt).getTime() < Date.now();
 
-  const act = (action: Promise<unknown>) => action.then(reload).catch((err: Error) => setError(err.message));
+  const act = (action: Promise<unknown>) => action.then(reload).catch((err: unknown) => setError(apiErrorText(err)));
   const remove = (code: ActivationCode) =>
     window.confirm(t('admin-confirm-delete-code', { code: code.code })) && act(userApiClient.deleteActivationCode(code.id, auth));
   const release = (code: ActivationCode) =>

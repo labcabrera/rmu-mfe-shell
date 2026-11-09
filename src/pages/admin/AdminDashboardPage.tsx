@@ -1,4 +1,4 @@
-import React, { ElementType, FC, ReactNode } from 'react';
+import { ElementType, FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import GroupIcon from '@mui/icons-material/Group';

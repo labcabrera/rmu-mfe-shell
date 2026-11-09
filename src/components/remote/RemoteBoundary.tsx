@@ -1,4 +1,4 @@
-import React, { ReactNode, Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ErrorBoundary, LoadingState } from '@labcabrera-rmu/rmu-react-shared-lib';
 import RemoteUnavailable from './RemoteUnavailable';

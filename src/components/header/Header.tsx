@@ -7,22 +7,22 @@ import { AppBar, Box, GlobalStyles, IconButton, Toolbar, Typography } from '@mui
 import LanguageSelector from './LanguageSelector';
 import ThemeSelector from './ThemeSelector';
 import UserMenu from './UserMenu';
+import { useNavDrawer } from '../navigation/nav-drawer';
 
 /** Brand name: not translated. */
 const BRAND_NAME = 'RMU-Engine';
 
 // Sticky top bar above the side navigation. On phones the menu button opens the navigation drawer.
-const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
+const Header = () => {
+  const { setOpen } = useNavDrawer();
   const { t, i18n } = useTranslation();
   const [, setTick] = React.useState(0);
 
   useEffect(() => {
     const onLang = () => setTick((v) => v + 1);
     i18n.on?.('languageChanged', onLang);
-    window.addEventListener('rmu:languageChanged', onLang as EventListener);
     return () => {
       i18n.off?.('languageChanged', onLang);
-      window.removeEventListener('rmu:languageChanged', onLang as EventListener);
     };
   }, [i18n]);
 
@@ -38,7 +38,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
         })}
       />
       <Toolbar sx={{ minHeight: { xs: 56, sm: 64 }, px: { xs: 1, sm: 2 }, gap: { xs: 1, md: 2 } }}>
-        <IconButton color="inherit" aria-label={t('menu')} onClick={onMenuClick} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
+        <IconButton color="inherit" aria-label={t('menu')} onClick={() => setOpen(true)} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
           <MenuIcon />
         </IconButton>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1, minWidth: 0 }}>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import { SectionLabel } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { ApiUser, MANAGED_GROUPS, userApiClient } from '../../api/user-api-client';
+import { ApiUser, MANAGED_GROUPS, userApiClient, apiErrorText } from '../../api/user-api-client';
 import PageTitle from '../../components/PageTitle';
 import { CountQuery, useAdminCounts } from './useAdminCounts';
 
@@ -78,7 +78,7 @@ const UserAdminDrawer: FC<{ user?: ApiUser; onClose: () => void; onChanged: (use
         onChanged(updated);
         setSaved(true);
       })
-      .catch((err: Error) => setError(err.message))
+      .catch((err: unknown) => setError(apiErrorText(err)))
       .finally(() => setSaving(false));
   };
   const toggle = (group: string) => setGroups((current) => (current.includes(group) ? current.filter((g) => g !== group) : [...current, group]));

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import AddLinkIcon from '@mui/icons-material/AddLink';
@@ -11,7 +11,7 @@ import { userApiClient } from '../../api/user-api-client';
 import { friendErrorMessage } from './friend-errors';
 
 /** The page that opens an invite: `/friends/invite/<token>` of this same shell. */
-export const friendInviteUrl = (token: string): string => `${window.location.origin}/friends/invite/${encodeURIComponent(token)}`;
+const friendInviteUrl = (token: string): string => `${window.location.origin}/friends/invite/${encodeURIComponent(token)}`;
 
 /**
  * Invite links (spec 070): creates one and shows it once to copy it, and lists the active ones to delete them. The
@@ -57,7 +57,10 @@ export default function FriendInviteDialog({ open, onClose }: { open: boolean; o
 
   const copy = () => {
     if (!link) return;
-    void navigator.clipboard?.writeText(link).then(() => setCopied(true));
+    navigator.clipboard
+      ?.writeText(link)
+      .then(() => setCopied(true))
+      .catch((err) => setError(friendErrorMessage(err, t)));
   };
 
   const remove = (id: string) => {

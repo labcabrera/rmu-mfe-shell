@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { TextField, Button, Stack, Alert, Box, Chip } from '@mui/material';
 import { RmuDialog, SectionLabel } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { ActivationCode, userApiClient } from '../../api/user-api-client';
+import { ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
 
 export default function ActivationCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const auth = useAuth();
@@ -24,17 +24,16 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
     userApiClient
       .fetchActivateCode(code, auth)
       .then((response) => setActivationCode(response))
-      .catch((err) => setErrorMessage(err.message));
+      .catch((err: unknown) => setErrorMessage(apiErrorText(err)));
   };
 
   const handleActivate = () => {
     if (!activationCode) return;
     userApiClient
       .activateCode(activationCode.code, auth)
-      .then(() => {
-        auth.signinSilent().then(() => onClose());
-      })
-      .catch((err) => console.error(err));
+      .then(() => auth.signinSilent())
+      .then(() => onClose())
+      .catch((err: unknown) => setErrorMessage(apiErrorText(err)));
   };
 
   const handleClose = () => {
