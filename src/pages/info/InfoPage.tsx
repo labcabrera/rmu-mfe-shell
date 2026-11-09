@@ -1,11 +1,11 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { alpha, Box, Container, Grid, Link, Stack, Typography } from '@mui/material';
 import PageTitle from '../../components/PageTitle';
 import HeroPanorama from '../home/parts/HeroPanorama';
 import { Ornament } from '../home/parts/LandingParts';
 
-export type InfoIndexEntry = { id: string; title: string };
+type InfoIndexEntry = { id: string; title: string };
 
 /**
  * The frame of the pages linked from the footer (spec 053): a short illustrated header with the title in the display

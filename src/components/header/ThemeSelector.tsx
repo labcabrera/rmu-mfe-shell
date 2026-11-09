@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import { Box, IconButton, Popover, Tooltip, Typography } from '@mui/material';

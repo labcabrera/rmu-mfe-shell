@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 
 /** Shows its content with a short fade when it enters the viewport (at once with reduced motion). */

@@ -1,5 +1,5 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { MessageScreen } from '@labcabrera-rmu/rmu-react-shared-lib';
 
@@ -13,6 +13,12 @@ const RemoteUnavailable = ({ name }: { name: string }) => {
       icon={<WarningAmberIcon color="warning" sx={{ fontSize: 48 }} />}
       title={t('module-unavailable')}
       text={t('module-unavailable-message', { name })}
+      // A failed remote stays failed in webpack's module cache: only a new page load can bring it back.
+      action={
+        <Button variant="outlined" onClick={() => window.location.reload()}>
+          {t('reload-page')}
+        </Button>
+      }
     />
   );
 };

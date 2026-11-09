@@ -1,8 +1,7 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { alpha, Container } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
+import { Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { imageBaseUrl } from '../services/config';
 
 export default function RegisterPage() {

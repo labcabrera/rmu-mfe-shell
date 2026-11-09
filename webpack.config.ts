@@ -74,6 +74,9 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
 
   return {
     output: {
+      // Workspace spec 091, E5: what changes gets a new name, so nginx can cache it for good.
+      filename: mode === 'production' ? '[name].[contenthash].js' : '[name].js',
+      chunkFilename: mode === 'production' ? '[name].[contenthash].js' : '[name].js',
       // The shell is always served at the root of its origin (the gateway, or the dev server).
       publicPath: '/',
       devtoolNamespace: 'shell',
@@ -112,13 +115,20 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
         },
         {
           test: /\.(css|s[ac]ss)$/i,
-          use: ['style-loader', 'css-loader', 'postcss-loader'],
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.(ts|tsx|js|jsx)$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader',
+            loader: 'swc-loader',
+            options: {
+              jsc: {
+                parser: { syntax: 'typescript', tsx: true },
+                transform: { react: { runtime: 'automatic' } },
+                target: 'es2020',
+              },
+            },
           },
         },
         {
@@ -155,21 +165,18 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           items: runtimeRemote('items'),
           spells: runtimeRemote('spells'),
         },
-        exposes: {
-          './i18n': './src/i18n/i18n',
-        },
         shared: {
           react: { singleton: true, requiredVersion: deps.react },
           'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
           'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
           '@mui/material': { singleton: true, requiredVersion: deps['@mui/material'] },
-          '@mui/icons-material': { singleton: true, requiredVersion: deps['@mui/icons-material'] },
           '@emotion/react': { singleton: true, requiredVersion: deps['@emotion/react'] },
           '@emotion/styled': { singleton: true, requiredVersion: deps['@emotion/styled'] },
           'react-oidc-context': { singleton: true, requiredVersion: deps['react-oidc-context'] },
           'oidc-client-ts': { singleton: true, requiredVersion: deps['oidc-client-ts'] },
           i18next: { singleton: true, requiredVersion: deps.i18next },
           'react-i18next': { singleton: true, requiredVersion: deps['react-i18next'] },
+          '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
           'i18next-http-backend': { singleton: true, requiredVersion: deps['i18next-http-backend'] },
         },
       }),

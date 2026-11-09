@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar, Chip, Stack, Typography } from '@mui/material';
 import { ApiUser, userApiClient } from '../../api/user-api-client';

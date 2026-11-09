@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { alpha, Box, Container } from '@mui/material';
 import { HERO_IMAGES } from '../modules';
 

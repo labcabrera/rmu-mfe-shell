@@ -1,4 +1,4 @@
-import React, { FC, useState, MouseEvent } from 'react';
+import { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';

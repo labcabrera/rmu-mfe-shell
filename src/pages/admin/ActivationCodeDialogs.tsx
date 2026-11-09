@@ -1,11 +1,11 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import { Alert, Box, Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from '@mui/material';
 import { RmuDialog } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { ACTIVATION_CODES_CSV_HEADER, ACTIVATION_FEATURES, ActivationCode, userApiClient } from '../../api/user-api-client';
+import { ACTIVATION_CODES_CSV_HEADER, ACTIVATION_FEATURES, ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
 
 /** End of the day of a `YYYY-MM-DD` date field, as the ISO date the API takes. */
 const endOfDay = (date: string): string | undefined => (date ? new Date(`${date}T23:59:59`).toISOString() : undefined);
@@ -36,7 +36,7 @@ export const CreateActivationCodesDialog: FC<{ open: boolean; onClose: () => voi
         setCreated(codes);
         onCreated();
       })
-      .catch((err: Error) => setError(err.message))
+      .catch((err: unknown) => setError(apiErrorText(err)))
       .finally(() => setSaving(false));
   };
   const text = created?.map((code) => code.code).join('\n') ?? '';
@@ -156,7 +156,7 @@ export const EditActivationCodeDialog: FC<{ code?: ActivationCode; onClose: () =
         onSaved();
         onClose();
       })
-      .catch((err: Error) => setError(err.message));
+      .catch((err: unknown) => setError(apiErrorText(err)));
   return (
     <RmuDialog
       open

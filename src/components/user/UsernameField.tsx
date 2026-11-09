@@ -1,10 +1,11 @@
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Stack, TextField, Tooltip, Typography } from '@mui/material';
-import { ApiError } from '../../api/user-api-client';
+import { isApiError } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { apiErrorText } from '../../api/user-api-client';
 import { useApiUser } from '../../services/user/ApiUserProvider';
 
 // The same rule as the display name of rmu-api-users.
@@ -47,7 +48,7 @@ export default function UsernameField({ fallback }: { fallback: string }) {
     setError(undefined);
     updateApiUser({ name })
       .then(close)
-      .catch((err: Error) => setError(err instanceof ApiError && err.status === 409 ? t('username-taken') : err.message))
+      .catch((err: unknown) => setError(isApiError(err) && err.status === 409 ? t('username-taken') : apiErrorText(err)))
       .finally(() => setSaving(false));
   };
 

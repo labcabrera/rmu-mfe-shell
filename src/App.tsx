@@ -1,36 +1,40 @@
-import React, { Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { LoadingState, NotFound } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { Box } from '@mui/material';
+import { Container } from '@mui/material';
+import { ErrorBoundary, LoadingState, NotFound } from '@labcabrera-rmu/rmu-react-shared-lib';
 import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import MobileNav, { BOTTOM_NAV_HEIGHT } from './components/navigation/MobileNav';
 import SideNav from './components/navigation/SideNav';
+import { NavDrawerProvider } from './components/navigation/nav-drawer';
 import { isImmersiveRoute } from './components/navigation/sections';
 import RemoteBoundary from './components/remote/RemoteBoundary';
 import RemoteUnavailable from './components/remote/RemoteUnavailable';
-import UserProfile from './components/user/UserProfile';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import DocsPage from './pages/DocsPage';
 import HomePage from './pages/HomePage';
-import LegalPage from './pages/LegalPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import RegisterPage from './pages/RegisterPage';
 import SigninCallbackPage from './pages/SigninCallbackPage';
-import TechnicalInfoPage from './pages/TechnicalInfoPage';
-import AdminActivationCodesPage from './pages/admin/AdminActivationCodesPage';
-import AdminCharactersPage from './pages/admin/AdminCharactersPage';
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
-import AdminGamesPage from './pages/admin/AdminGamesPage';
-import AdminLayout from './pages/admin/AdminLayout';
 import AdminRoute from './pages/admin/AdminRoute';
-import AdminToolsPage from './pages/admin/AdminToolsPage';
-import AdminUsersPage from './pages/admin/AdminUsersPage';
-import FriendInvitePage from './pages/FriendInvitePage';
 import ProtectedRoute from './services/auth/ProtectedRoute';
+import SessionRenewalNotice from './services/auth/SessionRenewalNotice';
 import { ThemeSettingsProvider } from './theme/ThemeSettingsProvider';
+
+// Workspace spec 091, E1: every page is its own chunk; the Suspense is in MfeRoot / the shell layout.
+const UserProfile = lazy(() => import('./components/user/UserProfile'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const DocsPage = lazy(() => import('./pages/DocsPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const TechnicalInfoPage = lazy(() => import('./pages/TechnicalInfoPage'));
+const AdminActivationCodesPage = lazy(() => import('./pages/admin/AdminActivationCodesPage'));
+const AdminCharactersPage = lazy(() => import('./pages/admin/AdminCharactersPage'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
+const AdminGamesPage = lazy(() => import('./pages/admin/AdminGamesPage'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
+const AdminToolsPage = lazy(() => import('./pages/admin/AdminToolsPage'));
+const AdminUsersPage = lazy(() => import('./pages/admin/AdminUsersPage'));
+const FriendInvitePage = lazy(() => import('./pages/FriendInvitePage'));
 
 // A remote that fails to load only breaks its own route (see runtimeRemote in webpack.config.ts); one that
 // fails while rendering is caught by RemoteBoundary.
@@ -52,13 +56,14 @@ const RemoteSpellsApp = lazyRemote('spells', () => import('spells/SpellsApp'));
 // Every remote route needs a user: all their APIs (core, strategic, tactical, items, spells, npcs)
 // guard their controllers with JwtAuthGuard. The home and static pages stay public.
 const App = () => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const { pathname } = useLocation();
 
   return (
     <ThemeSettingsProvider>
+      <NavDrawerProvider>
+      <SessionRenewalNotice />
       <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100dvh' }}>
-        <Header onMenuClick={() => setDrawerOpen(true)} />
+        <Header />
         <Box sx={{ display: 'flex', flex: 1, minHeight: 0 }}>
           <SideNav />
           <Box
@@ -72,6 +77,8 @@ const App = () => {
             }}
           >
             <Box sx={{ flex: 1 }}>
+              {/* Workspace spec 091, F1: a page that breaks leaves the header and the navigation working. */}
+              <ErrorBoundary resetKey={pathname}>
               <Suspense fallback={<LoadingState />}>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
@@ -184,13 +191,15 @@ const App = () => {
                   />
                 </Routes>
               </Suspense>
+              </ErrorBoundary>
             </Box>
             {/* Immersive pages (the combat board) need the whole height: no site footer under them. */}
             {!isImmersiveRoute(pathname) && <Footer />}
           </Box>
         </Box>
-        <MobileNav drawerOpen={drawerOpen} onDrawerChange={setDrawerOpen} />
+        <MobileNav />
       </Box>
+      </NavDrawerProvider>
     </ThemeSettingsProvider>
   );
 };

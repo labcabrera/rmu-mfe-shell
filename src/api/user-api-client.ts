@@ -1,4 +1,5 @@
 import { AuthContextProps } from 'react-oidc-context';
+import { callApi, isApiError } from '@labcabrera-rmu/rmu-react-shared-lib';
 import { userApiBaseUrl } from '../services/config';
 
 export type Page<T> = {
@@ -7,20 +8,20 @@ export type Page<T> = {
 };
 
 // Same shape as rmu-api-users' Page: { content, pagination: { page, size, totalElements, totalPages } }.
-export type Pagination = {
+type Pagination = {
   page: number;
   size: number;
   totalElements: number;
   totalPages: number;
 };
 
-export type MeasurementSystem = 'metric' | 'imperial';
+type MeasurementSystem = 'metric' | 'imperial';
 
-export type UserSettings = {
+type UserSettings = {
   measurementSystem: MeasurementSystem;
 };
 
-export type IdentityProvider = 'local' | 'google';
+type IdentityProvider = 'local' | 'google';
 
 export type ApiUser = {
   id: string;
@@ -93,266 +94,125 @@ export type Friendship = {
   updatedAt: Date;
 };
 
-export class ApiError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-    /** The stable `code` of the API error body, when it sent one. */
-    readonly code?: string
-  ) {
-    super(message);
-  }
-}
+const friendshipsPath = (rsql: string) => `/friendships?q=${encodeURIComponent(rsql)}`;
 
-const friendshipsUrl = (rsql: string) => `${userApiBaseUrl}/friendships?q=${encodeURIComponent(rsql)}`;
+/** What to show of a failure: the API's own message when it sent one. */
+export const apiErrorText = (err: unknown): string => {
+  if (isApiError(err)) return err.detail || err.statusText;
+  return err instanceof Error ? err.message : String(err);
+};
 
-/** A JSON call of rmu-api-users: JSON in and out, and the API's message and code in the error. */
-async function adminRequest<T>(auth: AuthContextProps, method: string, path: string, body?: unknown): Promise<T> {
-  const response = await fetch(`${userApiBaseUrl}${path}`, {
+/** A JSON call of rmu-api-users, through the client every MFE uses (session renewal included). */
+const request = <T>(auth: AuthContextProps, method: string, path: string, body?: unknown): Promise<T> =>
+  callApi(auth, `${userApiBaseUrl}${path}`, {
     method,
-    headers: {
-      Authorization: `Bearer ${auth.user?.access_token}`,
-      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  if (response.status === 204) return undefined as T;
-  const data = await response.json().catch(() => ({}));
-  if (response.ok) return data as T;
-  const error = data as { message?: string; code?: string };
-  throw new ApiError(error.message || response.statusText, response.status, error.code);
-}
+    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
+  }) as Promise<T>;
 
 export const userApiClient = {
   /** Every user, as an admin sees them (GET /users is admin only). */
   /** One user by id (admin only). */
   async fetchUserById(id: string, auth: AuthContextProps): Promise<ApiUser> {
-    return adminRequest(auth, 'GET', `/users/${encodeURIComponent(id)}`);
+    return request(auth, 'GET', `/users/${encodeURIComponent(id)}`);
   },
 
   /** Sets the managed realm groups of a user (admin only). */
   async updateUserGroups(id: string, groups: string[], auth: AuthContextProps): Promise<ApiUser> {
-    return adminRequest(auth, 'PUT', `/users/${encodeURIComponent(id)}/groups`, { groups });
+    return request(auth, 'PUT', `/users/${encodeURIComponent(id)}/groups`, { groups });
   },
 
   /** Enables or disables an account (admin only). */
   async setUserEnabled(id: string, enabled: boolean, auth: AuthContextProps): Promise<ApiUser> {
-    return adminRequest(auth, 'PATCH', `/users/${encodeURIComponent(id)}`, { enabled });
+    return request(auth, 'PATCH', `/users/${encodeURIComponent(id)}`, { enabled });
   },
 
   async fetchActivationCodes(rsql: string, page: number, size: number, auth: AuthContextProps): Promise<Page<ActivationCode>> {
-    return adminRequest(auth, 'GET', `/activation-codes?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`);
+    return request(auth, 'GET', `/activation-codes?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`);
   },
 
   async createActivationCodes(input: CreateActivationCodesInput, auth: AuthContextProps): Promise<ActivationCode[]> {
-    return adminRequest(auth, 'POST', '/activation-codes', input);
+    return request(auth, 'POST', '/activation-codes', input);
   },
 
   async updateActivationCode(id: string, input: UpdateActivationCodeInput, auth: AuthContextProps): Promise<ActivationCode> {
-    return adminRequest(auth, 'PATCH', `/activation-codes/${encodeURIComponent(id)}`, input);
+    return request(auth, 'PATCH', `/activation-codes/${encodeURIComponent(id)}`, input);
   },
 
   async deleteActivationCode(id: string, auth: AuthContextProps): Promise<void> {
-    return adminRequest(auth, 'DELETE', `/activation-codes/${encodeURIComponent(id)}`);
+    return request(auth, 'DELETE', `/activation-codes/${encodeURIComponent(id)}`);
   },
 
   async fetchUsers(rsql: string, page: number, size: number, auth: AuthContextProps): Promise<Page<ApiUser>> {
-    const response = await fetch(`${userApiBaseUrl}/users?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`, {
-      headers: { Authorization: `Bearer ${auth.user?.access_token}` },
-    });
-    if (response.ok) return await response.json();
-    throw new ApiError(`Failed to fetch users: ${response.statusText}`, response.status);
+    return request(auth, 'GET', `/users?q=${encodeURIComponent(rsql)}&page=${page}&size=${size}`);
   },
 
   async fetchUser(auth: AuthContextProps): Promise<ApiUser> {
-    const response = await fetch(`${userApiBaseUrl}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    throw new ApiError(`Failed to fetch user: ${response.statusText}`, response.status);
+    return request(auth, 'GET', '/users/me');
   },
 
   async updateCurrentUser(input: UpdateCurrentUserInput, auth: AuthContextProps): Promise<ApiUser> {
-    const response = await fetch(`${userApiBaseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-      body: JSON.stringify(input),
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json().catch(() => ({}));
-    throw new ApiError((err as { message?: string }).message || `Failed to update user: ${response.statusText}`, response.status);
+    return request(auth, 'PATCH', '/users/me', input);
   },
 
   async fetchFriends(auth: AuthContextProps): Promise<Page<Friendship>> {
     const userId = auth.user?.profile.sub;
-    const rsql = `(requesterId==${userId},addresseeId==${userId});status==accepted`;
-    const response = await fetch(friendshipsUrl(rsql), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
+    return request(auth, 'GET', friendshipsPath(`(requesterId==${userId},addresseeId==${userId});status==accepted`));
   },
 
   async fecthInvitationsPending(auth: AuthContextProps): Promise<Page<Friendship>> {
-    const userId = auth.user?.profile.sub;
-    const rsql = `addresseeId==${userId};status==pending`;
-    //TODO page and size
-    const response = await fetch(friendshipsUrl(rsql), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
+    return request(auth, 'GET', friendshipsPath(`addresseeId==${auth.user?.profile.sub};status==pending`));
   },
 
   async fecthInvitationsSent(auth: AuthContextProps): Promise<Page<Friendship>> {
-    const userId = auth.user?.profile.sub;
-    const rsql = `requesterId==${userId};status==pending`;
-    const response = await fetch(friendshipsUrl(rsql), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
+    return request(auth, 'GET', friendshipsPath(`requesterId==${auth.user?.profile.sub};status==pending`));
   },
 
   async fetchActivateCode(code: string, auth: AuthContextProps): Promise<ActivationCode> {
-    const response = await fetch(`${userApiBaseUrl}/activation-codes/check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-      body: JSON.stringify({ code }),
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to check activation code: ${response.statusText}`, response.status);
+    return request(auth, 'POST', '/activation-codes/check', { code });
   },
 
   async activateCode(code: string, auth: AuthContextProps): Promise<void> {
-    const response = await fetch(`${userApiBaseUrl}/activation-codes/activate`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-      body: JSON.stringify({ code }),
-    });
-    if (!response.ok) {
-      throw new ApiError(`Failed to activate code: ${response.statusText}`, response.status);
-    }
+    return request(auth, 'POST', '/activation-codes/activate', { code });
   },
 
   async sendFriendRequest(addresseeName: string, message: string, auth: AuthContextProps): Promise<Friendship> {
-    const response = await fetch(`${userApiBaseUrl}/friendships`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-      body: JSON.stringify({ addresseeName, message }),
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json().catch(() => ({}));
-    throw new ApiError(err.message || `Failed to send friend request: ${response.statusText}`, response.status, err.code);
+    return request(auth, 'POST', '/friendships', { addresseeName, message });
   },
 
   /** Creates an invite link: the answer is the only time its token is seen (spec 070). */
   async createFriendInvite(auth: AuthContextProps): Promise<FriendInvite> {
-    return adminRequest(auth, 'POST', '/friend-invites');
+    return request(auth, 'POST', '/friend-invites');
   },
 
   /** The active invites of the user, newest first, without tokens. */
   async fetchFriendInvites(auth: AuthContextProps): Promise<FriendInvite[]> {
-    return adminRequest(auth, 'GET', '/friend-invites');
+    return request(auth, 'GET', '/friend-invites');
   },
 
   async deleteFriendInvite(id: string, auth: AuthContextProps): Promise<void> {
-    return adminRequest(auth, 'DELETE', `/friend-invites/${encodeURIComponent(id)}`);
+    return request(auth, 'DELETE', `/friend-invites/${encodeURIComponent(id)}`);
   },
 
   /** Who invites with a token. The token goes in the body, out of the access logs. */
   async checkFriendInvite(token: string, auth: AuthContextProps): Promise<FriendInvite> {
-    return adminRequest(auth, 'POST', '/friend-invites/check', { token });
+    return request(auth, 'POST', '/friend-invites/check', { token });
   },
 
   /** Accepts an invite: the inviter and the user become friends. */
   async acceptFriendInvite(token: string, auth: AuthContextProps): Promise<Friendship> {
-    return adminRequest(auth, 'POST', '/friend-invites/accept', { token });
+    return request(auth, 'POST', '/friend-invites/accept', { token });
   },
 
   async updateFriendRequest(friendshipId: string, status: FriendshipStatus, auth: AuthContextProps): Promise<void> {
-    const response = await fetch(`${userApiBaseUrl}/friendships/${friendshipId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-      body: JSON.stringify({ status }),
-    });
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new ApiError((err as { message?: string }).message || `Failed to update friend request: ${response.statusText}`, response.status);
-    }
+    return request(auth, 'PATCH', `/friendships/${friendshipId}`, { status });
   },
 
   async fetchBlockedUsers(auth: AuthContextProps): Promise<Page<Friendship>> {
-    const userId = auth.user?.profile.sub;
     // Only the blocks this user made: the blocked participant neither sees nor undoes them (spec 044, decision 9).
-    const rsql = `blockedBy==${userId};status==blocked`;
-    const response = await fetch(friendshipsUrl(rsql), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (response.ok) {
-      return await response.json();
-    }
-    const err = await response.json();
-    throw new ApiError(err.message || `Failed to fetch blocked users: ${response.statusText}`, response.status);
+    return request(auth, 'GET', friendshipsPath(`blockedBy==${auth.user?.profile.sub};status==blocked`));
   },
 
   async removeFriend(friendshipId: string, auth: AuthContextProps): Promise<void> {
-    const response = await fetch(`${userApiBaseUrl}/friendships/${friendshipId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${auth.user?.access_token}`,
-      },
-    });
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new ApiError((err as { message?: string }).message || `Failed to remove friendship: ${response.statusText}`, response.status);
-    }
+    return request(auth, 'DELETE', `/friendships/${friendshipId}`);
   },
 };
