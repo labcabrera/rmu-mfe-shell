@@ -35,7 +35,6 @@ export const ADMIN_TOOLS = [
   { key: 'keycloak', uri: process.env.RMU_ADMIN_KEYCLOAK_URI },
   { key: 'kafka-ui', uri: process.env.RMU_ADMIN_KAFKA_UI_URI },
   { key: 'grafana', uri: process.env.RMU_ADMIN_GRAFANA_URI },
-  { key: 'mongo-express', uri: process.env.RMU_ADMIN_MONGO_EXPRESS_URI },
 ].filter((tool): tool is { key: string; uri: string } => Boolean(tool.uri));
 
 const apiUri = (name: string) => SYSTEM_APIS.find((api) => api.name === name)?.uri;
