@@ -37,7 +37,6 @@ window.__RMU_CONFIG__ = {
   RMU_ADMIN_KEYCLOAK_URI: '${RMU_ADMIN_KEYCLOAK_URI}',
   RMU_ADMIN_KAFKA_UI_URI: '${RMU_ADMIN_KAFKA_UI_URI}',
   RMU_ADMIN_GRAFANA_URI: '${RMU_ADMIN_GRAFANA_URI}',
-  RMU_ADMIN_MONGO_EXPRESS_URI: '${RMU_ADMIN_MONGO_EXPRESS_URI}',
 };
 
 // A key the container does not define stays as its placeholder: it counts as not set.
