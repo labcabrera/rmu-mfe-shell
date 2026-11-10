@@ -83,7 +83,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
-      // rmu-react-shared-lib is a file: link outside this folder: resolve its peer dependencies (react,
+      // rmu-react-shared-lib is a link: dependency outside this folder: resolve its peer dependencies (react,
       // MUI…) from this app first so the bundle has a single copy of each.
       modules: [path.resolve(__dirname, 'node_modules'), 'node_modules'],
     },

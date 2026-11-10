@@ -1,5 +1,5 @@
 // Runtime configuration, read through window.__RMU_CONFIG__ (see webpack.config.ts).
-// The Docker image renders this file into env-config.js with envsubst (docker/40-env-config.sh);
+// The Docker image renders this file into env-config.js with envsubst;
 // the webpack dev server serves the same keys from .env. Only public values belong here.
 // The remotes mounted by the shell read this same object, so it also carries the URLs they use.
 window.__RMU_CONFIG__ = {
@@ -39,3 +39,8 @@ window.__RMU_CONFIG__ = {
   RMU_ADMIN_GRAFANA_URI: '${RMU_ADMIN_GRAFANA_URI}',
   RMU_ADMIN_MONGO_EXPRESS_URI: '${RMU_ADMIN_MONGO_EXPRESS_URI}',
 };
+
+// A key the container does not define stays as its placeholder: it counts as not set.
+for (const key of Object.keys(window.__RMU_CONFIG__)) {
+  if (window.__RMU_CONFIG__[key].startsWith('$' + '{')) window.__RMU_CONFIG__[key] = '';
+}

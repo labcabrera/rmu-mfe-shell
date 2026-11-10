@@ -57,7 +57,15 @@ export const sections: NavSection[] = [
       { label: 'encounter-title', href: '/npcs/encounters' },
     ],
   },
-  { label: 'items', href: '/items', icon: BackpackIcon, links: [] },
+  {
+    label: 'items',
+    href: '/items',
+    icon: BackpackIcon,
+    links: [
+      { label: 'items', href: '/items' },
+      { label: 'loot-tables-title', href: '/items/treasure-tables' },
+    ],
+  },
   {
     label: 'spells',
     href: '/spells',
