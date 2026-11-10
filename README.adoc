@@ -25,9 +25,9 @@ image::diagrams/c4-context.png[Context System]
 ## Local build
 
 ----
-npm run build
+pnpm run build
 
-npx serve -l 8080 dist
+pnpm dlx serve -l 8080 dist
 ----
 
 
