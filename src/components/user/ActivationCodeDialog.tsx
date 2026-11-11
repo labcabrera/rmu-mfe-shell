@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { TextField, Button, Stack, Alert, Box, Chip } from '@mui/material';
 import { RmuDialog, SectionLabel } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
+import { ActivationCode, activationFeatureKey, userApiClient, apiErrorText } from '../../api/user-api-client';
 
 export default function ActivationCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const auth = useAuth();
@@ -73,14 +73,14 @@ export default function ActivationCodeDialog({ open, onClose }: { open: boolean;
             <SectionLabel>{t('new-features')}</SectionLabel>
             <Stack direction="column" spacing={1}>
               {newFeatures.map((feature, index) => (
-                <Chip key={index} label={t(feature)} color="success" />
+                <Chip key={index} label={t(activationFeatureKey(feature))} color="success" />
               ))}
             </Stack>
             {newFeatures.length === 0 && <Alert color="warning">{t('no-new-features')}</Alert>}
             <SectionLabel>{t('already-owned-features')}</SectionLabel>
             <Stack direction="column" spacing={1}>
               {ownedFeatures.map((feature, index) => (
-                <Chip key={index} label={t(feature)} color="secondary" disabled />
+                <Chip key={index} label={t(activationFeatureKey(feature))} color="secondary" disabled />
               ))}
             </Stack>
           </Stack>

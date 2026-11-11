@@ -6,7 +6,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Alert, Button, Chip, IconButton, Stack, Tab, Tabs, Tooltip, Typography } from '@mui/material';
-import { ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
+import { ActivationCode, activationFeatureKey, userApiClient, apiErrorText } from '../../api/user-api-client';
 import { CreateActivationCodesDialog, EditActivationCodeDialog } from './ActivationCodeDialogs';
 import AdminTable, { AdminColumn } from './AdminTable';
 import { useAdminPage } from './useAdminPage';
@@ -53,7 +53,7 @@ const AdminActivationCodesPage: FC = () => {
       render: (code) => (
         <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
           {code.features.map((feature) => (
-            <Chip key={feature} size="small" variant="outlined" label={feature} />
+            <Chip key={feature} size="small" variant="outlined" label={t(activationFeatureKey(feature))} />
           ))}
         </Stack>
       ),
