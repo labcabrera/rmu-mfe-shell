@@ -1,8 +1,10 @@
-import React, { FC, useState, MouseEvent } from 'react';
+import { FC, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { alpha, Avatar, Box, Button, IconButton, Menu, MenuItem, Skeleton, Tooltip, Typography, useTheme } from '@mui/material';
+import { assetCandidates } from '@labcabrera-rmu/rmu-react-shared-lib';
+import { useAuthPending } from '../../services/auth/session-restore';
 import { imageBaseUrl } from '../../services/config';
 import { useApiUser } from '../../services/user/ApiUserProvider';
 
@@ -13,13 +15,18 @@ const UserMenu: FC = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { t } = useTranslation();
+  const theme = useTheme();
   const oidc = useAuth();
   const { apiUser } = useApiUser();
   const isAuthenticated = !!oidc?.isAuthenticated;
+  const authPending = useAuthPending();
   const login = () => oidc.signinRedirect({ state: { returnTo: `${location.pathname}${location.search}${location.hash}` } });
-  const logout = () => oidc?.signoutRedirect?.();
+  // oidc-client-ts also adds the stored id_token as id_token_hint; post_logout_redirect_uri comes
+  // from the AuthProvider settings. Keycloak ends its session, which revokes "Remember me".
+  const logout = () => oidc.signoutRedirect({ id_token_hint: oidc.user?.id_token });
   const userName = apiUser?.name || oidc.user?.profile.preferred_username || 'Undefined';
-  const avatarUrl = apiUser?.imageUrl || DEFAULT_IMAGE;
+  // The 128 px thumbnail of a base image (spec 058): the original weighs up to 2.5 MB for a 45 px avatar.
+  const avatarUrl = assetCandidates([apiUser?.imageUrl || DEFAULT_IMAGE], 128)[0];
   const avatarInitials = userName
     .split(/\s+/)
     .map((part) => part[0])
@@ -45,9 +52,17 @@ const UserMenu: FC = () => {
     textTransform: 'none',
     '&:hover': {
       borderColor: 'currentColor',
-      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      backgroundColor: alpha(theme.palette.common.white, 0.08),
     },
   };
+
+  if (!isAuthenticated && authPending) {
+    return (
+      <Box role="status" aria-label={t('loading-authentication-state')} sx={{ display: 'flex', alignItems: 'center', pr: { xs: 1, md: 0 } }}>
+        <Skeleton variant="circular" sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }} />
+      </Box>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -58,7 +73,7 @@ const UserMenu: FC = () => {
           component={RouterLink}
           to="/register"
           size="small"
-          sx={headerButtonSx}
+          sx={{ ...headerButtonSx, display: { xs: 'none', sm: 'inline-flex' } }}
         >
           {t('register')}
         </Button>
@@ -72,13 +87,10 @@ const UserMenu: FC = () => {
   return (
     <>
       <Box sx={{ flexGrow: 0 }}>
-        <Tooltip title="Open menu">
+        <Tooltip title={t('open-menu')}>
           <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>
-            <Avatar
-              alt={userName}
-              src={avatarUrl}
-              sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}
-            >
+            {/* eslint-disable-next-line no-restricted-syntax -- the account avatar of a user is a circle (spec 058) */}
+            <Avatar alt={userName} src={avatarUrl} sx={{ width: { xs: 36, md: 45 }, height: { xs: 36, md: 45 } }}>
               {avatarInitials}
             </Avatar>
           </IconButton>

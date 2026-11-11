@@ -4,6 +4,7 @@ import { useAuth } from 'react-oidc-context';
 import BlockIcon from '@mui/icons-material/Block';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import LinkIcon from '@mui/icons-material/Link';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import MailIcon from '@mui/icons-material/Mail';
 import PeopleIcon from '@mui/icons-material/People';
@@ -15,26 +16,22 @@ import {
   Box,
   Button,
   Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  Paper,
   Stack,
   Tab,
   Tabs,
   TextField,
   Tooltip,
-  Typography,
 } from '@mui/material';
+import { ConfirmDialog, EmptyState, LoadingState, RmuDialog, Section } from '@labcabrera-rmu/rmu-react-shared-lib';
 import type { Friendship } from '../../api/user-api-client';
-import { userApiClient } from '../../api/user-api-client';
+import { userApiClient, apiErrorText } from '../../api/user-api-client';
+import { friendErrorMessage } from './friend-errors';
+import FriendInviteDialog from './FriendInviteDialog';
 
 function TabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
   return (
@@ -61,6 +58,7 @@ export default function FriendPanel() {
   const [sendMessage, setSendMessage] = useState('');
   const [sendError, setSendError] = useState<string>();
   const [sending, setSending] = useState(false);
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const [actionError, setActionError] = useState<string>();
 
@@ -87,7 +85,7 @@ export default function FriendPanel() {
         setPendingSent(sentPage.content);
         setBlocked(blockedPage.content);
       })
-      .catch((err) => setError(err.message))
+      .catch((err: unknown) => setError(apiErrorText(err)))
       .finally(() => setLoading(false));
   };
 
@@ -112,8 +110,13 @@ export default function FriendPanel() {
       action === 'remove-friend'
         ? userApiClient.removeFriend(friendship.id, auth)
         : userApiClient.updateFriendRequest(friendship.id, 'blocked', auth);
-    promise.then(() => loadData()).catch((err) => setActionError(err.message));
+    promise.then(() => loadData()).catch((err: unknown) => setActionError(apiErrorText(err)));
   };
+
+  const confirmName =
+    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
+      ? confirmDialog.friendship?.requesterName
+      : confirmDialog.friendship?.addresseeName;
 
   const handleRemoveFriend = (friendship: Friendship) => openConfirm('remove-friend', friendship);
 
@@ -124,7 +127,7 @@ export default function FriendPanel() {
     userApiClient
       .removeFriend(friendshipId, auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleAccept = (friendshipId: string) => {
@@ -132,7 +135,7 @@ export default function FriendPanel() {
     userApiClient
       .updateFriendRequest(friendshipId, 'accepted', auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleReject = (friendshipId: string) => {
@@ -140,7 +143,7 @@ export default function FriendPanel() {
     userApiClient
       .updateFriendRequest(friendshipId, 'rejected', auth)
       .then(() => loadData())
-      .catch((err) => setActionError(err.message));
+      .catch((err: unknown) => setActionError(apiErrorText(err)));
   };
 
   const handleSendRequest = () => {
@@ -155,7 +158,7 @@ export default function FriendPanel() {
         setSendMessage('');
         loadData();
       })
-      .catch((err) => setSendError(err.message))
+      .catch((err) => setSendError(friendErrorMessage(err, t)))
       .finally(() => setSending(false));
   };
 
@@ -167,14 +170,19 @@ export default function FriendPanel() {
   };
 
   return (
-    <Paper sx={{ p: { xs: 2, md: 3 } }}>
-      <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h6">{t('friends')}</Typography>
-        <Button variant="contained" startIcon={<PersonAddIcon />} onClick={() => setSendDialogOpen(true)}>
-          {t('add-friend')}
-        </Button>
-      </Stack>
-
+    <Section
+      title={t('friends')}
+      actions={
+        <Stack direction="row" spacing={1}>
+          <Button variant="outlined" startIcon={<LinkIcon />} onClick={() => setInviteDialogOpen(true)}>
+            {t('friend-invite-links')}
+          </Button>
+          <Button variant="contained" startIcon={<PersonAddIcon />} onClick={() => setSendDialogOpen(true)}>
+            {t('add-friend')}
+          </Button>
+        </Stack>
+      }
+    >
       {actionError && (
         <Alert severity="error" onClose={() => setActionError(undefined)} sx={{ mb: 2 }}>
           {actionError}
@@ -182,9 +190,7 @@ export default function FriendPanel() {
       )}
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-          <CircularProgress />
-        </Box>
+        <LoadingState />
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
@@ -200,7 +206,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={0}>
             {friends.length === 0 ? (
-              <Typography color="text.secondary">{t('no-friends')}</Typography>
+              <EmptyState dense title={t('no-friends')} />
             ) : (
               <List disablePadding>
                 {friends.map((f) => (
@@ -231,7 +237,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={1}>
             {pendingReceived.length === 0 ? (
-              <Typography color="text.secondary">{t('no-pending-invitations')}</Typography>
+              <EmptyState dense title={t('no-pending-invitations')} />
             ) : (
               <List disablePadding>
                 {pendingReceived.map((f) => (
@@ -262,7 +268,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={2}>
             {pendingSent.length === 0 ? (
-              <Typography color="text.secondary">{t('no-sent-invitations')}</Typography>
+              <EmptyState dense title={t('no-sent-invitations')} />
             ) : (
               <List disablePadding>
                 {pendingSent.map((f) => (
@@ -276,7 +282,7 @@ export default function FriendPanel() {
 
           <TabPanel value={tab} index={3}>
             {blocked.length === 0 ? (
-              <Typography color="text.secondary">{t('no-blocked-users')}</Typography>
+              <EmptyState dense title={t('no-blocked-users')} />
             ) : (
               <List disablePadding>
                 {blocked.map((f) => (
@@ -284,12 +290,14 @@ export default function FriendPanel() {
                     key={f.id}
                     divider
                     secondaryAction={
-                      <IconButton color="primary" onClick={() => handleUnblock(f.id)} title={t('unblock-user')}>
-                        <LockOpenIcon />
-                      </IconButton>
+                      f.blockedBy === auth.user?.profile.sub ? (
+                        <IconButton color="primary" onClick={() => handleUnblock(f.id)} title={t('unblock-user')}>
+                          <LockOpenIcon />
+                        </IconButton>
+                      ) : undefined
                     }
                   >
-                    <ListItemText primary={f.addresseeName} />
+                    <ListItemText primary={f.addresseeId === auth.user?.profile.sub ? f.requesterName : f.addresseeName} />
                   </ListItem>
                 ))}
               </List>
@@ -298,59 +306,47 @@ export default function FriendPanel() {
         </>
       )}
 
-      <Dialog open={confirmDialog.open} onClose={closeConfirm} maxWidth="xs" fullWidth>
-        <DialogTitle>{confirmDialog.action === 'remove-friend' ? t('remove-friend') : t('block-user')}</DialogTitle>
-        <DialogContent>
-          <Typography>
-            {confirmDialog.action === 'remove-friend'
-              ? t('confirm-remove-friend', {
-                  name:
-                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
-                      ? confirmDialog.friendship?.requesterName
-                      : confirmDialog.friendship?.addresseeName,
-                })
-              : t('confirm-block-user', {
-                  name:
-                    confirmDialog.friendship?.addresseeId === auth.user?.profile.sub
-                      ? confirmDialog.friendship?.requesterName
-                      : confirmDialog.friendship?.addresseeName,
-                })}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirm}>{t('cancel')}</Button>
-          <Button variant="contained" color="error" onClick={handleConfirm}>
-            {t('confirm')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={confirmDialog.open}
+        onClose={closeConfirm}
+        onConfirm={handleConfirm}
+        destructive
+        title={confirmDialog.action === 'remove-friend' ? t('remove-friend') : t('block-user')}
+        message={t(confirmDialog.action === 'remove-friend' ? 'confirm-remove-friend' : 'confirm-block-user', { name: confirmName })}
+      />
 
-      <Dialog open={sendDialogOpen} onClose={handleCloseSendDialog} fullWidth maxWidth="sm">
-        <DialogTitle>
-          {t('send-friend-request')}
-          <IconButton aria-label="close" onClick={handleCloseSendDialog} sx={{ position: 'absolute', right: 8, top: 8 }} size="large">
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers>
-          <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField label={t('username')} value={addresseeName} onChange={(e) => setAddresseeName(e.target.value)} fullWidth required />
-            <TextField label={t('message')} value={sendMessage} onChange={(e) => setSendMessage(e.target.value)} fullWidth multiline rows={3} />
-            {sendError && <Alert severity="error">{sendError}</Alert>}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseSendDialog}>{t('cancel')}</Button>
+      <RmuDialog
+        open={sendDialogOpen}
+        onClose={handleCloseSendDialog}
+        title={t('send-friend-request')}
+        maxWidth="sm"
+        buttons={
           <Button
             variant="contained"
             onClick={handleSendRequest}
             disabled={!addresseeName.trim() || sending}
-            startIcon={sending ? <CircularProgress size={16} /> : <SendIcon />}
+            startIcon={sending ? <LoadingState variant="inline" /> : <SendIcon />}
           >
             {t('send')}
           </Button>
-        </DialogActions>
-      </Dialog>
-    </Paper>
+        }
+      >
+        <Stack spacing={2}>
+          <TextField
+            label={t('friend-nick')}
+            helperText={t('friend-nick-help')}
+            value={addresseeName}
+            onChange={(e) => setAddresseeName(e.target.value)}
+            fullWidth
+            required
+            autoFocus
+          />
+          <TextField label={t('message')} value={sendMessage} onChange={(e) => setSendMessage(e.target.value)} fullWidth multiline rows={3} />
+          {sendError && <Alert severity="error">{sendError}</Alert>}
+        </Stack>
+      </RmuDialog>
+
+      <FriendInviteDialog open={inviteDialogOpen} onClose={() => setInviteDialogOpen(false)} />
+    </Section>
   );
 }

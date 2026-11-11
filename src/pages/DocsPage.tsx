@@ -1,144 +1,96 @@
-import React, { JSX } from 'react';
-import { Container, Divider, Link } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
+import { JSX } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router-dom';
+import { Avatar, Box, Grid, Link, Stack, Typography } from '@mui/material';
+import { hoverLiftSx, Panel } from '@labcabrera-rmu/rmu-react-shared-lib';
+import PageTitle from '../components/PageTitle';
 import { imageBaseUrl } from '../services/config';
+import { LANDING_MODULES } from './home/modules';
+import InfoPage, { InfoSection } from './info/InfoPage';
+
+const CONCEPTS = [
+  'docs-concept-realm',
+  'docs-concept-strategic-game',
+  'docs-concept-faction',
+  'docs-concept-character',
+  'docs-concept-npc',
+  'docs-concept-tactical-game',
+  'docs-concept-items',
+  'docs-concept-spells',
+];
+const STEPS = ['docs-step-realm', 'docs-step-campaign', 'docs-step-characters', 'docs-step-tactical'];
+const SECTIONS = ['docs-official', 'docs-modules', 'docs-approach', 'docs-first-steps'];
 
 export default function DocsPage(): JSX.Element {
+  const { t } = useTranslation();
+  const strong = { strong: <strong /> };
   return (
-    <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
-      <Box
-        sx={{
-          minHeight: '25vh',
-          display: 'flex',
-          alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'white',
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Get started
-          </Typography>
-          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            This section covers the first steps for using the tool, creating a campaign, developing characters and setting up a game.
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          First of all, you’ll need the{' '}
-          <Link href="https://www.drivethrurpg.com/en/browse?keyword=rolemaster" target="_blank">
-            official ICE content
-          </Link>{' '}
-          to play! This tool is a guide that doesn’t cover the entire game. It simply helps to streamline certain actions, such as character
-          management and combat management.
+    <InfoPage title={t('footer-get-started')} subtitle={t('docs-intro')} image={4} index={SECTIONS.map((id) => ({ id, title: t(`${id}-title`) }))}>
+      <InfoSection id="docs-official" number={1} title={t('docs-official-title')}>
+        <Typography variant="body1">
+          <Trans
+            i18nKey="docs-official-content-text"
+            components={{ link: <Link href="https://www.drivethrurpg.com/en/browse?keyword=rolemaster" target="_blank" rel="noopener noreferrer" /> }}
+          />
         </Typography>
         <Box
           component="img"
           src={`${imageBaseUrl}images/doc/ice-books.png`}
-          alt="ICE books"
-          sx={{
-            width: { xs: '100%', sm: '80%', md: '40%' },
-            display: 'block',
-            mx: 'auto',
-            objectFit: 'cover',
-            borderRadius: 4,
-            boxShadow: 4,
-          }}
+          alt={t('docs-ice-books-alt')}
+          loading="lazy"
+          sx={{ width: { xs: '100%', sm: 360 }, borderRadius: (theme) => `${theme.radius.lg}px`, boxShadow: 4, alignSelf: 'center' }}
         />
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          To use this assistant you should own the official rulebooks. These are available on DriveThruRPG, where you can find the full rules and game
-          content. This assistant does not cover every option in the rules; it is intended as a practical tool to help manage characters and sessions.
-        </Typography>
+        <Typography variant="body1">{t('docs-rulebooks-text')}</Typography>
+      </InfoSection>
 
-        <Divider />
+      <InfoSection id="docs-modules" number={2} title={t('docs-modules-title')}>
+        <Grid container spacing={1.5}>
+          {LANDING_MODULES.map((module) => (
+            <Grid key={module.id} size={{ xs: 12, sm: 6 }}>
+              <Box component={RouterLink} to={module.href} sx={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}>
+                <Panel variant="outlined" sx={[{ height: '100%' }, hoverLiftSx]}>
+                  <Stack direction="row" spacing={1.5} sx={{ alignItems: 'flex-start' }}>
+                    <Avatar variant="rounded" src={module.img} alt="" sx={{ width: 56, height: 56 }} />
+                    <Box sx={{ minWidth: 0 }}>
+                      <PageTitle variant="subtitle1" component="h3" sx={{ color: 'text.primary' }}>
+                        {t(module.id)}
+                      </PageTitle>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                      >
+                        {t(module.desc)}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Panel>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </InfoSection>
 
-        <Typography variant="h6" sx={{ maxWidth: 600, mb: 2 }}>
-          Approach
-        </Typography>
-
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Assuming familiarity with Rolemaster concepts, the application focuses on the following core ideas:
-        </Typography>
-
-        <Box component="ul" sx={{ pl: 2, mb: 3, '& li': { mb: 1.5 } }}>
-          <li>
-            <Typography component="span">
-              <strong>Realms</strong>: A realm defines the fictional universe for a campaign. This could be, for example, Shadow World, the official
-              ICE universe, a realistic medieval setting without magic or Tolkien’s Middle-earth
+      <InfoSection id="docs-approach" number={3} title={t('docs-approach-title')}>
+        <Typography variant="body1">{t('docs-approach-text')}</Typography>
+        <Box component="ul" sx={{ m: 0, pl: 3, '& li': { mb: 1 } }}>
+          {CONCEPTS.map((key) => (
+            <Typography key={key} component="li" variant="body1">
+              <Trans i18nKey={key} components={strong} />
             </Typography>
-          </li>
-
-          <li>
-            <Typography component="span">
-              <strong>Strategic game</strong>: Equivalent to a campaign. It contains factions, groups, and the collection of characters and resources
-              that make up a long-running campaign.
-            </Typography>
-          </li>
-
-          <li>
-            <Typography component="span">
-              <strong>Faction</strong>: A faction is a group of characters tied to a campaign. It can also represent a set of NPCs (for example, the
-              goblins guarding a dungeon).
-            </Typography>
-          </li>
-
-          <li>
-            <Typography component="span">
-              <strong>Character</strong>: A player character built using RMU design rules — attributes, skills, items and other customisations.
-            </Typography>
-          </li>
-
-          <li>
-            <Typography component="span">
-              <strong>NPC</strong>: A non-player actor created either manually or derived from module content. NPCs are assigned levels, skills,
-              equipment and hit points directly rather than through character construction rules.
-            </Typography>
-          </li>
-
-          <li>
-            <Typography component="span">
-              <strong>Tactical game</strong>: Encounters and sessions that generally involve actions and combat, played with a board and miniatures.
-              From the tactical dashboard you declare and resolve maneuvers, movement, combat, resistance rolls and other actions.
-            </Typography>
-          </li>
+          ))}
         </Box>
+      </InfoSection>
 
-        <Box
-          component="img"
-          src={`${imageBaseUrl}images/doc/rmu-diagram.png`}
-          alt="Diagram"
-          sx={{
-            width: { xs: '100%', sm: '90%', md: '60%' },
-            display: 'block',
-            mx: 'auto',
-            objectFit: 'cover',
-            borderRadius: 4,
-            boxShadow: 4,
-          }}
-        />
-
-        <Divider />
-
-        <Typography variant="h6" sx={{ maxWidth: 600, mb: 2 }}>
-          Creating a game
-        </Typography>
-
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          First, you must choose a Realm. You can use the default realms available in the app or create a new one. Creating a realm takes some time,
-          as it involves setting up each of the races and customisations for that realm.
-        </Typography>
-
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Once inside the realm, you will create a ‘Strategic game’. Within the game, we’ll select certain features such as the experience multiplier
-          and the board scale (which we’ll use to adapt the distances calculated by the app to our scale for playing with miniatures. For example, for
-          28mm miniatures, we can choose a scale of 0.5 to play in inches on a standard wargame board).
-        </Typography>
-      </Container>
-    </Box>
+      <InfoSection id="docs-first-steps" number={4} title={t('docs-first-steps-title')}>
+        <Stack component="ol" spacing={1.5} sx={{ m: 0, pl: 3 }}>
+          {STEPS.map((key) => (
+            <Typography key={key} component="li" variant="body1">
+              <Trans i18nKey={key} components={strong} />
+            </Typography>
+          ))}
+        </Stack>
+      </InfoSection>
+    </InfoPage>
   );
 }

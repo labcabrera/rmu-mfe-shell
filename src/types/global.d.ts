@@ -1,3 +1,6 @@
+// Stylesheets imported for their side effects (the @fontsource webfonts).
+declare module '*.css';
+
 declare const process: {
   env: Record<string, string | undefined>;
 };
@@ -30,4 +33,9 @@ declare module 'items/ItemsApp' {
 declare module 'spells/SpellsApp' {
   const SpellsApp: import('react').ComponentType;
   export default SpellsApp;
+}
+
+declare module 'wiki/WikiApp' {
+  const WikiApp: import('react').ComponentType;
+  export default WikiApp;
 }

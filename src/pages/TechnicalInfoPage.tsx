@@ -1,102 +1,57 @@
-import React from 'react';
-import { Container, Link, Paper } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import { Box } from '@mui/system';
-import { imageBaseUrl } from '../services/config';
+import { Trans, useTranslation } from 'react-i18next';
+import { Box, Link, Typography } from '@mui/material';
+import InfoPage, { InfoSection } from './info/InfoPage';
+
+const external = (href: string) => <Link href={href} target="_blank" rel="noopener noreferrer" />;
+
+const TOOLS: { key: string; href: string }[] = [
+  { key: 'technical-tool-mongodb', href: 'https://www.mongodb.com/' },
+  { key: 'technical-tool-kafka', href: 'https://kafka.apache.org/' },
+  { key: 'technical-tool-keycloak', href: 'https://www.keycloak.org/' },
+  { key: 'technical-tool-caddy', href: 'https://caddyserver.com/' },
+  { key: 'technical-tool-otel', href: 'https://opentelemetry.io/' },
+];
+const SECTIONS = ['technical-general', 'technical-tools', 'technical-cloning', 'technical-running'];
+const PLATFORM_URL = 'https://github.com/labcabrera/rmu-platform';
 
 export default function TechnicalInfoPage() {
+  const { t } = useTranslation();
   return (
-    <Box sx={{ bgcolor: 'background.default', color: 'text.primary' }}>
-      <Box
-        sx={{
-          minHeight: '25vh',
-          display: 'flex',
-          alignItems: 'center',
-          background: `linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.2)), url(${imageBaseUrl}images/actions/action-melee-all.png)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: 'white',
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            Technical Information
-          </Typography>
-          <Typography variant="h6" sx={{ maxWidth: 600, mb: 3 }}>
-            This section explains the technical structure of the project for running it locally
-          </Typography>
-        </Container>
-      </Box>
-
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Paper sx={{ padding: 2 }}>
-          <Typography variant="h3" sx={{ mb: 2 }}>
-            General project information
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            This guide assumes you have a basic understanding of Docker, Git, Node.js and TypeScript. If you don’t, setting up the application may
-            prove a little tricky
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            The application is built using a microservices and micro-frontend (MFE) architecture. APIs are built using{' '}
-            <Link href="https://nestjs.com/" target="_blank">
-              NestJS
-            </Link>{' '}
-            following a CQRS pattern. The front-end uses{' '}
-            <Link href="https://es.react.dev/" target="_blank">
-              React
-            </Link>{' '}
-            and <Link href="https://mui.com/material-ui/getting-started/">MUI</Link> for its UI components.
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            The application uses the following external tools, all of which are open-source:
-          </Typography>
-          <ul>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://www.mongodb.com/" target="_blank">
-                  MongoDB
-                </Link>
-                : a NoSQL database for storing data.
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://kafka.apache.org/" target="_blank">
-                  Apache Kafka
-                </Link>
-                : used for asynchronous communication between modules.
-              </Typography>
-            </li>
-            <li>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                <Link href="https://www.keycloak.org/">Keycloak</Link>: IdP for authentication.
-              </Typography>
-            </li>
-          </ul>
-          <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            Cloning the repositories
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Within the{' '}
-            <Link href="https://github.com/labcabrera/rmu-platform" target="_blank">
-              GitHub project
-            </Link>
-            , we can see the set of repositories that make up the tool.
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            As it is developed in a modular way, we won’t need to clone all the repositories—for example, if we aren’t going to use the spells or NPC
-            modules.
-          </Typography>
-          <Typography variant="h3" sx={{ mb: 2, mt: 6 }}>
-            Running the images
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }} color="error">
-            Work in progress
-          </Typography>
-          <Typography variant="h6" sx={{ mb: 2 }}></Typography>
-        </Paper>
-      </Container>
-    </Box>
+    <InfoPage title={t('technical-title')} subtitle={t('technical-intro')} image={1} index={SECTIONS.map((id) => ({ id, title: t(`${id}-title`) }))}>
+      <InfoSection id="technical-general" number={1} title={t('technical-general-title')}>
+        <Typography variant="body1">{t('technical-prerequisites')}</Typography>
+        <Typography variant="body1">
+          <Trans
+            i18nKey="technical-architecture"
+            components={{
+              nestjs: external('https://nestjs.com/'),
+              react: external('https://react.dev/'),
+              mui: external('https://mui.com/material-ui/getting-started/'),
+            }}
+          />
+        </Typography>
+      </InfoSection>
+      <InfoSection id="technical-tools" number={2} title={t('technical-tools-title')}>
+        <Typography variant="body1">{t('technical-external-tools')}</Typography>
+        <Box component="ul" sx={{ m: 0, pl: 3, '& li': { mb: 1 } }}>
+          {TOOLS.map((tool) => (
+            <Typography key={tool.key} component="li" variant="body1">
+              <Trans i18nKey={tool.key} components={{ link: external(tool.href) }} />
+            </Typography>
+          ))}
+        </Box>
+      </InfoSection>
+      <InfoSection id="technical-cloning" number={3} title={t('technical-cloning-title')}>
+        <Typography variant="body1">
+          <Trans i18nKey="technical-cloning-text-1" components={{ link: external(PLATFORM_URL) }} />
+        </Typography>
+        <Typography variant="body1">{t('technical-cloning-text-2')}</Typography>
+      </InfoSection>
+      <InfoSection id="technical-running" number={4} title={t('technical-running-title')}>
+        <Typography variant="body1">
+          <Trans i18nKey="technical-running-text" components={{ link: external(PLATFORM_URL), code: <code /> }} />
+        </Typography>
+      </InfoSection>
+    </InfoPage>
   );
 }

@@ -1,31 +1,18 @@
 import js from '@eslint/js';
-import pluginTs from '@typescript-eslint/eslint-plugin';
-import parserTs from '@typescript-eslint/parser';
-import pluginReact from 'eslint-plugin-react';
-import { defineConfig } from 'eslint/config';
+import i18next from 'eslint-plugin-i18next';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-export default defineConfig([
+// Shared by the shared lib, the shell and every MFE: keep the copies identical.
+export default [
+  { ignores: ['dist/**', 'node_modules/**', 'storybook-static/**', 'coverage/**'] },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,mjs,cjs,jsx}'],
-    plugins: { js },
-    extends: ['js/recommended'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        process: 'readonly',
-      },
-    },
-    rules: {
-      'react/prop-types': 'off',
-    },
-  },
-  {
-    files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      parser: parserTs,
       parserOptions: {
-        project: './tsconfig.json',
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: {
@@ -34,14 +21,69 @@ export default defineConfig([
       },
       globals: {
         ...globals.browser,
-        process: 'readonly',
+        ...globals.node,
       },
     },
     plugins: {
-      '@typescript-eslint': pluginTs,
+      'react-hooks': reactHooks,
+      i18next,
     },
-    extends: [pluginTs.configs['flat/recommended']],
-    rules: {},
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
+      '@typescript-eslint/no-explicit-any': 'warn',
+
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'error',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      eqeqeq: ['error', 'always'],
+
+      // Entity images are squares (spec 058): no circular MUI Avatar, which is the default without `variant`.
+      // Use EntityAvatar or EntityImage; only the account avatar of the user is a circle (disable the rule there).
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "JSXOpeningElement[name.name='Avatar']:not(:has(JSXAttribute[name.name='variant']))",
+          message: 'Avatar is circular without `variant`: entity images are square (spec 058). Use EntityAvatar.',
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Avatar'] > JSXAttribute[name.name='variant'][value.value='circular']",
+          message: 'Entity images are square (spec 058): only the account avatar of the user is circular.',
+        },
+      ],
+
+      // Spec 066: the MFEs use the wrappers of rmu-react-shared-lib (RmuDialog, FlowSteps, RmuPagination,
+      // LoadingState). The library itself builds those wrappers, so it shows these warnings by design.
+      'no-restricted-imports': [
+        'warn',
+        {
+          paths: [
+            {
+              name: '@mui/material',
+              importNames: ['Dialog', 'Stepper', 'Pagination', 'CircularProgress'],
+              message:
+                'Use the rmu-react-shared-lib wrapper: RmuDialog/ConfirmDialog, FlowSteps, RmuPagination or LoadingState (spec 066).',
+            },
+          ],
+        },
+      ],
+
+      // Every visible string goes through i18n: JSX text and the attributes users see or hear.
+      'i18next/no-literal-string': [
+        'error',
+        {
+          mode: 'jsx-only',
+          'jsx-attributes': {
+            include: ['label', 'title', 'placeholder', 'aria-label', 'helperText', 'alt', 'subtitle', 'text'],
+          },
+        },
+      ],
+    },
   },
-  pluginReact.configs.flat.recommended,
-]);
+  {
+    // Stories and tests hold sample data, not UI text.
+    files: ['**/*.stories.{ts,tsx}', '**/*.test.{ts,tsx}', 'src/test/**', '.storybook/**'],
+    rules: { 'i18next/no-literal-string': 'off' },
+  },
+];

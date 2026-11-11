@@ -2,17 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="referrer" content="no-referrer">
     <title>Silent Check SSO</title>
 </head>
 <body>
-    <script>
-        window.parent.postMessage(
-            {
-                source: 'oidc-client',
-                url: window.location.href,
-            },
-            window.location.origin
-        );
-    </script>
+    <!-- External script (no inline code), so a CSP with script-src 'self' allows it. -->
+    <script src="/silent-check-sso.js"></script>
 </body>
 </html>
