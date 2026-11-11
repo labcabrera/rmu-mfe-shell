@@ -5,7 +5,14 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DownloadIcon from '@mui/icons-material/Download';
 import { Alert, Box, Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Stack, TextField } from '@mui/material';
 import { RmuDialog } from '@labcabrera-rmu/rmu-react-shared-lib';
-import { ACTIVATION_CODES_CSV_HEADER, ACTIVATION_FEATURES, ActivationCode, userApiClient, apiErrorText } from '../../api/user-api-client';
+import {
+  ACTIVATION_CODES_CSV_HEADER,
+  ACTIVATION_FEATURES,
+  ActivationCode,
+  activationFeatureKey,
+  userApiClient,
+  apiErrorText,
+} from '../../api/user-api-client';
 
 /** End of the day of a `YYYY-MM-DD` date field, as the ISO date the API takes. */
 const endOfDay = (date: string): string | undefined => (date ? new Date(`${date}T23:59:59`).toISOString() : undefined);
@@ -98,7 +105,7 @@ export const CreateActivationCodesDialog: FC<{ open: boolean; onClose: () => voi
               {ACTIVATION_FEATURES.map((feature) => (
                 <FormControlLabel
                   key={feature}
-                  label={feature}
+                  label={t(activationFeatureKey(feature))}
                   control={
                     <Checkbox
                       checked={features.includes(feature)}

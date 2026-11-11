@@ -69,6 +69,9 @@ export type ActivationCode = {
 
 export const ACTIVATION_FEATURES = ['core-law', 'spell-law', 'treasure-law', 'creature-law-i'] as const;
 
+/** Translation key of the name of a feature of the activation codes (the book it unlocks). */
+export const activationFeatureKey = (feature: string) => `activation-feature-${feature}`;
+
 /** Realm groups an administrator can grant (the API's MANAGED_GROUPS). */
 export const MANAGED_GROUPS = ['rmu-user', 'rmu-admin', 'rmu-core-law', 'rmu-spell-law', 'rmu-treasure-law', 'rmu-creature-law-i'] as const;
 

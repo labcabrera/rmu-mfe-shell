@@ -44,9 +44,20 @@ export const HeroActions: FC = () => {
           {t('shell.home.start-campaign')}
         </Button>
       ) : (
-        <Button variant="contained" size="large" startIcon={<LoginIcon />} onClick={() => void auth.signinRedirect()}>
-          {t('landing-sign-in')}
-        </Button>
+        <>
+          <Button variant="contained" size="large" startIcon={<LoginIcon />} onClick={() => void auth.signinRedirect()}>
+            {t('landing-sign-in')}
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            component={RouterLink}
+            to="/register"
+            sx={(theme) => ({ color: 'common.white', borderColor: alpha(theme.palette.common.white, 0.6) })}
+          >
+            {t('register')}
+          </Button>
+        </>
       )}
       <Button
         variant="outlined"
