@@ -3,6 +3,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BackpackIcon from '@mui/icons-material/Backpack';
 import GroupsIcon from '@mui/icons-material/Groups';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import PublicIcon from '@mui/icons-material/Public';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
@@ -77,6 +78,9 @@ export const sections: NavSection[] = [
   },
 ];
 
+/** The wiki (workspace spec 099): guides of the mechanics, after a divider and open without signing in. */
+export const wikiSection: NavSection = { label: 'wiki', href: '/wiki', icon: LocalLibraryIcon, links: [] };
+
 /** The administration (spec 053): listed after the rest, only for the `rmu-admin` group. */
 export const adminSection: NavSection = {
   label: 'administration',
@@ -93,7 +97,7 @@ export const adminSection: NavSection = {
 
 /** Section that contains `pathname`, if any. */
 export const activeSection = (pathname: string): NavSection | undefined =>
-  [...sections, adminSection].find((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
+  [...sections, wikiSection, adminSection].find((section) => pathname === section.href || pathname.startsWith(`${section.href}/`));
 
 const matches = (pathname: string, href: string): boolean => pathname === href || pathname.startsWith(`${href}/`);
 

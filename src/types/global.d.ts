@@ -34,3 +34,8 @@ declare module 'spells/SpellsApp' {
   const SpellsApp: import('react').ComponentType;
   export default SpellsApp;
 }
+
+declare module 'wiki/WikiApp' {
+  const WikiApp: import('react').ComponentType;
+  export default WikiApp;
+}

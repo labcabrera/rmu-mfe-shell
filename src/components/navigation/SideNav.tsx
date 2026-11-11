@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { useIsAdmin } from '@labcabrera-rmu/rmu-react-shared-lib';
 import NavList from './NavList';
-import { activeSection, adminSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections } from './sections';
+import { activeSection, adminSection, isActiveLink, isImmersiveRoute, navItemSx, NavSection, sections, wikiSection } from './sections';
 
 const RAIL_WIDTH = 248;
 const MINI_RAIL_WIDTH = 72;
@@ -103,7 +103,7 @@ const RailList = () => {
   return (
     <>
       <List component="nav" aria-label={t('menu')}>
-        {[HOME_ITEM, ...sections, ...(admin ? [adminSection] : [])].map((section) => {
+        {[HOME_ITEM, ...sections, wikiSection, ...(admin ? [adminSection] : [])].map((section) => {
           const Icon = section.icon;
           const selected = section.href === '/' ? pathname === '/' : current?.href === section.href;
           const button = (
@@ -125,12 +125,20 @@ const RailList = () => {
             </ListItemButton>
           );
           // Sections with pages show their name in the flyout; the rest keep the tooltip.
-          return section.links.length > 0 ? (
-            <React.Fragment key={section.href}>{button}</React.Fragment>
-          ) : (
-            <Tooltip key={section.href} title={t(section.label)} placement="right">
-              {button}
-            </Tooltip>
+          const item =
+            section.links.length > 0 ? (
+              button
+            ) : (
+              <Tooltip title={t(section.label)} placement="right">
+                {button}
+              </Tooltip>
+            );
+          // The wiki and the administration go after a divider, as in the full list (workspace spec 099).
+          return (
+            <React.Fragment key={section.href}>
+              {(section === wikiSection || section === adminSection) && <Divider sx={{ my: 1, mx: 1 }} />}
+              {item}
+            </React.Fragment>
           );
         })}
       </List>
