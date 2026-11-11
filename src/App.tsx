@@ -52,9 +52,11 @@ const RemoteTacticalApp = lazyRemote('tactical', () => import('tactical/Tactical
 const RemoteNpcsApp = lazyRemote('npcs', () => import('npcs/NpcsApp'));
 const RemoteItemsApp = lazyRemote('items', () => import('items/ItemsApp'));
 const RemoteSpellsApp = lazyRemote('spells', () => import('spells/SpellsApp'));
+const RemoteWikiApp = lazyRemote('wiki', () => import('wiki/WikiApp'));
 
 // Every remote route needs a user: all their APIs (core, strategic, tactical, items, spells, npcs)
-// guard their controllers with JwtAuthGuard. The home and static pages stay public.
+// guard their controllers with JwtAuthGuard. The home and static pages stay public, and so does the wiki
+// (workspace spec 099): static content that calls no API.
 const App = () => {
   const { pathname } = useLocation();
 
@@ -163,6 +165,14 @@ const App = () => {
                           <RemoteSpellsApp />
                         </RemoteBoundary>
                       </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/wiki/*"
+                    element={
+                      <RemoteBoundary name="wiki">
+                        <RemoteWikiApp />
+                      </RemoteBoundary>
                     }
                   />
                   <Route

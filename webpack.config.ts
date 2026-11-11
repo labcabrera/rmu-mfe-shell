@@ -164,6 +164,7 @@ export default function (_: any, argv: any): Configuration & { devServer?: DevSe
           npcs: runtimeRemote('npcs'),
           items: runtimeRemote('items'),
           spells: runtimeRemote('spells'),
+          wiki: runtimeRemote('wiki'),
         },
         shared: {
           react: { singleton: true, requiredVersion: deps.react },
